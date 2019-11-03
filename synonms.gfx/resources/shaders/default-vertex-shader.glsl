@@ -5,8 +5,10 @@ layout(location = 1) in vec2 textureUV;
 
 out vec2 v_textureUV;
 
+uniform mat4 u_modelViewProjection;
+
 void main()
 {
-    gl_Position = position;
+    gl_Position = u_modelViewProjection * position;
     v_textureUV = textureUV;
 }

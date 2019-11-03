@@ -1,7 +1,5 @@
 #pragma once
 
-#include <gfx\exports.h>
-
 #include <string>
 
 namespace synonms
@@ -13,7 +11,7 @@ namespace synonms
             class FileSystem
             {
             public:
-                SYNONMS_GFX_API std::string ReadFile(const std::string& filePath);
+                std::string ReadFile(const std::string& filePath);
             };
         }
     }

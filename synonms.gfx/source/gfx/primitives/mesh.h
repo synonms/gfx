@@ -1,7 +1,5 @@
 #pragma once
 
-#include <gfx\exports.h>
-
 #include <gfx\primitives\vertex-attribute.h>
 #include <gfx\primitives\vertex-definition.h>
 
@@ -16,14 +14,14 @@ namespace synonms
             class Mesh
             {
             public:
-                SYNONMS_GFX_API Mesh(const VertexDefinition& vertexDefinition, float* vertexData, unsigned int noOfVertexBytes, unsigned int* indexData, unsigned int noOfIndexBytes);
-                SYNONMS_GFX_API void Draw();
-                SYNONMS_GFX_API std::string ToString();
+                Mesh(const VertexDefinition& vertexDefinition, float* vertexData, unsigned int noOfVertices, unsigned int* indexData, unsigned int noOfIndices);
+                void Draw();
+                std::string ToString();
 
             private:
                 unsigned int _indexBufferId{ 0 };
-                unsigned int _noOfIndexBytes{ 0 };
-                unsigned int _noOfVertexBytes{ 0 };
+                unsigned int _noOfIndices{ 0 };
+                unsigned int _noOfVertices{ 0 };
                 unsigned int _vertexArrayId{ 0 };
                 unsigned int _vertexBufferId{ 0 };
             };

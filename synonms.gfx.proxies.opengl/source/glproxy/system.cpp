@@ -23,7 +23,7 @@ std::string System::GetVersion()
 
 bool System::Initialise()
 {
-    return glfwInit();
+    return glfwInit() == GLFW_TRUE;
 }
 
 bool System::InitialiseExtensions()

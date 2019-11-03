@@ -15,6 +15,34 @@ GLFWwindow* Window::Create(int width, int height, const std::string& title)
     return glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);
 }
 
+int Window::GetHeight(GLFWwindow* window)
+{
+    int width, height;
+
+    glfwGetWindowSize(window, &width, &height);
+
+    return height;
+}
+
+std::tuple<int, int> Window::GetSize(GLFWwindow* window)
+{
+    int width, height;
+
+    glfwGetWindowSize(window, &width, &height);
+
+    return std::make_tuple(width, height);
+}
+
+int Window::GetWidth(GLFWwindow* window)
+{
+    int width, height;
+
+    glfwGetWindowSize(window, &width, &height);
+
+    return width;
+
+}
+
 void Window::MakeCurrent(GLFWwindow* window)
 {
     glfwMakeContextCurrent(window);

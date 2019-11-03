@@ -1,7 +1,5 @@
 #pragma once
 
-#include <gfx\exports.h>
-
 #include <string>
 
 namespace synonms
@@ -13,13 +11,13 @@ namespace synonms
             class Texture
             {
             public:
-                SYNONMS_GFX_API Texture(const std::string& filePath);
-                SYNONMS_GFX_API ~Texture();
+                Texture(const std::string& filePath);
+                ~Texture();
 
-                SYNONMS_GFX_API void Bind(unsigned int slot = 0);
-                SYNONMS_GFX_API int GetHeight() const;
-                SYNONMS_GFX_API int GetWidth() const;
-                SYNONMS_GFX_API void Unbind();
+                void Bind(unsigned int slot = 0);
+                int GetHeight() const;
+                int GetWidth() const;
+                void Unbind();
 
             private:
                 unsigned int _textureId{ 0 };

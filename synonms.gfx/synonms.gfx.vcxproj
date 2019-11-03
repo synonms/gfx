@@ -26,26 +26,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -72,22 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -100,7 +100,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;synonms.gfx.proxies.imgui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -114,7 +114,7 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <AdditionalLibraryDirectories>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;synonms.gfx.proxies.imgui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,7 +132,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;synonms.gfx.proxies.imgui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -150,15 +150,22 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>synonms.gfx.proxies.opengl.lib;synonms.gfx.proxies.imgui.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
+    <ClCompile Include="source\gfx\environment\camera.cpp" />
+    <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
+    <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
     <ClCompile Include="source\gfx\environment\window.cpp" />
     <ClCompile Include="source\gfx\environment\engine.cpp" />
+    <ClCompile Include="source\gfx\gui\gui-helper.cpp" />
     <ClCompile Include="source\gfx\io\file-system.cpp" />
     <ClCompile Include="source\gfx\materials\texture.cpp" />
+    <ClCompile Include="source\gfx\mathematics\linear\transform.cpp" />
+    <ClCompile Include="source\gfx\mathematics\maths-helper.cpp" />
+    <ClCompile Include="source\gfx\primitives\mesh-instance.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
     <ClCompile Include="source\gfx\primitives\vertex-attribute.cpp" />
     <ClCompile Include="source\gfx\primitives\vertex-definition.cpp" />
@@ -168,11 +175,23 @@
   <ItemGroup>
     <ClInclude Include="source\gfx\enumerators\attribute-type.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
-    <ClInclude Include="source\gfx\exports.h" />
+    <ClInclude Include="source\gfx\environment\camera.h" />
+    <ClInclude Include="source\gfx\environment\perspective-view.h" />
+    <ClInclude Include="source\gfx\environment\orthographic-view.h" />
     <ClInclude Include="source\gfx\environment\window.h" />
     <ClInclude Include="source\gfx\environment\engine.h" />
+    <ClInclude Include="source\gfx\gui\gui-helper.h" />
     <ClInclude Include="source\gfx\io\file-system.h" />
     <ClInclude Include="source\gfx\materials\texture.h" />
+    <ClInclude Include="source\gfx\mathematics\linear\matrix2x2.h" />
+    <ClInclude Include="source\gfx\mathematics\linear\matrix3x3.h" />
+    <ClInclude Include="source\gfx\mathematics\linear\matrix4x4.h" />
+    <ClInclude Include="source\gfx\mathematics\linear\transform.h" />
+    <ClInclude Include="source\gfx\mathematics\linear\vector2.h" />
+    <ClInclude Include="source\gfx\mathematics\linear\vector3.h" />
+    <ClInclude Include="source\gfx\mathematics\linear\vector4.h" />
+    <ClInclude Include="source\gfx\mathematics\maths-helper.h" />
+    <ClInclude Include="source\gfx\primitives\mesh-instance.h" />
     <ClInclude Include="source\gfx\primitives\mesh.h" />
     <ClInclude Include="source\gfx\primitives\vertex-attribute.h" />
     <ClInclude Include="source\gfx\primitives\vertex-definition.h" />

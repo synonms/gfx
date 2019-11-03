@@ -1,9 +1,9 @@
 #pragma once
 
-#include <gfx\exports.h>
-
 #include <memory>
 #include <string>
+
+#include <gfx\mathematics\linear\vector2.h>
 
 namespace synonms 
 {
@@ -14,13 +14,16 @@ namespace synonms
             class Window
             {
             public:
-                SYNONMS_GFX_API Window(int width = 640, int height = 480, const std::string& title = "");
-                SYNONMS_GFX_API ~Window();
+                Window(int width = 640, int height = 480, const std::string& title = "");
+                ~Window();
 
-                SYNONMS_GFX_API void Clear();
-                SYNONMS_GFX_API void MakeContextCurrent();
-                SYNONMS_GFX_API bool ShouldClose();
-                SYNONMS_GFX_API void SwapBuffers();
+                void Clear();
+                void EnableVsync();
+                void* GetContext();
+                mathematics::linear::Vector2<int> GetSize() const;
+                void MakeContextCurrent();
+                bool ShouldClose();
+                void SwapBuffers();
 
             private:
                 class Implementation;

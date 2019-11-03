@@ -1,7 +1,5 @@
 #pragma once
 
-#include <glproxy\glproxy-exports.h>
-
 #include <string>
 
 #include <glproxy\enumerators\shader-type.h>
@@ -17,11 +15,11 @@ namespace synonms
                 class Shader
                 {
                 public:
-                    GLPROXY_API static bool Compile(unsigned int shaderId, bool throwOnError = false);
-                    GLPROXY_API static unsigned int Create(enumerators::ShaderType shaderType, bool throwOnError = false);
-                    GLPROXY_API static void Delete(unsigned int shaderId, bool throwOnError = false);
-                    GLPROXY_API static std::string GetLog(unsigned int shaderId);
-                    GLPROXY_API static void SetSource(unsigned int shaderId, const std::string& sourceCode, bool throwOnError = false);
+                    static bool Compile(unsigned int shaderId, bool throwOnError = false);
+                    static unsigned int Create(enumerators::ShaderType shaderType, bool throwOnError = false);
+                    static void Delete(unsigned int shaderId, bool throwOnError = false);
+                    static std::string GetLog(unsigned int shaderId);
+                    static void SetSource(unsigned int shaderId, const std::string& sourceCode, bool throwOnError = false);
                 };
             }
         }

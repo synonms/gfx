@@ -5,6 +5,7 @@
 #include <glproxy\window.h>
 
 using namespace synonms::gfx::environment;
+using namespace synonms::gfx::mathematics::linear;
 
 class Window::Implementation 
 {
@@ -36,12 +37,26 @@ void Window::Clear()
     proxies::opengl::Window::Clear(proxies::opengl::enumerators::AttributeBit::ColourBuffer);
 }
 
+void Window::EnableVsync()
+{
+    proxies::opengl::Window::SetSwapInterval(1);
+}
+
+void* Window::GetContext()
+{
+    return _implementation->window;
+}
+
+Vector2<int> Window::GetSize() const
+{
+    auto size = proxies::opengl::Window::GetSize(_implementation->window);
+
+    return { std::get<0>(size), std::get<1>(size) };
+}
+
 void Window::MakeContextCurrent()
 {
     proxies::opengl::Window::MakeCurrent(_implementation->window);
-
-    // TODO: this should be elsewhere
-    proxies::opengl::Window::SetSwapInterval(1);
 }
 
 bool Window::ShouldClose()

@@ -10,7 +10,7 @@ namespace synonms
             {
                 Position,
                 Colour,
-                Texture
+                TextureCoordinates
             };
         }
     }

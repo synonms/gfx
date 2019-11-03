@@ -68,6 +68,12 @@ void ShaderSet::SetUniform(const std::string& uniformName, float value1, float v
     proxies::opengl::ShaderProgram::SetUniform(location, value1, value2, value3, value4, true);
 }
 
+void ShaderSet::SetUniformMatrix(const std::string& uniformName, const float* value)
+{
+    auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
+    proxies::opengl::ShaderProgram::SetUniformMatrix(location, value, true);
+}
+
 std::string ShaderSet::ToString()
 {
     std::stringstream stream;

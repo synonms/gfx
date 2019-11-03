@@ -1,7 +1,5 @@
 #pragma once
 
-#include <gfx\exports.h>
-
 #include <memory>
 
 namespace synonms
@@ -13,11 +11,11 @@ namespace synonms
             class Engine
             {
             public:
-                SYNONMS_GFX_API Engine();
-                SYNONMS_GFX_API ~Engine();
+                Engine();
+                ~Engine();
 
-                SYNONMS_GFX_API void InitialiseExtensions();
-                SYNONMS_GFX_API void PollEvents();
+                void InitialiseExtensions();
+                void PollEvents();
             };
         }
     }

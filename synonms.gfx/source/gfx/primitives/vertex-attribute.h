@@ -1,6 +1,5 @@
 #pragma once
 
-#include <gfx\exports.h>
 #include <gfx\enumerators\attribute-type.h>
 #include <gfx\enumerators\data-type.h>
 
@@ -13,13 +12,13 @@ namespace synonms
             class VertexAttribute
             {
             public:
-                SYNONMS_GFX_API VertexAttribute(enumerators::AttributeType attributeType, enumerators::DataType dataType, int noOfComponents, int noOfBytesPerComponent, bool isNormalised);
+                VertexAttribute(enumerators::AttributeType attributeType, enumerators::DataType dataType, int noOfComponents, int noOfBytesPerComponent, bool isNormalised);
 
-                SYNONMS_GFX_API enumerators::AttributeType GetAttributeType() const;
-                SYNONMS_GFX_API enumerators::DataType GetDataType() const;
-                SYNONMS_GFX_API bool GetIsNormalised() const;
-                SYNONMS_GFX_API int GetNoOfBytes() const;
-                SYNONMS_GFX_API int GetNoOfComponents() const;
+                enumerators::AttributeType GetAttributeType() const;
+                enumerators::DataType GetDataType() const;
+                bool GetIsNormalised() const;
+                int GetNoOfBytes() const;
+                int GetNoOfComponents() const;
 
             private:
                 enumerators::AttributeType _attributeType;
