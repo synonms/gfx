@@ -153,6 +153,7 @@ Matrix4x4<float> Transform::GetScaleMatrix() const
 
 Matrix4x4<float> Transform::GetTransformationMatrix() const
 {
+//    return GetScaleMatrix() * GetRotationMatrix() * GetTranslationMatrix();
     return GetTranslationMatrix() * (GetRotationMatrix() * GetScaleMatrix());
 }
 

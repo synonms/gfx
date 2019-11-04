@@ -108,10 +108,10 @@ int main(int, char**)
 
     float vertexData[] = {
         // x      y       u     v
-         0.0f,   0.0f, 0.0f, 0.0f,
-       500.0f,   0.0f, 1.0f, 0.0f,
-       500.0f, 500.0f, 1.0f, 1.0f,
-         0.0f, 500.0f, 0.0f, 1.0f
+        -0.5f, -0.5f, 0.0f, 0.0f,
+         0.5f, -0.5f, 1.0f, 0.0f,
+         0.5f,  0.5f, 1.0f, 1.0f,
+        -0.5f,  0.5f, 0.0f, 1.0f
     };
 
     unsigned int indexData[] = {
@@ -137,7 +137,9 @@ int main(int, char**)
     GuiHelper::ApplyDarkStyle();
 
     auto translation1 = Vector3<float>(0.0f, 0.0f, 0.0f);
+    auto scale1 = Vector3<float>(1.0f, 1.0f, 1.0f);
     auto translation2 = Vector3<float>(0.0f, 0.0f, 0.0f);
+    auto scale2 = Vector3<float>(1.0f, 1.0f, 1.0f);
 
     while (!window.ShouldClose())
     {
@@ -147,8 +149,12 @@ int main(int, char**)
 
         {
             meshInstance1.GetTransform().SetPosition(translation1);
+            meshInstance1.GetTransform().SetScale(scale1);
 
-            auto modelViewProjection = projectionMatrix * viewMatrix * meshInstance1.GetTransform().GetTranslationMatrix();
+            auto modelMatrix = meshInstance1.GetTransform().GetTransformationMatrix();
+            auto modelViewProjection = projectionMatrix * viewMatrix * modelMatrix;
+
+            auto sisisi = sizeof(modelMatrix.xAxis);
 
             shaderSet.Use();
             shaderSet.SetUniformMatrix("u_modelViewProjection", modelViewProjection.Data());
@@ -158,8 +164,10 @@ int main(int, char**)
 
         {
             meshInstance2.GetTransform().SetPosition(translation2);
+            meshInstance2.GetTransform().SetScale(scale2);
 
-            auto modelViewProjection = projectionMatrix * viewMatrix * meshInstance2.GetTransform().GetTranslationMatrix();
+            auto modelMatrix = meshInstance2.GetTransform().GetTransformationMatrix();
+            auto modelViewProjection = projectionMatrix * viewMatrix * modelMatrix;
 
             shaderSet.Use();
             shaderSet.SetUniformMatrix("u_modelViewProjection", modelViewProjection.Data());
@@ -168,8 +176,10 @@ int main(int, char**)
         }
 
         GuiHelper::PushWindow("Transform");
-        GuiHelper::SliderFloat3("Translation 1", &translation1.x, 0.0f, 2048.0f);
-        GuiHelper::SliderFloat3("Translation 2", &translation2.x, 0.0f, 2048.0f);
+        GuiHelper::SliderFloat3("Translation 1", &translation1.x, -1024.0f, 1024.0f);
+        GuiHelper::SliderFloat3("Scale 1", &scale1.x, 1.0f, 1000.0f);
+        GuiHelper::SliderFloat3("Translation 2", &translation2.x, -1024.0f, 1024.0f);
+        GuiHelper::SliderFloat3("Scale 2", &scale2.x, 1.0f, 1000.0f);
         GuiHelper::PopWindow();
 
         GuiHelper::Render();

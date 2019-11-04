@@ -28,33 +28,33 @@ namespace synonms
                 {
                 public:
                     Matrix3x3(
-                        T vectorIx = static_cast<T>(1), T vectorIy = static_cast<T>(0), T vectorIz = static_cast<T>(0),
-                        T vectorJx = static_cast<T>(0), T vectorJy = static_cast<T>(1), T vectorJz = static_cast<T>(0),
-                        T vectorKx = static_cast<T>(0), T vectorKy = static_cast<T>(0), T vectorKz = static_cast<T>(1))
-                        : iX(vectorIx), jX(vectorJx), kX(vectorKx)
-                        , iY(vectorIy), jY(vectorJy), kY(vectorKy)
-                        , iZ(vectorIz), jZ(vectorJz), kZ(vectorKz)
+                        T xAxisX = static_cast<T>(1), T xAxisY = static_cast<T>(0), T xAxisZ = static_cast<T>(0),
+                        T yAxisX = static_cast<T>(0), T yAxisY = static_cast<T>(1), T yAxisZ = static_cast<T>(0),
+                        T zAxisX = static_cast<T>(0), T zAxisY = static_cast<T>(0), T zAxisZ = static_cast<T>(1))
+                        : xAxis({xAxisX, xAxisY, xAxisZ})
+                        , yAxis({yAxisX, yAxisY, yAxisZ})
+                        , zAxis({zAxisX, zAxisY, zAxisZ})
                     {
                     }
 
 
-                    Matrix3x3(const Vector3<T>& vectorI, const Vector3<T>& vectorJ, const Vector3<T>& vectorK)
-                        : iX(vectorI.x), jX(vectorJ.x), kX(vectorK.x)
-                        , iY(vectorI.y), jY(vectorJ.y), kY(vectorK.y)
-                        , iZ(vectorI.z), jZ(vectorJ.z), kZ(vectorK.z)
+                    Matrix3x3(const Vector3<T>& xAxis, const Vector3<T>& yAxis, const Vector3<T>& zAxis)
+                        : xAxis(xAxis)
+                        , yAxis(yAxis)
+                        , zAxis(zAxis)
                     {
                     }
 
-                    T iX, jX, kX;
-                    T iY, jY, kY;
-                    T iZ, jZ, kZ;
+                    Vector3<T> xAxis;
+                    Vector3<T> yAxis;
+                    Vector3<T> zAxis;
 
                 public:
                     Matrix3x3<T> Cofactor() const
                     {
-                        auto i = Vector3<float>((jY * kZ) - (kY * jZ), (jX * kZ) - (kX * jZ), (jX * kY) - (kX * jY));
-                        auto j = Vector3<float>((iY * kZ) - (kY * iZ), (iX * kZ) - (kX * iZ), (iX * kY) - (kX * iY));
-                        auto k = Vector3<float>((iY * jZ) - (jY * iZ), (iX * jZ) - (jX * iZ), (iX * jY) - (jX * iY));
+                        auto i = Vector3<float>((yAxis.y * zAxis.z) - (zAxis.y * yAxis.z), (yAxis.x * zAxis.z) - (zAxis.x * yAxis.z), (yAxis.x * zAxis.y) - (zAxis.x * yAxis.y));
+                        auto j = Vector3<float>((xAxis.y * zAxis.z) - (zAxis.y * xAxis.z), (xAxis.x * zAxis.z) - (zAxis.x * xAxis.z), (xAxis.x * zAxis.y) - (zAxis.x * xAxis.y));
+                        auto k = Vector3<float>((xAxis.y * yAxis.z) - (yAxis.y * xAxis.z), (xAxis.x * yAxis.z) - (yAxis.x * xAxis.z), (xAxis.x * yAxis.y) - (yAxis.x * xAxis.y));
 
                         return {i, j, k};
                     }
@@ -68,11 +68,11 @@ namespace synonms
                     /// For 3D it means that the coordinate system has flipped from right handed to left handed
                     float Determinant() const
                     {
-                        auto determinantA = Matrix2x2<T>(jY, jZ, kY, kZ).Determinant();
-                        auto determinantB = Matrix2x2<T>(iY, iZ, kY, kZ).Determinant();
-                        auto determinantC = Matrix2x2<T>(iY, iZ, jY, jZ).Determinant();
+                        auto determinantA = Matrix2x2<T>(yAxis.y, yAxis.z, zAxis.y, zAxis.z).Determinant();
+                        auto determinantB = Matrix2x2<T>(xAxis.y, xAxis.z, zAxis.y, zAxis.z).Determinant();
+                        auto determinantC = Matrix2x2<T>(xAxis.y, xAxis.z, yAxis.y, yAxis.z).Determinant();
 
-                        return (iX * determinantA) - (jX * determinantB) + (kX * determinantC);
+                        return (xAxis.x * determinantA) - (yAxis.x * determinantB) + (zAxis.x * determinantC);
                     }
 
                     /// Composition is the multiplication of two transforms and is read right to left
@@ -86,16 +86,16 @@ namespace synonms
                     /// Reset to Identity
                     void Reset()
                     {
-                        iX = static_cast<T>(1); jX = static_cast<T>(0); kX = static_cast<T>(0);
-                        iY = static_cast<T>(0); jY = static_cast<T>(1); kY = static_cast<T>(0);
-                        iZ = static_cast<T>(0); jZ = static_cast<T>(0); kZ = static_cast<T>(1);
+                        xAxis.x = static_cast<T>(1); yAxis.x = static_cast<T>(0); zAxis.x = static_cast<T>(0);
+                        xAxis.y = static_cast<T>(0); yAxis.y = static_cast<T>(1); zAxis.y = static_cast<T>(0);
+                        xAxis.z = static_cast<T>(0); yAxis.z = static_cast<T>(0); zAxis.z = static_cast<T>(1);
                     }
 
                     Vector3<T> Transform(const Vector3<T>& input) const
                     {
-                        auto outputX = (iX * input.x) + (jX * input.y) + (kX * input.z);
-                        auto outputY = (iY * input.x) + (jY * input.y) + (kY * input.z);
-                        auto outputZ = (iZ * input.x) + (jZ * input.y) + (kZ * input.z);
+                        auto outputX = (xAxis.x * input.x) + (yAxis.x * input.y) + (zAxis.x * input.z);
+                        auto outputY = (xAxis.y * input.x) + (yAxis.y * input.y) + (zAxis.y * input.z);
+                        auto outputZ = (xAxis.z * input.x) + (yAxis.z * input.y) + (zAxis.z * input.z);
 
                         return { outputX, outputY, outputZ };
                     }
@@ -109,23 +109,23 @@ namespace synonms
                 public:
                     friend Matrix3x3<T> operator*(const Matrix3x3<T>& left, const Matrix3x3<T>& right) {
                         return {
-                            (left.iX * right.iX) + (left.iY * right.jX) + (left.iZ * right.kX),
-                            (left.iX * right.iY) + (left.iY * right.jY) + (left.iZ * right.kY),
-                            (left.iX * right.iZ) + (left.iY * right.jZ) + (left.iZ * right.kZ),
-                            (left.jX * right.iX) + (left.jY * right.jX) + (left.jZ * right.kX),
-                            (left.jX * right.iY) + (left.jY * right.jY) + (left.jZ * right.kY),
-                            (left.jX * right.iZ) + (left.jY * right.jZ) + (left.jZ * right.kZ),
-                            (left.kX * right.iX) + (left.kY * right.jX) + (left.kZ * right.kX),
-                            (left.kX * right.iY) + (left.kY * right.jY) + (left.kZ * right.kY),
-                            (left.kX * right.iZ) + (left.kY * right.jZ) + (left.kZ * right.kZ)
+                            (left.xAxis.x * right.xAxis.x) + (left.xAxis.y * right.yAxis.x) + (left.xAxis.z * right.kX),
+                            (left.xAxis.x * right.xAxis.y) + (left.xAxis.y * right.yAxis.y) + (left.xAxis.z * right.kY),
+                            (left.xAxis.x * right.xAxis.z) + (left.xAxis.y * right.yAxis.z) + (left.xAxis.z * right.kZ),
+                            (left.yAxis.x * right.xAxis.x) + (left.yAxis.y * right.yAxis.x) + (left.yAxis.z * right.kX),
+                            (left.yAxis.x * right.xAxis.y) + (left.yAxis.y * right.yAxis.y) + (left.yAxis.z * right.kY),
+                            (left.yAxis.x * right.xAxis.z) + (left.yAxis.y * right.yAxis.z) + (left.yAxis.z * right.kZ),
+                            (left.zAxis.x * right.xAxis.x) + (left.zAxis.y * right.yAxis.x) + (left.zAxis.z * right.kX),
+                            (left.zAxis.x * right.xAxis.y) + (left.zAxis.y * right.yAxis.y) + (left.zAxis.z * right.kY),
+                            (left.zAxis.x * right.xAxis.z) + (left.zAxis.y * right.yAxis.z) + (left.zAxis.z * right.kZ)
                         };
                     }
 
                     friend Matrix3x3<T> operator*(const Matrix3x3<T>& matrix, T factor) {
                         return {
-                            matrix.iX * factor, matrix.iY * factor, matrix.iZ * factor,
-                            matrix.jX * factor, matrix.jY * factor, matrix.jZ * factor,
-                            matrix.kX * factor, matrix.kY * factor, matrix.kZ * factor
+                            matrix.xAxis.x * factor, matrix.xAxis.y * factor, matrix.xAxis.z * factor,
+                            matrix.yAxis.x * factor, matrix.yAxis.y * factor, matrix.yAxis.z * factor,
+                            matrix.zAxis.x * factor, matrix.zAxis.y * factor, matrix.zAxis.z * factor
                         };
                     }
                 };
