@@ -3,6 +3,7 @@
 #include <gfx\enumerators\data-type.h>
 
 #include <glproxy\index-buffer.h>
+#include <glproxy\system.h>
 #include <glproxy\vertex-array.h>
 #include <glproxy\vertex-attribute-array.h>
 #include <glproxy\vertex-buffer.h>
@@ -46,6 +47,8 @@ Mesh::Mesh(const VertexDefinition& vertexDefinition, float* vertexData, unsigned
 
 void Mesh::Draw()
 {
+    proxies::opengl::System::SetFaceCulling(_isBackFaceCulled);
+
     proxies::opengl::VertexArray::Bind(_vertexArrayId, true);
 
     proxies::opengl::IndexBuffer::Bind(_indexBufferId, true);

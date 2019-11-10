@@ -273,7 +273,7 @@ namespace synonms
                         return (xAxis.x * determinantA) - (yAxis.x * determinantB) + (zAxis.x * determinantC) - (origin.x * determinantD);
                     }
 
-                    float* Data()
+                    const float* Data() const
                     {
                         return &xAxis.x;
                     }
@@ -368,6 +368,16 @@ namespace synonms
                     }
 
                 public:
+                    // Generally used to create Normal matrix from a Model matrix
+                    static Matrix3x3<float> CreateInverseTranspose3x3From(const Matrix4x4<float>& matrix)
+                    {
+                        return {
+                            matrix.xAxis.x, matrix.yAxis.x, matrix.zAxis.x,
+                            matrix.xAxis.y, matrix.yAxis.y, matrix.zAxis.y,
+                            matrix.xAxis.z, matrix.yAxis.z, matrix.zAxis.z
+                        };
+                    }
+
                     static Matrix3x3<float> Create3x3From(const Matrix4x4<float>& matrix)
                     {
                         return { 
@@ -527,17 +537,17 @@ namespace synonms
                         return result;
                     }
 
-                    static Matrix4x4<float> CreatePerspective(float horizontalFieldOfView, float aspectRatio, float near, float far)
+                    static Matrix4x4<float> CreatePerspective(float horizontalFieldOfViewRadians, float aspectRatio, float near, float far)
                     {
-                        float horizontal_zoom = 1.0f / MathsHelper::Tangent(horizontalFieldOfView / 2.0f);
-                        float vertical_zoom = horizontal_zoom / aspectRatio;
+                        auto scaleY = 1.0f / MathsHelper::Tangent(horizontalFieldOfViewRadians / 2.0f);
+                        auto scaleX = scaleY / aspectRatio;
 
-                        return {
-                            horizontal_zoom, 0.0f,          0.0f,                              0.0f,
-                            0.0f,            vertical_zoom, 0.0f,                              0.0f,
-                            0.0f,            0.0f,         -((far + near) / (far - near)),    -1.0f,
-                            0.0f,            0.0f,        (-2.0f * near * far) / (far - near), 0.0f
-                        };
+                        auto i = Vector4<float>(scaleX, 0.0f, 0.0f, 0.0f);
+                        auto j = Vector4<float>(0.0f, scaleY, 0.0f, 0.0f);
+                        auto k = Vector4<float>(0.0f, 0.0f, ((far + near) / (near - far)), -1.0f);
+                        auto l = Vector4<float>(0.0f, 0.0f, (2.0f * near * far) / (near - far), 0.0f);
+
+                        return { i, j, k, l };
                     }
 
                 public:

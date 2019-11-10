@@ -162,13 +162,16 @@
     <ClCompile Include="source\gfx\environment\engine.cpp" />
     <ClCompile Include="source\gfx\gui\gui-helper.cpp" />
     <ClCompile Include="source\gfx\io\file-system.cpp" />
+    <ClCompile Include="source\gfx\materials\material.cpp" />
     <ClCompile Include="source\gfx\materials\texture.cpp" />
     <ClCompile Include="source\gfx\mathematics\linear\transform.cpp" />
     <ClCompile Include="source\gfx\mathematics\maths-helper.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh-instance.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
+    <ClCompile Include="source\gfx\primitives\primitive-factory.cpp" />
     <ClCompile Include="source\gfx\primitives\vertex-attribute.cpp" />
     <ClCompile Include="source\gfx\primitives\vertex-definition.cpp" />
+    <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-set.cpp" />
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
@@ -176,12 +179,14 @@
     <ClInclude Include="source\gfx\enumerators\attribute-type.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
+    <ClInclude Include="source\gfx\environment\light.h" />
     <ClInclude Include="source\gfx\environment\perspective-view.h" />
     <ClInclude Include="source\gfx\environment\orthographic-view.h" />
     <ClInclude Include="source\gfx\environment\window.h" />
     <ClInclude Include="source\gfx\environment\engine.h" />
     <ClInclude Include="source\gfx\gui\gui-helper.h" />
     <ClInclude Include="source\gfx\io\file-system.h" />
+    <ClInclude Include="source\gfx\materials\material.h" />
     <ClInclude Include="source\gfx\materials\texture.h" />
     <ClInclude Include="source\gfx\mathematics\linear\matrix2x2.h" />
     <ClInclude Include="source\gfx\mathematics\linear\matrix3x3.h" />
@@ -191,24 +196,26 @@
     <ClInclude Include="source\gfx\mathematics\linear\vector3.h" />
     <ClInclude Include="source\gfx\mathematics\linear\vector4.h" />
     <ClInclude Include="source\gfx\mathematics\maths-helper.h" />
+    <ClInclude Include="source\gfx\primitives\primitive-factory.h" />
     <ClInclude Include="source\gfx\primitives\mesh-instance.h" />
     <ClInclude Include="source\gfx\primitives\mesh.h" />
     <ClInclude Include="source\gfx\primitives\vertex-attribute.h" />
     <ClInclude Include="source\gfx\primitives\vertex-definition.h" />
+    <ClInclude Include="source\gfx\shaders\shader-builder.h" />
     <ClInclude Include="source\gfx\shaders\shader-set.h" />
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\default-fragment-shader.glsl">
+    <None Include="resources\shaders\phong.fragment.glsl">
       <DeploymentContent>true</DeploymentContent>
     </None>
-    <Content Include="resources\shaders\default-fragment-shader.glsl">
+    <Content Include="resources\shaders\phong.fragment.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="resources\shaders\default-vertex-shader.glsl">
+    <None Include="resources\shaders\phong.vertex.glsl">
       <DeploymentContent>true</DeploymentContent>
     </None>
-    <Content Include="resources\shaders\default-vertex-shader.glsl">
+    <Content Include="resources\shaders\phong.vertex.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

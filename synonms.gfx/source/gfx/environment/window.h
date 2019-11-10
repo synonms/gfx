@@ -22,6 +22,7 @@ namespace synonms
                 void* GetContext();
                 mathematics::linear::Vector2<int> GetSize() const;
                 void MakeContextCurrent();
+                void SetViewport(int lowerLeftX, int lowerLeftY, int width, int height);
                 bool ShouldClose();
                 void SwapBuffers();
 

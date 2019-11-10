@@ -35,6 +35,8 @@ Window::~Window()
 void Window::Clear()
 {
     proxies::opengl::Window::Clear(proxies::opengl::enumerators::AttributeBit::ColourBuffer);
+
+    // TODO - set viewport
 }
 
 void Window::EnableVsync()
@@ -57,6 +59,11 @@ Vector2<int> Window::GetSize() const
 void Window::MakeContextCurrent()
 {
     proxies::opengl::Window::MakeCurrent(_implementation->window);
+}
+
+void Window::SetViewport(int lowerLeftX, int lowerLeftY, int width, int height)
+{
+    proxies::opengl::Window::SetViewport(lowerLeftX, lowerLeftY, width, height);
 }
 
 bool Window::ShouldClose()

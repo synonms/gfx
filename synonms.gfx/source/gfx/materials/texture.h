@@ -12,17 +12,24 @@ namespace synonms
             {
             public:
                 Texture(const std::string& filePath);
+                Texture(Texture&& other) noexcept;
+                Texture& operator=(Texture&& other) noexcept;
                 ~Texture();
 
-                void Bind(unsigned int slot = 0);
+                Texture() = delete;
+                Texture(const Texture& other) = delete;
+                Texture& operator=(const Texture& other) = delete;
+
+                void Bind(unsigned int slot = 0) const;
                 int GetHeight() const;
                 int GetWidth() const;
-                void Unbind();
+
+            public:
+                static void Unbind();
 
             private:
                 unsigned int _textureId{ 0 };
                 std::string _filePath{ "" };
-                unsigned char* _data{ nullptr };
                 int _width{ 0 };
                 int _height{ 0 };
                 int _bitsPerPixel{ 0 };

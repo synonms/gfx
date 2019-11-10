@@ -5,6 +5,7 @@
 
 #include <sstream>
 
+using namespace synonms::gfx::mathematics::linear;
 using namespace synonms::gfx::shaders;
 
 class ShaderSet::Implementation 
@@ -56,22 +57,46 @@ ShaderSet::~ShaderSet()
     proxies::opengl::ShaderProgram::Delete(_implementation->programId, false);
 }
 
+void ShaderSet::SetUniform(const std::string& uniformName, bool value)
+{
+    auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
+    proxies::opengl::ShaderProgram::SetUniformBool(location, value, true);
+}
+
 void ShaderSet::SetUniform(const std::string& uniformName, int value)
 {
     auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
-    proxies::opengl::ShaderProgram::SetUniform(location, value, true);
+    proxies::opengl::ShaderProgram::SetUniformInt(location, value, true);
 }
 
-void ShaderSet::SetUniform(const std::string& uniformName, float value1, float value2, float value3, float value4)
+void ShaderSet::SetUniform(const std::string& uniformName, float value)
 {
     auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
-    proxies::opengl::ShaderProgram::SetUniform(location, value1, value2, value3, value4, true);
+    proxies::opengl::ShaderProgram::SetUniformFloat(location, value, true);
 }
 
-void ShaderSet::SetUniformMatrix(const std::string& uniformName, const float* value)
+void ShaderSet::SetUniform(const std::string& uniformName, const Vector3<float>& vector)
 {
     auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
-    proxies::opengl::ShaderProgram::SetUniformMatrix(location, value, true);
+    proxies::opengl::ShaderProgram::SetUniformVector3(location, vector.x, vector.y, vector.z, true);
+}
+
+void ShaderSet::SetUniform(const std::string& uniformName, const Vector4<float>& vector)
+{
+    auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
+    proxies::opengl::ShaderProgram::SetUniformVector4(location, vector.x, vector.y, vector.z, vector.w, true);
+}
+
+void ShaderSet::SetUniform(const std::string& uniformName, const Matrix3x3<float>& matrix)
+{
+    auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
+    proxies::opengl::ShaderProgram::SetUniformMatrix3x3(location, matrix.Data(), true);
+}
+
+void ShaderSet::SetUniform(const std::string& uniformName, const Matrix4x4<float>& matrix)
+{
+    auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
+    proxies::opengl::ShaderProgram::SetUniformMatrix4x4(location, matrix.Data(), true);
 }
 
 std::string ShaderSet::ToString()

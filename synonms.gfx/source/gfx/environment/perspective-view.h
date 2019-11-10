@@ -13,10 +13,10 @@ namespace synonms
             class PerspectiveView
             {
             public:
-                PerspectiveView(float horizontalFieldOfView, float aspectRatio, float nearClipPlane, float farClipPlane);
+                PerspectiveView(float horizontalFieldOfViewDegrees, float aspectRatio, float nearClipPlane, float farClipPlane);
 
                 const mathematics::linear::Matrix4x4<float>& GetProjectionMatrix() const;
-                void Resize(float horizontalFieldOfView, float aspectRatio, float nearClipPlane, float farClipPlane);
+                void Resize(float horizontalFieldOfViewDegrees, float aspectRatio, float nearClipPlane, float farClipPlane);
 
             private:
                 mathematics::linear::Matrix4x4<float> _projectionMatrix;

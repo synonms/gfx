@@ -67,7 +67,31 @@ void ShaderProgram::Link(unsigned int programId, bool throwOnError)
         });
 }
 
-void ShaderProgram::SetUniform(unsigned int location, int value, bool throwOnError)
+void ShaderProgram::SetUniformBool(unsigned int location, bool value, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glUniform1i(location, static_cast<int>(value));
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_VALUE, "Count is less than 0." },   // Actually only applicable to vectors
+        {GL_INVALID_OPERATION , "No current program object OR size of the uniform variable declared in the shader does not match the size indicated by the glUniform command OR invalid data types OR location is an invalid uniform location for the current program object and location is not equal to -1 OR count is greater than 1 and the indicated uniform variable is not an array variable OR a sampler is loaded using a command other than glUniform1i and glUniform1iv." }
+        });
+}
+
+void ShaderProgram::SetUniformFloat(unsigned int location, float value, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glUniform1f(location, value);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_VALUE, "Count is less than 0." },   // Actually only applicable to vectors
+        {GL_INVALID_OPERATION , "No current program object OR size of the uniform variable declared in the shader does not match the size indicated by the glUniform command OR invalid data types OR location is an invalid uniform location for the current program object and location is not equal to -1 OR count is greater than 1 and the indicated uniform variable is not an array variable OR a sampler is loaded using a command other than glUniform1i and glUniform1iv." }
+        });
+}
+
+void ShaderProgram::SetUniformInt(unsigned int location, int value, bool throwOnError)
 {
     if (throwOnError) Error::Clear();
 
@@ -79,7 +103,19 @@ void ShaderProgram::SetUniform(unsigned int location, int value, bool throwOnErr
         });
 }
 
-void ShaderProgram::SetUniform(unsigned int location, float value1, float value2, float value3, float value4, bool throwOnError)
+void ShaderProgram::SetUniformVector3(unsigned int location, float value1, float value2, float value3, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glUniform3f(location, value1, value2, value3);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_VALUE, "Count is less than 0." },   // Actually only applicable to vectors
+        {GL_INVALID_OPERATION , "No current program object OR size of the uniform variable declared in the shader does not match the size indicated by the glUniform command OR invalid data types OR location is an invalid uniform location for the current program object and location is not equal to -1 OR count is greater than 1 and the indicated uniform variable is not an array variable OR a sampler is loaded using a command other than glUniform1i and glUniform1iv." }
+        });
+}
+
+void ShaderProgram::SetUniformVector4(unsigned int location, float value1, float value2, float value3, float value4, bool throwOnError)
 {
     if (throwOnError) Error::Clear();
 
@@ -91,7 +127,19 @@ void ShaderProgram::SetUniform(unsigned int location, float value1, float value2
         });
 }
 
-void ShaderProgram::SetUniformMatrix(unsigned int location, const float* value, bool throwOnError)
+void ShaderProgram::SetUniformMatrix3x3(unsigned int location, const float* value, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glUniformMatrix3fv(location, 1, GL_FALSE, value);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_VALUE, "Count is less than 0." },   // Actually only applicable to vectors
+        {GL_INVALID_OPERATION , "No current program object OR size of the uniform variable declared in the shader does not match the size indicated by the glUniform command OR invalid data types OR location is an invalid uniform location for the current program object and location is not equal to -1 OR count is greater than 1 and the indicated uniform variable is not an array variable OR a sampler is loaded using a command other than glUniform1i and glUniform1iv." }
+        });
+}
+
+void ShaderProgram::SetUniformMatrix4x4(unsigned int location, const float* value, bool throwOnError)
 {
     if (throwOnError) Error::Clear();
 

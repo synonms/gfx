@@ -11,7 +11,7 @@ Texture::Texture(const std::string& filePath)
 {
     // OpenGL expects images with 0,0 at bottom left which isn't how PNG stores the data, so we need to flip it
     stbi_set_flip_vertically_on_load(1);
-    _data = stbi_load(filePath.c_str(), &_width, &_height, &_bitsPerPixel, 4); // 4 = RGBA
+    auto data = stbi_load(filePath.c_str(), &_width, &_height, &_bitsPerPixel, 4); // 4 = RGBA
 
     _textureId = proxies::opengl::Texture::Generate(true);
     Bind();
@@ -21,13 +21,13 @@ Texture::Texture(const std::string& filePath)
     proxies::opengl::Texture::SetWrapModeS(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::TextureWrapMode::ClampToEdge);
     proxies::opengl::Texture::SetWrapModeT(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::TextureWrapMode::ClampToEdge);
 
-    proxies::opengl::Texture::SendData(proxies::opengl::enumerators::TargetTexture::Texture2D, _width, _height, _data, true);
+    proxies::opengl::Texture::SendData(proxies::opengl::enumerators::TargetTexture::Texture2D, _width, _height, data, true);
 
     Unbind();
 
-    if (_data)
+    if (data)
     {
-        stbi_image_free(_data);
+        stbi_image_free(data);
     }
     else 
     {
@@ -35,15 +35,39 @@ Texture::Texture(const std::string& filePath)
     }
 }
 
-Texture::~Texture()
+Texture::Texture(Texture&& other) noexcept
+    : _textureId(std::exchange(other._textureId, 0))
+    , _filePath(std::exchange(other._filePath, ""))
+    , _width(std::exchange(other._width, 0))
+    , _height(std::exchange(other._height, 0))
+    , _bitsPerPixel(std::exchange(other._bitsPerPixel, 0))
 {
-    proxies::opengl::Texture::Delete(_textureId, true);
 }
 
-void Texture::Bind(unsigned int slot)
+Texture& Texture::operator=(Texture&& other) noexcept
 {
-    proxies::opengl::Texture::ActivateSlot(slot);
-    proxies::opengl::Texture::Bind(proxies::opengl::enumerators::TargetTexture::Texture2D, _textureId, true);
+    _textureId = std::exchange(other._textureId, 0);
+    _filePath = std::exchange(other._filePath, "");
+    _width = std::exchange(other._width, 0);
+    _height = std::exchange(other._height, 0);
+    _bitsPerPixel = std::exchange(other._bitsPerPixel, 0);
+
+    return *this;
+}
+
+Texture::~Texture()
+{
+    if (_textureId > 0) {
+        proxies::opengl::Texture::Delete(_textureId, true);
+    }
+}
+
+void Texture::Bind(unsigned int slot) const
+{
+    if (_textureId > 0) {
+        proxies::opengl::Texture::ActivateSlot(slot);
+        proxies::opengl::Texture::Bind(proxies::opengl::enumerators::TargetTexture::Texture2D, _textureId, true);
+    }
 }
 
 int Texture::GetHeight() const

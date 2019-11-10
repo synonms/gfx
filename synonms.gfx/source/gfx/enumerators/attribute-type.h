@@ -9,6 +9,7 @@ namespace synonms
             enum class AttributeType
             {
                 Position,
+                Normal,
                 Colour,
                 TextureCoordinates
             };

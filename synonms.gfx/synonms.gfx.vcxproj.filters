@@ -66,6 +66,15 @@
     <ClCompile Include="source\gfx\mathematics\linear\transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\gfx\primitives\primitive-factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\shaders\shader-builder.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\materials\material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\environment\engine.h">
@@ -140,10 +149,22 @@
     <ClInclude Include="source\gfx\mathematics\linear\transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\gfx\environment\light.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\primitives\primitive-factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\shader-builder.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\materials\material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\default-vertex-shader.glsl" />
-    <None Include="resources\shaders\default-fragment-shader.glsl" />
+    <None Include="resources\shaders\phong.fragment.glsl" />
+    <None Include="resources\shaders\phong.vertex.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">

@@ -21,6 +21,7 @@ namespace synonms
                     static bool InitialiseExtensions();
                     static void PollEvents();
                     static void SetBlendFunction(enumerators::BlendFactor sourceFactor, enumerators::BlendFactor destinationFactor);
+                    static void SetFaceCulling(bool isCulled);
                     static void Terminate();
                 };
             }

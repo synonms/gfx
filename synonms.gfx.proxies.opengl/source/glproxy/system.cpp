@@ -41,6 +41,18 @@ void System::SetBlendFunction(BlendFactor sourceFactor, BlendFactor destinationF
     glBlendFunc(static_cast<unsigned int>(sourceFactor), static_cast<unsigned int>(destinationFactor));
 }
 
+void System::SetFaceCulling(bool isCulled)
+{
+    if (isCulled) {
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
+        glFrontFace(GL_CCW);
+    }
+    else {
+        glDisable(GL_CULL_FACE);
+    }
+}
+
 void System::Terminate()
 {
     glfwTerminate();

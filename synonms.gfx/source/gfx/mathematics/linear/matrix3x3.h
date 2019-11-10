@@ -59,6 +59,11 @@ namespace synonms
                         return {i, j, k};
                     }
 
+                    const float* Data() const
+                    {
+                        return &xAxis.x;
+                    }
+
                     /// Determinant is the factor by which the area/volume represented by the basis vectors is increased/decreased by the transform
                     /// e.g. with the matrix
                     /// [ 2 0 ]

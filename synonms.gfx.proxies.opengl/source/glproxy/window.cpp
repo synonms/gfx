@@ -74,6 +74,11 @@ void Window::SetSwapInterval(int interval)
     glfwSwapInterval(interval);
 }
 
+void Window::SetViewport(int lowerLeftX, int lowerLeftY, int width, int height)
+{
+    glViewport(lowerLeftX, lowerLeftY, width, height);
+}
+
 bool Window::ShouldClose(GLFWwindow* window)
 {
     return glfwWindowShouldClose(window);

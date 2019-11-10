@@ -28,6 +28,10 @@ namespace synonms
                     Transform(TransformBehaviour behaviour = TransformBehaviour::Flight);
 
                 public:
+                    inline const Vector3<float>& GetPosition() const { return _position; }
+                    inline const Vector3<float>& GetViewDirection() const { return _viewDirection; }
+                    inline const Vector3<float>& GetScale() const { return _scale; }
+
                     void SetPosition(float x, float y, float z);
                     void SetPosition(const Vector3<float>& position);
                     void SetViewDirection(float x, float y, float z);

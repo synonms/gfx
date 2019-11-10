@@ -24,6 +24,7 @@ namespace synonms
                 unsigned int _noOfVertices{ 0 };
                 unsigned int _vertexArrayId{ 0 };
                 unsigned int _vertexBufferId{ 0 };
+                bool _isBackFaceCulled{ true };
             };
         }
     }

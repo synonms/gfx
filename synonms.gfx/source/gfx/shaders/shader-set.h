@@ -1,5 +1,10 @@
 #pragma once
 
+#include <gfx/mathematics/linear/matrix3x3.h>
+#include <gfx/mathematics/linear/matrix4x4.h>
+#include <gfx/mathematics/linear/vector3.h>
+#include <gfx/mathematics/linear/vector4.h>
+
 #include <memory>
 #include <string>
 
@@ -15,10 +20,13 @@ namespace synonms
                 ShaderSet(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
                 ~ShaderSet();
 
-                unsigned int Id();
+                void SetUniform(const std::string& uniformName, bool value);
                 void SetUniform(const std::string& uniformName, int value);
-                void SetUniform(const std::string& uniformName, float value1, float value2, float value3, float value4);
-                void SetUniformMatrix(const std::string& uniformName, const float* value);
+                void SetUniform(const std::string& uniformName, float value);
+                void SetUniform(const std::string& uniformName, const mathematics::linear::Vector3<float>& vector);
+                void SetUniform(const std::string& uniformName, const mathematics::linear::Vector4<float>& vector);
+                void SetUniform(const std::string& uniformName, const mathematics::linear::Matrix3x3<float>& matrix);
+                void SetUniform(const std::string& uniformName, const mathematics::linear::Matrix4x4<float>& matrix);
                 std::string ToString();
                 void Use();
 
