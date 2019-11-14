@@ -155,7 +155,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
-    <ClCompile Include="source\gfx\environment\camera.cpp" />
     <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
     <ClCompile Include="source\gfx\environment\window.cpp" />
@@ -166,11 +165,11 @@
     <ClCompile Include="source\gfx\materials\texture.cpp" />
     <ClCompile Include="source\gfx\mathematics\linear\transform.cpp" />
     <ClCompile Include="source\gfx\mathematics\maths-helper.cpp" />
-    <ClCompile Include="source\gfx\primitives\mesh-instance.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
     <ClCompile Include="source\gfx\primitives\primitive-factory.cpp" />
     <ClCompile Include="source\gfx\primitives\vertex-attribute.cpp" />
     <ClCompile Include="source\gfx\primitives\vertex-definition.cpp" />
+    <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-set.cpp" />
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
@@ -182,6 +181,7 @@
     <ClInclude Include="source\gfx\environment\light.h" />
     <ClInclude Include="source\gfx\environment\perspective-view.h" />
     <ClInclude Include="source\gfx\environment\orthographic-view.h" />
+    <ClInclude Include="source\gfx\environment\i-view.h" />
     <ClInclude Include="source\gfx\environment\window.h" />
     <ClInclude Include="source\gfx\environment\engine.h" />
     <ClInclude Include="source\gfx\gui\gui-helper.h" />
@@ -201,6 +201,8 @@
     <ClInclude Include="source\gfx\primitives\mesh.h" />
     <ClInclude Include="source\gfx\primitives\vertex-attribute.h" />
     <ClInclude Include="source\gfx\primitives\vertex-definition.h" />
+    <ClInclude Include="source\gfx\shaders\phong-shader-set.h" />
+    <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\shader-builder.h" />
     <ClInclude Include="source\gfx\shaders\shader-set.h" />
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />

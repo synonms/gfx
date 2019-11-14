@@ -87,13 +87,13 @@ void ShaderSet::SetUniform(const std::string& uniformName, const Vector4<float>&
     proxies::opengl::ShaderProgram::SetUniformVector4(location, vector.x, vector.y, vector.z, vector.w, true);
 }
 
-void ShaderSet::SetUniform(const std::string& uniformName, const Matrix3x3<float>& matrix)
+void ShaderSet::SetUniform(const std::string& uniformName, const Matrix3x3& matrix)
 {
     auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
     proxies::opengl::ShaderProgram::SetUniformMatrix3x3(location, matrix.Data(), true);
 }
 
-void ShaderSet::SetUniform(const std::string& uniformName, const Matrix4x4<float>& matrix)
+void ShaderSet::SetUniform(const std::string& uniformName, const Matrix4x4& matrix)
 {
     auto location = proxies::opengl::ShaderProgram::GetUniformLocation(_implementation->programId, uniformName, true);
     proxies::opengl::ShaderProgram::SetUniformMatrix4x4(location, matrix.Data(), true);

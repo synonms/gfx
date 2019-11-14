@@ -8,21 +8,34 @@ in vec3 p_vertexToLightDirection;
 in float p_vertexToLightDistance;
 
 // Material
-uniform vec4 fu_materialAmbientColour;
-uniform vec4 fu_materialDiffuseColour;
-uniform vec4 fu_materialSpecularColour;
-uniform vec4 fu_materialEmissiveColour;
-uniform float fu_materialShininess;
+struct Material {
+    vec3 ambientColour;
+    vec3 diffuseColour;
+    vec3 specularColour;
+    vec3 emissiveColour;
+    float opacity;
+    float shininess;
+}; 
+
+uniform Material fu_material;
+
 uniform bool fu_isTextureEnabled;
 uniform sampler2D fu_textureSlot;
 
 // Lights
-uniform bool fu_isLightEnabled;
-uniform vec3 fu_lightPosition;
-uniform vec3 fu_lightAmbientColour;
-uniform vec3 fu_lightDiffuseColour;
-uniform vec3 fu_lightSpecularColour;
-uniform float fu_ambientIntensityMultiplier;
+struct Light {
+    bool isEnabled;
+    vec3 position;
+    vec3 ambientColour;
+    vec3 diffuseColour;
+    vec3 specularColour;
+    float intensityMultiplier;
+    float constantAttenuation;
+    float linearAttenuation;
+    float quadraticAttenuation;
+};
+
+uniform Light fu_light;
 
 // Fragment shader requires a vec4 color output variable otherwise geometry renders black or white
 // Can be named anything
@@ -32,38 +45,44 @@ void main()
 {
     vec4 materialColour;
 
-    vec4 diffuseColour = fu_materialDiffuseColour;
-    diffuseColour.rgb *= diffuseColour.a;
-
     if (fu_isTextureEnabled)
     {
         // Sample the pixel color from the texture using the sampler at this texture coordinate location.
         // This defaults to (1.0, 1.0, 1.0, 1.0) if no valid texture bound
-        vec4 textureColour = texture(fu_textureSlot, p_vertexTextureUV);
-        textureColour.rgb *= textureColour.a;
-
-        materialColour.rgb = textureColour.rgb + (diffuseColour.rgb * (1 - textureColour.a));
-        materialColour.a = textureColour.a + (diffuseColour.a * (1.0 - textureColour.a));
+        materialColour = texture(fu_textureSlot, p_vertexTextureUV);
     }
     else
     {
-        materialColour = diffuseColour;
+        materialColour = vec4(fu_material.diffuseColour, fu_material.opacity);
     }
 
 
-    vec4 lightColour = vec4(1.0);
+    vec4 litColour = materialColour;
 
-    if (fu_isLightEnabled)
+    if (fu_light.isEnabled)
     {
-        vec3 lightAmbientColour = fu_lightAmbientColour * fu_ambientIntensityMultiplier;
+        // ambient
+        vec3 ambientResult = fu_light.ambientColour * fu_material.ambientColour;
+    
+        // diffuse 
+        float diffuseFactor = max(dot(p_vertexNormalDirection, p_vertexToLightDirection), 0.0);
+        vec3 diffuseResult = fu_light.diffuseColour * (diffuseFactor * fu_material.diffuseColour);
+    
+        // specular
+        vec3 lightReflectionDirection = normalize(reflect(-p_vertexToLightDirection, p_vertexNormalDirection));
+        float specularFactor = pow(max(dot(p_vertexToCameraDirection, lightReflectionDirection), 0.0), fu_material.shininess);
+        vec3 specularResult = fu_light.specularColour * (specularFactor * fu_material.specularColour);  
 
-        // The greater the angle between normal and direction to light, the lesser the diffuse light
-        float lightDiffuseFactor = max(dot(p_vertexNormalDirection, p_vertexToLightDirection), 0.0);
-        vec3 lightDiffuseColour = fu_lightDiffuseColour * lightDiffuseFactor;
+        // Calculate the attenuation factor (falloff over distance)
+        float attenuation = 1.0 / (fu_light.constantAttenuation +
+                                        (fu_light.linearAttenuation * p_vertexToLightDistance) +
+                                        (fu_light.quadraticAttenuation * p_vertexToLightDistance * p_vertexToLightDistance));
+        
+        vec3 lightResult = ambientResult + diffuseResult + specularResult;
 
-        lightColour = vec4(lightAmbientColour + lightDiffuseColour, 1.0);
+        litColour = vec4(lightResult * attenuation, 1.0);
     }
 
-
-    p_fragmentColour = materialColour * lightColour;
+    // Add on the material emissive (self illumination)
+    p_fragmentColour = vec4(fu_material.emissiveColour, 1.0) + litColour;
 }

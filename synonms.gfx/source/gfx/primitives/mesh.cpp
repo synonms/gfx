@@ -45,7 +45,7 @@ Mesh::Mesh(const VertexDefinition& vertexDefinition, float* vertexData, unsigned
     proxies::opengl::IndexBuffer::SendData(indexData, _noOfIndices * sizeof(unsigned int), proxies::opengl::enumerators::DataUsage::StaticDraw, true);
 }
 
-void Mesh::Draw()
+void Mesh::Draw() const
 {
     proxies::opengl::System::SetFaceCulling(_isBackFaceCulled);
 
@@ -55,7 +55,7 @@ void Mesh::Draw()
     proxies::opengl::IndexBuffer::Draw(proxies::opengl::enumerators::DrawMode::Triangles, _noOfIndices, proxies::opengl::enumerators::DataType::UnsignedInt, true);
 }
 
-std::string Mesh::ToString()
+std::string Mesh::ToString() const
 {
     std::stringstream stream;
     stream << "[Mesh: VertexArrayId " << _vertexArrayId << ", VertexBufferId " << _vertexBufferId << ", IndexBufferId " << _indexBufferId << ", " << _noOfVertices << " vertices, " << _noOfIndices << " indices]";

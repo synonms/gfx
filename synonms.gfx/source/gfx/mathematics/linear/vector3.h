@@ -18,16 +18,19 @@ namespace synonms
                     {
                         T x;
                         T red;
+                        T pitch;
                     };
                     union
                     {
                         T y;
                         T green;
+                        T yaw;
                     };
                     union
                     {
                         T z;
                         T blue;
+                        T roll;
                     };
 
                 public:

@@ -20,29 +20,28 @@ namespace synonms
                 /// [ 0 2 ]
                 /// represents scaling by factor 2, as I is transformed from (1, 0) to (2, 0) and J from (0, 1) to (0, 2)
                 /// An input vector of (3, 2) would be transfornmed to (6, 4) by this matrix
-                template <typename T>
                 class Matrix2x2
                 {
                 public:
-                    Matrix2x2(T vectorIx = static_cast<T>(1), T vectorIy = static_cast<T>(0), T vectorJx = static_cast<T>(0), T vectorJy = static_cast<T>(1))
-                        : iX(vectorIx), jX(vectorJx)
-                        , iY(vectorIy), jY(vectorJy)
+                    Matrix2x2(float xAxisX = 1.0f, float xAxisY = 0.0f, float yAxisX = 0.0f, float yAxisY = 1.0f)
+                        : xAxis(xAxisX, xAxisY)
+                        , yAxis(yAxisX, yAxisY)
                     {
                     }
 
-                    Matrix2x2(const Vector2<T>& vectorI, const Vector2<T>& vectorJ)
-                        : iX(vectorI.x), jX(vectorJ.x)
-                        , iY(vectorI.y), jY(vectorJ.y)
+                    Matrix2x2(const Vector2<float>& xAxis, const Vector2<float>& yAxis)
+                        : xAxis(xAxis)
+                        , yAxis(yAxis)
                     {
                     }
 
-                    T iX, jX;
-                    T iY, jY;
+                    Vector2<float> xAxis;
+                    Vector2<float> yAxis;
 
                 public:
                     const float* Data() const
                     {
-                        return &iX;
+                        return &xAxis.x;
                     }
 
                     /// Determinant is the factor by which the area/volume represented by the basis vectors is increased/decreased by the transform
@@ -54,13 +53,13 @@ namespace synonms
                     /// For 3D it means that the coordinate system has flipped from right handed to left handed
                     float Determinant() const
                     {
-                        return (iX * jY) - (jX * iY);
+                        return (xAxis.x * yAxis.y) - (yAxis.x * xAxis.y);
                     }
 
                     /// Composition is the multiplication of two transforms and is read right to left
                     /// i.i [matrixA][matrixB] means that matrixB is applied first and then matrixA, which is coded matrixB.Multiply(matrixA)
                     /// [matrixA][matrixB][matrixC] would be matrixC.Multiply(matrixB).Multiply(matrixA)
-                    Matrix2x2<T> Multiply(Matrix2x2<T> secondTransform)
+                    Matrix2x2 Multiply(const Matrix2x2& secondTransform)
                     {
                         return *this * secondTransform;
                     }
@@ -68,38 +67,40 @@ namespace synonms
                     /// Reset to Identity
                     void Reset()
                     {
-                        iX = static_cast<T>(1); jX = static_cast<T>(0);
-                        iY = static_cast<T>(0); jY = static_cast<T>(1);
+                        xAxis.x = 1.0f; yAxis.x = 0.0f;
+                        xAxis.y = 0.0f; yAxis.y = 1.0f;
                     }
 
-                    Vector2<T> Transform(const Vector2<T>& input) const
+                    Vector2<float> Transform(const Vector2<float>& input) const
                     {
-                        auto outputX = (iX * input.x) + (jX * input.y);
-                        auto outputY = (iY * input.x) + (jY * input.y);
+                        auto outputX = (xAxis.x * input.x) + (yAxis.x * input.y);
+                        auto outputY = (xAxis.y * input.x) + (yAxis.y * input.y);
 
                         return { outputX, outputY };
                     }
 
                 public:
-                    static Matrix2x2<T> CreateFromScale(T xFactor, T yFactor)
+                    static Matrix2x2 CreateFromScale(float xFactor, float yFactor)
                     {
-                        return { xFactor, 0, 0, yFactor };
+                        return { 
+                            xFactor, 0, 
+                            0,       yFactor };
                     }
 
                 public:
-                    friend Matrix2x2<T> operator*(const Matrix2x2<T>& left, const Matrix2x2<T>& right) {
+                    friend Matrix2x2 operator*(const Matrix2x2& left, const Matrix2x2& right) {
                         return {
-                            (left.iX * right.iX) + (left.iY * right.jX),
-                            (left.iX * right.iY) + (left.iY * right.jY),
-                            (left.jX * right.iX) + (left.jY * right.jX),
-                            (left.jX * right.iY) + (left.jY * right.jY)
+                            (left.xAxis.x * right.xAxis.x) + (left.xAxis.y * right.yAxis.x),
+                            (left.xAxis.x * right.xAxis.y) + (left.xAxis.y * right.yAxis.y),
+                            (left.yAxis.x * right.xAxis.x) + (left.yAxis.y * right.yAxis.x),
+                            (left.yAxis.x * right.xAxis.y) + (left.yAxis.y * right.yAxis.y)
                         };
                     }
 
-                    friend Matrix2x2<T> operator*(const Matrix2x2<T>& matrix, T factor) {
+                    friend Matrix2x2 operator*(const Matrix2x2& matrix, float factor) {
                         return {
-                            matrix.iX * factor, matrix.iY * factor,
-                            matrix.jX * factor, matrix.jY * factor
+                            matrix.xAxis.x * factor, matrix.xAxis.y * factor,
+                            matrix.yAxis.x* factor,  matrix.yAxis.y* factor
                         };
                     }
                 };

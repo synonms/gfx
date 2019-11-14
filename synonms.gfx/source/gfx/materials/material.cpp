@@ -3,30 +3,37 @@
 using namespace synonms::gfx::materials;
 using namespace synonms::gfx::mathematics::linear;
 
-Material& Material::WithAmbientColour(const Vector4<float>& colour)
+Material& Material::WithAmbientColour(const Vector3<float>& colour)
 {
     _ambientColour = colour;
 
     return *this;
 }
 
-Material& Material::WithDiffuseColour(const Vector4<float>& colour)
+Material& Material::WithDiffuseColour(const Vector3<float>& colour)
 {
     _diffuseColour = colour;
 
     return *this;
 }
 
-Material& Material::WithSpecularColour(const Vector4<float>& colour)
+Material& Material::WithSpecularColour(const Vector3<float>& colour)
 {
     _specularColour = colour;
 
     return *this;
 }
 
-Material& Material::WithEmissiveColour(const Vector4<float>& colour)
+Material& Material::WithEmissiveColour(const Vector3<float>& colour)
 {
     _emissiveColour = colour;
+
+    return *this;
+}
+
+Material& Material::WithOpacity(float opacity)
+{
+    _opacity = opacity;
 
     return *this;
 }

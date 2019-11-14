@@ -27,54 +27,46 @@ namespace synonms
                 public:
                     Transform(TransformBehaviour behaviour = TransformBehaviour::Flight);
 
+                    TransformBehaviour behaviour;
+
+                    Vector3<float> position{ 0.0f, 0.0f, 0.0f };
+                    Vector3<float> rotationDegrees{ 0.0f, 0.0f, 0.0f };
+                    Vector3<float> scale{ 1.0f, 1.0f, 1.0f };
+
                 public:
-                    inline const Vector3<float>& GetPosition() const { return _position; }
-                    inline const Vector3<float>& GetViewDirection() const { return _viewDirection; }
-                    inline const Vector3<float>& GetScale() const { return _scale; }
+                    //void LookAt(const Vector3<float>& target);
+                    //void LookAt(const Vector3<float>& eye, const Vector3<float>& target, const Vector3<float>& up);
+//                    void Rotate(float pitchInDegrees, float yawInDegrees, float rollInDegrees);
+//                    void Scale(const Vector3<float>& scale);
+//                    void Translate(float deltaX, float deltaY, float deltaZ);
+//                    void TranslateAbsolute(const Vector3<float>& deltaTranslation);
 
-                    void SetPosition(float x, float y, float z);
-                    void SetPosition(const Vector3<float>& position);
-                    void SetViewDirection(float x, float y, float z);
-                    void SetViewDirection(const Vector3<float>& viewDirection);
-                    void SetRotation(float angleInDegrees, const Vector3<float>& axis);
-                    void SetRotation(const Matrix4x4<float>& rotationMatrix);
-                    void SetScale(float x, float y, float z);
-                    void SetScale(const Vector3<float>& scale);
-                    void ToIdentity();
+                    Matrix4x4 GetModelMatrix() const;
+                    Matrix3x3 GetNormalMatrix() const;
+                    Matrix4x4 GetRotationMatrix() const;
+                    Matrix4x4 GetScaleMatrix() const;
+                    Matrix4x4 GetTranslationMatrix() const;
+                    Matrix4x4 GetViewMatrix(bool isRotationOnly = false) const;	// For camera/viewpoint - use rotationOnly when applying to skyboxes
 
-                    void LookAt(const Vector3<float>& target);
-                    void LookAt(const Vector3<float>& eye, const Vector3<float>& target, const Vector3<float>& up);
-                    void Rotate(float pitchInDegrees, float yawInDegrees, float rollInDegrees);
-                    void Scale(const Vector3<float>& scale);
-                    void Translate(float deltaX, float deltaY, float deltaZ);
-                    void TranslateAbsolute(const Vector3<float>& deltaTranslation);
-
-                    Matrix4x4<float> GetTranslationMatrix() const;
-                    Matrix4x4<float> GetRotationMatrix() const;
-                    Matrix4x4<float> GetScaleMatrix() const;
-                    Matrix4x4<float> GetTransformationMatrix() const;
-                    Matrix4x4<float> GetViewpointTransformationMatrix(bool isRotationOnly = false) const;	// For camera/viewpoint - use rotationOnly when applying to skyboxes
+                    void Reset();
 
                 private:
-                    TransformBehaviour _behaviour;
 
-                    Vector3<float> _position{ 0.0f, 0.0f, 0.0f };
-                    Vector3<float> _viewDirection{ 0.0f, 0.0f, 1.0f };
-                    Vector3<float> _scale{ 1.0f, 1.0f, 1.0f };
+                    //                    Vector3<float> _viewDirection{ 0.0f, 0.0f, 1.0f };
 
-                    Vector3<float> _xAxis{ 1.0f, 0.0f, 0.0f };
-                    Vector3<float> _yAxis{ 0.0f, 1.0f, 0.0f };
-                    Vector3<float> _zAxis{ 0.0f, 0.0f, 1.0f };
+//                    Vector3<float> _xAxis{ 1.0f, 0.0f, 0.0f };
+//                    Vector3<float> _yAxis{ 0.0f, 1.0f, 0.0f };
+//                    Vector3<float> _zAxis{ 0.0f, 0.0f, 1.0f };
 
-                    float _yawInDegrees{ 0 };
-                    float _pitchInDegrees{ 0 };
-                    float _rollInDegrees{ 0 };
+                    //float _yawInDegrees{ 0 };
+                    //float _pitchInDegrees{ 0 };
+                    //float _rollInDegrees{ 0 };
 
-                    void RotateFlight(float pitchInDegrees, float yawInDegrees, float rollInDegrees);
-                    void RotateFirstPerson(float pitchInDegrees, float yawInDegrees);
-                    void SetXAxis(const Vector3<float>& x);
-                    void SetYAxis(const Vector3<float>& y);
-                    void SetZAxis(const Vector3<float>& z);
+//                    void RotateFlight(float pitchInDegrees, float yawInDegrees, float rollInDegrees);
+//                    void RotateFirstPerson(float pitchInDegrees, float yawInDegrees);
+//                    void SetXAxis(const Vector3<float>& x);
+//                    void SetYAxis(const Vector3<float>& y);
+//                    void SetZAxis(const Vector3<float>& z);
                 };
             }
         }

@@ -15,8 +15,8 @@ namespace synonms
             {
             public:
                 Mesh(const VertexDefinition& vertexDefinition, float* vertexData, unsigned int noOfVertices, unsigned int* indexData, unsigned int noOfIndices);
-                void Draw();
-                std::string ToString();
+                void Draw() const;
+                std::string ToString() const;
 
             private:
                 unsigned int _indexBufferId{ 0 };

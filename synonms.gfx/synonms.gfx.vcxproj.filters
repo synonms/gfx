@@ -51,16 +51,10 @@
     <ClCompile Include="source\gfx\mathematics\maths-helper.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gfx\environment\camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\gfx\environment\perspective-view.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gfx\primitives\mesh-instance.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gfx\mathematics\linear\transform.cpp">
@@ -73,6 +67,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gfx\materials\material.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,6 +156,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\materials\material.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\phong-shader-set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\environment\i-view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

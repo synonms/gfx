@@ -2,6 +2,7 @@
 
 #include <memory>
 
+#include <gfx\environment\i-view.h>
 #include <gfx\mathematics\linear\matrix4x4.h>
 
 namespace synonms
@@ -10,16 +11,16 @@ namespace synonms
     {
         namespace environment
         {
-            class OrthographicView
+            class OrthographicView : public IView
             {
             public:
                 OrthographicView(float left, float right, float bottom, float top, float nearClipPlane, float farClipPlane);
 
-                const mathematics::linear::Matrix4x4<float>& GetProjectionMatrix() const;
+                virtual const mathematics::linear::Matrix4x4& GetProjectionMatrix() const override;
                 void Resize(float left, float right, float bottom, float top, float nearClipPlane, float farClipPlane);
 
             private:
-                mathematics::linear::Matrix4x4<float> _projectionMatrix;
+                mathematics::linear::Matrix4x4 _projectionMatrix;
             };
         }
     }

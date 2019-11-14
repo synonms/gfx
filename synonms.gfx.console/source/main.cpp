@@ -18,7 +18,7 @@
 #include <gfx\primitives\mesh-instance.h>
 #include <gfx\primitives\primitive-factory.h>
 #include <gfx\primitives\vertex-definition.h>
-#include <gfx\shaders\shader-set.h>
+#include <gfx\shaders\phong-shader-set.h>
 
 using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::environment;
@@ -67,8 +67,8 @@ int main(int, char**)
     std::cout << "Creating camera..." << std::endl;
 
     Camera camera;
-    camera.GetTransform().SetPosition({ 0.0f, 0.0f, 30.0f });
-    camera.GetTransform().SetViewDirection({ 0.0f, 0.0f, -1.0f });
+    camera.SetPosition({ 0.0f, 0.0f, 50.0f });
+    camera.SetRotation({ 0.0f, 0.0f, 0.0f });
 
     std::cout << "Camera created" << std::endl;
 
@@ -82,10 +82,15 @@ int main(int, char**)
     // MATERIALS ***********************
     auto checkerboardDiffuseTexture = std::make_shared<Texture>("resources/textures/UVCheckerBoard-2048x2048.png");
 
-    auto material = Material::Create()
-        .WithDiffuseColour({0.8f, 0.6f, 0.4f, 1.0f})
-        .WithTexture(0, checkerboardDiffuseTexture);
+    auto checkerboardMaterial = Material::Create()
+        .WithDiffuseColour({0.8f, 0.6f, 0.4f})
+        .WithTexture(0, checkerboardDiffuseTexture)
+        .WithShininess(0.8f);
 
+    auto lightMaterial = Material::Create()
+        .WithAmbientColour({ 1.0f, 1.0f, 1.0f })
+        .WithDiffuseColour({ 1.0f, 1.0f, 1.0f })
+        .WithEmissiveColour({ 1.0f, 1.0f, 1.0f });
 
     // SHADERS ***********************
     std::cout << "Creating shaders..." << std::endl;
@@ -95,19 +100,7 @@ int main(int, char**)
     std::string vertexShaderSource = fileSystem.ReadFile("resources/shaders/phong.vertex.glsl");
     std::string fragmentShaderSource = fileSystem.ReadFile("resources/shaders/phong.fragment.glsl");
 
-    // Projection matrix converts the positions to screen (viewport) space
-    auto projectionMatrix = view.GetProjectionMatrix();
-    // View matrix represents eye position
-    // Transformation is simulated by performing the reverse operation on the geometry
-    // i.e. to move the "camera" left, instead move all the geometry right
-    auto viewMatrix = camera.GetTransform().GetViewpointTransformationMatrix();
-    // Model matrix is the transform of the geometry (i.e. moves it into world space)
-//    auto modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, -500.0f, 0.0f));
-    // OpenGL is right to left multiplication
-//    auto modelViewProjection = projectionMatrix * viewMatrix * modelMatrix;
-
-    ShaderSet shaderSet(vertexShaderSource, fragmentShaderSource);
-    shaderSet.Use();
+    PhongShaderSet shaderSet(vertexShaderSource, fragmentShaderSource);
 
     std::cout << "Shaders created" << std::endl;
     std::cout << shaderSet.ToString() << std::endl;
@@ -116,7 +109,13 @@ int main(int, char**)
     std::cout << "Creating mesh..." << std::endl;
 
     auto mesh = PrimitiveFactory::CreateBox(1.0f, 1.0f, 1.0f);
-    MeshInstance meshInstance(mesh);
+    MeshInstance objectInstance(mesh, checkerboardMaterial);
+    objectInstance.SetPosition({ 0.0f, 0.0f, 0.0f });
+    objectInstance.SetScale({ 20.0f, 20.0f, 20.0f });
+    objectInstance.SetRotation({ 0.0f, 0.0f, 0.0f });
+
+    MeshInstance lightInstance(mesh, lightMaterial);
+    lightInstance.SetScale({5.0f, 5.0f, 5.0f});
 
     std::cout << "Meshes created" << std::endl;
     std::cout << mesh.ToString() << std::endl;
@@ -125,14 +124,7 @@ int main(int, char**)
     std::cout << "Creating light..." << std::endl;
 
     Light light;
-    light.AmbientColour.red = 1.0f;
-    light.AmbientColour.green = 1.0f;
-    light.AmbientColour.blue = 1.0f;
-    light.AmbientIntensityMultiplier = 0.2f;
-    light.DiffuseColour.red = 1.0f;
-    light.DiffuseColour.green = 1.0f;
-    light.DiffuseColour.blue = 1.0f;
-    light.WorldTransform.SetPosition(0.0f, 20.0f, 20.0f);
+    light.SetPosition({ 0.0f, 20.0f, 20.0f });
     light.IsEnabled = true;
 
     std::cout << "Light created" << std::endl;
@@ -141,11 +133,6 @@ int main(int, char**)
 
     auto imguiContext = GuiHelper::Initialise(window.GetContext(), "#version 330 core");
     GuiHelper::ApplyDarkStyle();
-
-    auto translation = Vector3<float>(0.0f, 0.0f, 0.0f);
-    auto scale = Vector3<float>(20.0f, 20.0f, 20.0f);
-    auto rotation = Vector3<float>(0.0f, 0.0f, 0.0f);
-    auto lightPosition = Vector3<float>(0.0f, 20.0f, 20.0f);
 
     while (!window.ShouldClose())
     {
@@ -156,49 +143,30 @@ int main(int, char**)
 
         GuiHelper::NewFrame();
 
+        auto projectionMatrix = view.GetProjectionMatrix();
+        auto viewMatrix = camera.GetViewMatrix();
+
         {
-            meshInstance.GetTransform().SetPosition(translation);
-            meshInstance.GetTransform().SetScale(scale);
-            meshInstance.GetTransform().SetRotation(Matrix4x4<float>::CreateFromRotationPitchYawRoll(MathsHelper::DegreesToRadians(rotation.x), MathsHelper::DegreesToRadians(rotation.y), MathsHelper::DegreesToRadians(rotation.z)));
-            light.WorldTransform.SetPosition(lightPosition);
+            auto modelMatrix = objectInstance.GetModelMatrix();
+            auto normalMatrix = objectInstance.GetNormalMatrix();
 
-            auto modelMatrix = meshInstance.GetTransform().GetTransformationMatrix();
-//            auto modelViewProjection = projectionMatrix * viewMatrix * modelMatrix;
+            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, objectInstance.GetMaterial(), light), objectInstance.GetMesh());
+        }
 
-            auto sisisi = sizeof(modelMatrix.xAxis);
+        {
+            lightInstance.SetPosition(light.GetPosition());
 
-            shaderSet.Use();
-            shaderSet.SetUniform("vu_modelMatrix", modelMatrix);
-            shaderSet.SetUniform("vu_viewMatrix", viewMatrix);
-            shaderSet.SetUniform("vu_projectionMatrix", projectionMatrix);
-            shaderSet.SetUniform("vu_normalMatrix", Matrix4x4<float>::CreateInverseTranspose3x3From(modelMatrix));
+            auto modelMatrix = lightInstance.GetModelMatrix();
+            auto normalMatrix = lightInstance.GetNormalMatrix();
 
-            shaderSet.SetUniform("vu_isLightEnabled", light.IsEnabled);
-            shaderSet.SetUniform("vu_lightPosition", light.WorldTransform.GetPosition());
-
-            shaderSet.SetUniform("fu_materialAmbientColour", material.GetAmbientColour());
-            shaderSet.SetUniform("fu_materialDiffuseColour", material.GetDiffuseColour());
-            shaderSet.SetUniform("fu_materialSpecularColour", material.GetSpecularColour());
-            shaderSet.SetUniform("fu_materialEmissiveColour", material.GetEmissiveColour());
-            shaderSet.SetUniform("fu_materialShininess", material.GetShininess());
-            shaderSet.SetUniform("fu_isTextureEnabled", true);
-            shaderSet.SetUniform("fu_textureSlot", 0);
-
-            shaderSet.SetUniform("fu_isLightEnabled", light.IsEnabled);
-            shaderSet.SetUniform("fu_lightPosition", light.WorldTransform.GetPosition());
-            shaderSet.SetUniform("fu_lightAmbientColour", light.AmbientColour);
-            shaderSet.SetUniform("fu_lightDiffuseColour", light.DiffuseColour);
-            shaderSet.SetUniform("fu_lightSpecularColour", light.SpecularColour);
-            shaderSet.SetUniform("fu_ambientIntensityMultiplier", light.AmbientIntensityMultiplier);
-
-            mesh.Draw();
+            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), light), lightInstance.GetMesh());
         }
 
         GuiHelper::PushWindow("Transform");
-        GuiHelper::SliderFloat3("Translation", &translation.x, -200.0f, 200.0f);
-        GuiHelper::SliderFloat3("Scale", &scale.x, 1.0f, 100.0f);
-        GuiHelper::SliderFloat3("Rotation", &rotation.x, -180.0f, 180.0f);
-        GuiHelper::SliderFloat3("Light Position", &lightPosition.x, -100.0f, 100.0f);
+        GuiHelper::SliderFloat3("Translation", objectInstance.GetPositionData(), -200.0f, 200.0f);
+        GuiHelper::SliderFloat3("Scale", objectInstance.GetScaleData(), 1.0f, 100.0f);
+        GuiHelper::SliderFloat3("Rotation", objectInstance.GetRotationData(), -180.0f, 180.0f);
+        GuiHelper::SliderFloat3("Light Position", light.GetPositionData(), -100.0f, 100.0f);
         GuiHelper::PopWindow();
 
         GuiHelper::Render();

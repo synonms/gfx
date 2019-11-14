@@ -8,15 +8,15 @@ using namespace synonms::gfx::mathematics::linear;
 
 PerspectiveView::PerspectiveView(float horizontalFieldOfViewDegrees, float aspectRatio, float nearClipPlane, float farClipPlane)
 {
-    _projectionMatrix = Matrix4x4<float>::CreatePerspective(MathsHelper::DegreesToRadians(horizontalFieldOfViewDegrees), aspectRatio, nearClipPlane, farClipPlane);
+    _projectionMatrix = Matrix4x4::CreatePerspective(MathsHelper::DegreesToRadians(horizontalFieldOfViewDegrees), aspectRatio, nearClipPlane, farClipPlane);
 }
 
-const Matrix4x4<float>& PerspectiveView::GetProjectionMatrix() const
+const Matrix4x4& PerspectiveView::GetProjectionMatrix() const
 {
     return _projectionMatrix;
 }
 
 void PerspectiveView::Resize(float horizontalFieldOfViewDegrees, float aspectRatio, float nearClipPlane, float farClipPlane)
 {
-    _projectionMatrix = Matrix4x4<float>::CreatePerspective(MathsHelper::DegreesToRadians(horizontalFieldOfViewDegrees), aspectRatio, nearClipPlane, farClipPlane);
+    _projectionMatrix = Matrix4x4::CreatePerspective(MathsHelper::DegreesToRadians(horizontalFieldOfViewDegrees), aspectRatio, nearClipPlane, farClipPlane);
 }
