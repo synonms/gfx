@@ -474,6 +474,25 @@ namespace synonms
                         return Matrix3x3::CreateTransposeOf(Matrix3x3::CreateInverseOf(Create3x3From(matrix)));
                     }
 
+                    static Matrix4x4 CreateViewFrom(const Vector3<float>& position, const Vector3<float>& rotationDegrees, bool isRotationOnly)
+                    {
+                        Matrix4x4 translation;
+
+                        if (!isRotationOnly) {
+                            // Move camera to origin
+                            translation = Matrix4x4::CreateFromTranslation(-position.x, -position.y, -position.z);
+                        }
+
+                        auto rotationMatrix = Matrix4x4::CreateFromRotationPitchYawRoll(
+                            MathsHelper::DegreesToRadians(rotationDegrees.pitch),
+                            MathsHelper::DegreesToRadians(rotationDegrees.yaw),
+                            MathsHelper::DegreesToRadians(rotationDegrees.roll));
+
+                        auto inverseRotation = Matrix4x4::CreateInverseOf(rotationMatrix);
+
+                        return inverseRotation * translation;
+                    }
+
                     static Matrix4x4 CreateOrthographic(float left, float right, float bottom, float top, float near, float far)
                     {
                         auto horizontal_zoom = 2.0f / (right - left);

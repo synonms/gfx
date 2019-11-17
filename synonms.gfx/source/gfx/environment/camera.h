@@ -13,12 +13,10 @@ namespace synonms
             class Camera
             {
             public:
-                inline mathematics::linear::Matrix4x4 GetViewMatrix() const { return _transform.GetViewMatrix(); }
-                inline void SetPosition(const mathematics::linear::Vector3<float>& position) { _transform.position = position; }
-                inline void SetRotation(const mathematics::linear::Vector3<float>& rotationDegrees) { _transform.rotationDegrees = rotationDegrees; }
+                inline mathematics::linear::Matrix4x4 GetViewMatrix() const { return mathematics::linear::Matrix4x4::CreateViewFrom(position, rotationDegrees, false); }
 
-            private:
-                mathematics::linear::Transform _transform{};
+                mathematics::linear::Vector3<float> position{ 0.0f, 0.0f, 0.0f };
+                mathematics::linear::Vector3<float> rotationDegrees{ 0.0f, 0.0f, 0.0f };
             };
         }
     }

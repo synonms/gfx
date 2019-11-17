@@ -5,6 +5,7 @@
 #include <guiproxy\gui.h>
 
 using namespace synonms::gfx::gui;
+using namespace synonms::gfx::mathematics::linear;
 
 bool GuiHelper::show_demo_window = true;
 bool GuiHelper::show_another_window = false;
@@ -13,6 +14,16 @@ float GuiHelper::clear_color[] = { 0.45f, 0.55f, 0.60f, 1.00f };
 void GuiHelper::ApplyDarkStyle()
 {
     proxies::imgui::Gui::ApplyDarkStyle();
+}
+
+bool GuiHelper::CollapsingHeader(const std::string& header)
+{
+    return proxies::imgui::Gui::CollapsingHeader(header);
+}
+
+bool GuiHelper::ColourEdit3(const std::string& label, float* values)
+{
+    return proxies::imgui::Gui::ColourEdit3(label, values);
 }
 
 void GuiHelper::DrawSampleWindow()
@@ -43,6 +54,20 @@ void GuiHelper::DrawSampleWindow()
 
 }
 
+Vector2<float> GuiHelper::GetDisplaySize()
+{
+    auto displaySize = proxies::imgui::Gui::GetDisplaySize();
+
+    return { std::get<0>(displaySize), std::get<1>(displaySize) };
+}
+
+Vector2<float> GuiHelper::GetDisplayFramebufferScale()
+{
+    auto displayFramebufferScale = proxies::imgui::Gui::GetDisplayFramebufferScale();
+
+    return { std::get<0>(displayFramebufferScale), std::get<1>(displayFramebufferScale) };
+}
+
 void* GuiHelper::Initialise(void* window, const std::string& glslVersion)
 {
     return proxies::imgui::Gui::Initialise(window, glslVersion);
@@ -53,13 +78,25 @@ void GuiHelper::NewFrame()
     proxies::imgui::Gui::NewFrame();
 }
 
+void GuiHelper::PopItemWidth()
+{
+    proxies::imgui::Gui::PopItemWidth();
+}
+
 void GuiHelper::PopWindow()
 {
     proxies::imgui::Gui::End();
 }
 
-void GuiHelper::PushWindow(const std::string& title)
+void GuiHelper::PushItemWidth(float width)
 {
+    proxies::imgui::Gui::PushItemWidth(width);
+}
+
+void GuiHelper::PushWindow(const std::string& title, float x, float y, float width, float height)
+{
+    proxies::imgui::Gui::SetNextWindowPosition(x, y);
+    proxies::imgui::Gui::SetNextWindowSize(width, height);
     proxies::imgui::Gui::Begin(title);
 }
 
@@ -76,4 +113,9 @@ void GuiHelper::Shutdown()
 void GuiHelper::SliderFloat3(const std::string& label, float* values, float min, float max)
 {
     proxies::imgui::Gui::SliderFloat3(label, values, min, max);
+}
+
+void GuiHelper::Text(const std::string& text)
+{
+    proxies::imgui::Gui::Text(text);
 }

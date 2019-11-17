@@ -28,6 +28,11 @@ bool Gui::Checkbox(const std::string& label, bool& showAnotherWindow)
     return ImGui::Checkbox(label.c_str(), &showAnotherWindow);
 }
 
+bool Gui::CollapsingHeader(const std::string& header)
+{
+    return ImGui::CollapsingHeader(header.c_str());
+}
+
 bool Gui::ColourEdit3(const std::string& label, float* colorValues)
 {
     return ImGui::ColorEdit3(label.c_str(), colorValues);
@@ -36,6 +41,20 @@ bool Gui::ColourEdit3(const std::string& label, float* colorValues)
 void Gui::End()
 {
     ImGui::End();
+}
+
+std::tuple<float, float> Gui::GetDisplayFramebufferScale()
+{
+    auto& io = ImGui::GetIO();    
+
+    return std::make_tuple(io.DisplayFramebufferScale.x, io.DisplayFramebufferScale.y);
+}
+
+std::tuple<float, float> Gui::GetDisplaySize()
+{
+    auto& io = ImGui::GetIO();
+
+    return std::make_tuple(io.DisplaySize.x, io.DisplaySize.y);
 }
 
 float Gui::GetFramerate()
@@ -59,6 +78,16 @@ void Gui::NewFrame()
     ImGui::NewFrame();
 }
 
+void Gui::PopItemWidth()
+{
+    ImGui::PopItemWidth();
+}
+
+void Gui::PushItemWidth(float width)
+{
+    ImGui::PushItemWidth(width);
+}
+
 void Gui::Render()
 {
     ImGui::Render();
@@ -68,6 +97,16 @@ void Gui::Render()
 void Gui::SameLine()
 {
     ImGui::SameLine();
+}
+
+void Gui::SetNextWindowPosition(float x, float y)
+{
+    ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_FirstUseEver);
+}
+
+void Gui::SetNextWindowSize(float width, float height)
+{
+    ImGui::SetNextWindowSize(ImVec2(width, height), ImGuiCond_FirstUseEver);
 }
 
 void Gui::Shutdown()

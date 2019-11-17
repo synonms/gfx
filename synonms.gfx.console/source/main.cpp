@@ -67,8 +67,9 @@ int main(int, char**)
     std::cout << "Creating camera..." << std::endl;
 
     Camera camera;
-    camera.SetPosition({ 0.0f, 0.0f, 50.0f });
-    camera.SetRotation({ 0.0f, 0.0f, 0.0f });
+    camera.position.y = 50.0f;
+    camera.position.z = 50.0f;
+    camera.rotationDegrees.pitch = 45.0f;
 
     std::cout << "Camera created" << std::endl;
 
@@ -81,15 +82,18 @@ int main(int, char**)
 
     // MATERIALS ***********************
     auto checkerboardDiffuseTexture = std::make_shared<Texture>("resources/textures/UVCheckerBoard-2048x2048.png");
+    auto checkerboardSpecularTexture = std::make_shared<Texture>("resources/textures/UVCheckerBoard-specular-2048x2048.png");
 
     auto checkerboardMaterial = Material::Create()
-        .WithDiffuseColour({0.8f, 0.6f, 0.4f})
-        .WithTexture(0, checkerboardDiffuseTexture)
-        .WithShininess(0.8f);
+        .WithTexture(Material::TextureSlot::Diffuse, checkerboardDiffuseTexture)
+        .WithTexture(Material::TextureSlot::Specular, checkerboardSpecularTexture);
+
+    auto metalMaterial = Material::Create()
+        .WithDiffuseColour({ 0.5f, 0.5f, 0.5f, 1.0f })
+        .WithShininess(100.0f);
 
     auto lightMaterial = Material::Create()
-        .WithAmbientColour({ 1.0f, 1.0f, 1.0f })
-        .WithDiffuseColour({ 1.0f, 1.0f, 1.0f })
+        .WithDiffuseColour({ 1.0f, 1.0f, 1.0f, 1.0f })
         .WithEmissiveColour({ 1.0f, 1.0f, 1.0f });
 
     // SHADERS ***********************
@@ -108,31 +112,53 @@ int main(int, char**)
     // MESH **************************
     std::cout << "Creating mesh..." << std::endl;
 
-    auto mesh = PrimitiveFactory::CreateBox(1.0f, 1.0f, 1.0f);
-    MeshInstance objectInstance(mesh, checkerboardMaterial);
-    objectInstance.SetPosition({ 0.0f, 0.0f, 0.0f });
-    objectInstance.SetScale({ 20.0f, 20.0f, 20.0f });
-    objectInstance.SetRotation({ 0.0f, 0.0f, 0.0f });
+    auto boxMesh = PrimitiveFactory::CreateBox(1.0f, 1.0f, 1.0f);
+    auto planeMesh = PrimitiveFactory::CreatePlane(1.0f, 1.0f);
 
-    MeshInstance lightInstance(mesh, lightMaterial);
-    lightInstance.SetScale({5.0f, 5.0f, 5.0f});
+    MeshInstance planeInstance(planeMesh, checkerboardMaterial);
+    planeInstance.SetUniformScale(100.0f);
+    planeInstance.rotationDegrees.x = -90.0f;
+
+    MeshInstance boxInstance(boxMesh, metalMaterial);
+    boxInstance.SetUniformScale(20.0f);
+
+    MeshInstance lightInstance(boxMesh, lightMaterial);
+    lightInstance.SetUniformScale(5.0f);
 
     std::cout << "Meshes created" << std::endl;
-    std::cout << mesh.ToString() << std::endl;
+    std::cout << boxMesh.ToString() << std::endl;
 
     // LIGHT **********************************
     std::cout << "Creating light..." << std::endl;
 
     Light light;
-    light.SetPosition({ 0.0f, 20.0f, 20.0f });
-    light.IsEnabled = true;
+    light.ambientColour = Vector4<float>({ 0.1f, 0.1f, 0.1f, 1.0f });
+    light.diffuseColour = Vector4<float>({ 1.0f, 1.0f, 1.0f, 1.0f });
+    light.specularColour = Vector4<float>({ 0.5f, 0.5f, 0.5f, 0.5f });
+    light.intensityMultiplier = 1.0f;
+    light.position.y = 20.0f;
+    light.position.z = 20.0f;
+    light.isEnabled = true;
 
     std::cout << "Light created" << std::endl;
 
-    std::cout << "Entering event loop..." << std::endl;
+    // IMGUI **********************************
+    std::cout << "Initialising IMGUI..." << std::endl;
 
     auto imguiContext = GuiHelper::Initialise(window.GetContext(), "#version 330 core");
     GuiHelper::ApplyDarkStyle();
+
+    auto displaySize = GuiHelper::GetDisplaySize();
+    auto displayFramebufferScale = GuiHelper::GetDisplayFramebufferScale();
+
+    std::cout << "displaySize: " << displaySize.x << "x" << displaySize.y << std::endl;
+    std::cout << "displayFramebufferScale: " << displayFramebufferScale.x << "x" << displayFramebufferScale.y << std::endl;
+
+    std::cout << "IMGUI initialised" << std::endl;
+
+    std::cout << "Entering event loop..." << std::endl;
+
+    Vector4<float> sceneAmbientColour(0.0f, 0.0f, 0.0f, 1.0f);
 
     while (!window.ShouldClose())
     {
@@ -147,26 +173,65 @@ int main(int, char**)
         auto viewMatrix = camera.GetViewMatrix();
 
         {
-            auto modelMatrix = objectInstance.GetModelMatrix();
-            auto normalMatrix = objectInstance.GetNormalMatrix();
+            auto modelMatrix = planeInstance.GetModelMatrix();
+            auto normalMatrix = planeInstance.GetNormalMatrix();
 
-            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, objectInstance.GetMaterial(), light), objectInstance.GetMesh());
+            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, planeInstance.GetMaterial(), light, sceneAmbientColour), planeInstance.GetMesh());
         }
 
         {
-            lightInstance.SetPosition(light.GetPosition());
+            auto modelMatrix = boxInstance.GetModelMatrix();
+            auto normalMatrix = boxInstance.GetNormalMatrix();
+
+            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, boxInstance.GetMaterial(), light, sceneAmbientColour), boxInstance.GetMesh());
+        }
+
+        {
+            lightInstance.position = light.position;
 
             auto modelMatrix = lightInstance.GetModelMatrix();
             auto normalMatrix = lightInstance.GetNormalMatrix();
 
-            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), light), lightInstance.GetMesh());
+            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), light, sceneAmbientColour), lightInstance.GetMesh());
         }
 
-        GuiHelper::PushWindow("Transform");
-        GuiHelper::SliderFloat3("Translation", objectInstance.GetPositionData(), -200.0f, 200.0f);
-        GuiHelper::SliderFloat3("Scale", objectInstance.GetScaleData(), 1.0f, 100.0f);
-        GuiHelper::SliderFloat3("Rotation", objectInstance.GetRotationData(), -180.0f, 180.0f);
-        GuiHelper::SliderFloat3("Light Position", light.GetPositionData(), -100.0f, 100.0f);
+        GuiHelper::PushWindow("gfx", 100.0f, 100.0f, 400.0f, 400.0f);
+
+        GuiHelper::CollapsingHeader("Box");
+        GuiHelper::SliderFloat3("Translation", &boxInstance.position.x, -200.0f, 200.0f);
+        GuiHelper::SliderFloat3("Scale", &boxInstance.scale.x, 1.0f, 100.0f);
+        GuiHelper::SliderFloat3("Rotation", &boxInstance.rotationDegrees.pitch, -180.0f, 180.0f);
+
+        GuiHelper::CollapsingHeader("Light");
+        GuiHelper::SliderFloat3("Position", &light.position.x, -100.0f, 100.0f);
+        GuiHelper::ColourEdit3("Ambient", &light.ambientColour.red);
+        GuiHelper::ColourEdit3("Diffuse", &light.diffuseColour.red);
+        GuiHelper::ColourEdit3("Specular", &light.specularColour.red);
+
+        auto planeVertex1Normal = Vector3<float>(0.0f, 0.0f, 1.0f);
+        auto vertexNormalDirection = planeInstance.GetNormalMatrix().Transform(planeVertex1Normal);
+        vertexNormalDirection.Normalise();
+
+        auto planeVertex1Position = Vector3<float>(-0.5f, -0.5f, 0.0f);
+        auto planeVertex1PositionWorld = planeInstance.GetModelMatrix().Transform(planeVertex1Position);
+        auto vertexToLightDirection = light.position - planeVertex1PositionWorld;
+        vertexToLightDirection.Normalise();
+
+        auto diffuseDot = MathsHelper::Maximum(vertexNormalDirection.Dot(vertexToLightDirection), 0.0f);
+        auto diffuseResult = checkerboardMaterial.diffuseColour * light.diffuseColour * diffuseDot;
+        diffuseResult.red = MathsHelper::Clamp(diffuseResult.red, 0.0f, 1.0f);
+        diffuseResult.green = MathsHelper::Clamp(diffuseResult.green, 0.0f, 1.0f);
+        diffuseResult.blue = MathsHelper::Clamp(diffuseResult.blue, 0.0f, 1.0f);
+
+        GuiHelper::CollapsingHeader("Debug");
+        GuiHelper::Text("Plane V1 Nml: (" + std::to_string(vertexNormalDirection.x) + "," + std::to_string(vertexNormalDirection.y) + "," + std::to_string(vertexNormalDirection.z) + ")");
+        GuiHelper::Text("Plane V1 Pos: (" + std::to_string(planeVertex1PositionWorld.x) + "," + std::to_string(planeVertex1PositionWorld.y) + "," + std::to_string(planeVertex1PositionWorld.z) + ")");
+        GuiHelper::Text("Light Pos: (" + std::to_string(light.position.x) + "," + std::to_string(light.position.y) + "," + std::to_string(light.position.z) + ")");
+        GuiHelper::Text("Plane V1 -> Light: (" + std::to_string(vertexToLightDirection.x) + "," + std::to_string(vertexToLightDirection.y) + "," + std::to_string(vertexToLightDirection.z) + ")");
+
+        GuiHelper::Text("DiffuseDot: " + std::to_string(diffuseDot));
+        GuiHelper::Text("DiffuseResult: (" + std::to_string(diffuseResult.red) + "," + std::to_string(diffuseResult.green) + "," + std::to_string(diffuseResult.blue) + "," + std::to_string(diffuseResult.alpha) + ")");
+
         GuiHelper::PopWindow();
 
         GuiHelper::Render();

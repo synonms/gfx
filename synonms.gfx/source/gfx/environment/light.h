@@ -15,8 +15,8 @@ namespace synonms
                 enum class LightType
                 {
                     Directional = 0,
-                    Positional,
-                    Spot
+                    Positional = 1,
+                    Spot = 2
                 };
 
             public:
@@ -26,26 +26,20 @@ namespace synonms
 
                 LightType Type;
 
-                mathematics::linear::Vector3<float> ambientColour{0.2f, 0.2f, 0.2f};
-                mathematics::linear::Vector3<float> diffuseColour{0.5f, 0.5f, 0.5f};
-                mathematics::linear::Vector3<float> specularColour{1.0f, 1.0f, 1.0f};
+                mathematics::linear::Vector3<float> position{ 0.0f, 0.0f, 0.0f };
+                mathematics::linear::Vector3<float> direction{ 0.0f, 0.0f, 1.0f };
 
-                bool IsEnabled{ true };
-                float IntensityMultiplier{1.0f};
-                float ConstantAttenuation{1.0f};
-                float LinearAttenuation{0.0f};
-                float QuadraticAttenuation{0.0f};
+                mathematics::linear::Vector4<float> ambientColour{0.005f, 0.005f, 0.005f, 1.0f};
+                mathematics::linear::Vector4<float> diffuseColour{1.0f, 1.0f, 1.0f, 1.0f};
+                mathematics::linear::Vector4<float> specularColour{0.1f, 0.1f, 0.1f, 1.0f};
 
-                inline const mathematics::linear::Vector3<float>& GetPosition() const { return _transform.position; }
-                inline float* GetPositionData() { return &_transform.position.x; }
-                inline const mathematics::linear::Vector3<float>& GetRotation() const { return _transform.rotationDegrees; }
-                inline float* GetRotationData() { return &_transform.rotationDegrees.x; }
-
-                inline void SetPosition(const mathematics::linear::Vector3<float>& position) { _transform.position = position; }
-                inline void SetRotation(const mathematics::linear::Vector3<float>& rotationDegrees) { _transform.rotationDegrees = rotationDegrees; }
-
-            private:
-                mathematics::linear::Transform _transform{};
+                bool isEnabled{ true };
+                float spotInnerCutoffDegrees{ 30.0f };
+                float spotOuterCutoffDegrees{ 60.0f };
+                float intensityMultiplier{1.0f};
+                float constantAttenuation{1.0f};
+                float linearAttenuation{0.1f};
+                float quadraticAttenuation{0.01f};
             };
         }
     }
