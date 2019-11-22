@@ -11,10 +11,6 @@
 **/.ui/
 cache
 artifacts/
-x64/
-Win32/
-[Dd]ebug/
-[Rr]elease/
 
 # General output
 *.pdb

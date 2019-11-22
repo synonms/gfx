@@ -164,6 +164,9 @@
     <ProjectReference Include="..\syno.gloop\syno.gloop.vcxproj">
       <Project>{b9f86dbb-cc7e-466b-9a51-7c6124a3c260}</Project>
     </ProjectReference>
+    <ProjectReference Include="..\synonms.gfx\synonms.gfx.vcxproj">
+      <Project>{b9f86dbb-cc7e-466b-9a51-7c6124a3c260}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
