@@ -2,6 +2,8 @@
 
 #include <gfx\mathematics\maths-helper.h>
 
+#include <string>
+
 namespace synonms
 {
     namespace gfx
@@ -97,6 +99,13 @@ namespace synonms
                         return *this + other; 
                     }
 
+                    void Clamp(float min, float max)
+                    {
+                        x = MathsHelper::Clamp(x, min, max);
+                        y = MathsHelper::Clamp(y, min, max);
+                        z = MathsHelper::Clamp(z, min, max);
+                    }
+
                     /// Cross takes the area of a parallelogram (or square) formed by two vectors
                     /// e.g. square area formed by (2,0,0) and (0,3,0) has cross 2x3=6
                     /// If first vector is to the right of the second (i.e. anti-clockwise from 1 to 2) then cross is +ve
@@ -153,10 +162,20 @@ namespace synonms
                         return *this - other; 
                     }
 
+                    std::string ToString() const
+                    {
+                        return "(" + std::to_string(x) + "," + std::to_string(y) + "," + std::to_string(z) + ")";
+                    }
+
                 public:
                     static Vector3<T> CreateInverseOf(const Vector3<T>& vector)
                     {
                         return { -vector.x, -vector.y, -vector.z };
+                    }
+
+                    static Vector3<T> CreateReflectioneOf(const Vector3<T>& incident, const Vector3<T>& normal)
+                    {
+                        return incident - 2.0f * normal.Dot(incident) * normal;
                     }
 
                 public:

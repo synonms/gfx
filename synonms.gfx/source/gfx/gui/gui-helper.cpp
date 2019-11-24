@@ -110,6 +110,11 @@ void GuiHelper::Shutdown()
     proxies::imgui::Gui::Shutdown();
 }
 
+void GuiHelper::SliderFloat(const std::string& label, float& value, float min, float max)
+{
+    proxies::imgui::Gui::SliderFloat(label, value, min, max);
+}
+
 void GuiHelper::SliderFloat3(const std::string& label, float* values, float min, float max)
 {
     proxies::imgui::Gui::SliderFloat3(label, values, min, max);

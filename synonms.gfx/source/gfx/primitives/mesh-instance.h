@@ -4,7 +4,6 @@
 #include <gfx\materials\material.h>
 #include <gfx\mathematics\linear\matrix3x3.h>
 #include <gfx\mathematics\linear\matrix4x4.h>
-#include <gfx\mathematics\linear\transform.h>
 
 #include <string>
 

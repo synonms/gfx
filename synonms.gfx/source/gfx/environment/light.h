@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gfx\mathematics\linear\transform.h>
+#include <gfx\mathematics\linear\vector4.h>
 #include <gfx\mathematics\linear\vector3.h>
 
 namespace synonms

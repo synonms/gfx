@@ -166,15 +166,12 @@
     <ClCompile Include="source\gfx\mathematics\maths-helper.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
     <ClCompile Include="source\gfx\primitives\primitive-factory.cpp" />
-    <ClCompile Include="source\gfx\primitives\vertex-attribute.cpp" />
-    <ClCompile Include="source\gfx\primitives\vertex-definition.cpp" />
     <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-set.cpp" />
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\gfx\enumerators\attribute-type.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
     <ClInclude Include="source\gfx\environment\light.h" />
@@ -197,8 +194,7 @@
     <ClInclude Include="source\gfx\primitives\primitive-factory.h" />
     <ClInclude Include="source\gfx\primitives\mesh-instance.h" />
     <ClInclude Include="source\gfx\primitives\mesh.h" />
-    <ClInclude Include="source\gfx\primitives\vertex-attribute.h" />
-    <ClInclude Include="source\gfx\primitives\vertex-definition.h" />
+    <ClInclude Include="source\gfx\primitives\vertex.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader-set.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\shader-builder.h" />
@@ -226,7 +222,7 @@
     <Content Include="resources\textures\UVCheckerBoard-2048x2048.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Image Include="resources\textures\UVCheckerBoard-specular-2048x2048.png" >
+    <Image Include="resources\textures\UVCheckerBoard-specular-2048x2048.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Content Include="resources\textures\UVCheckerBoard-specular-2048x2048.png">

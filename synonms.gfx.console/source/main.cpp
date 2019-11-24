@@ -17,10 +17,8 @@
 #include <gfx\primitives\mesh.h>
 #include <gfx\primitives\mesh-instance.h>
 #include <gfx\primitives\primitive-factory.h>
-#include <gfx\primitives\vertex-definition.h>
 #include <gfx\shaders\phong-shader-set.h>
 
-using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::gui;
 using namespace synonms::gfx::io;
@@ -34,6 +32,84 @@ using namespace synonms::gfx::shaders;
 //{
 //    fprintf(stderr, "Glfw Error %d: %s\n", error, description);
 //}
+
+Vector4<float> CalculateAmbient(const Light& light, const Material& material)
+{
+    GuiHelper::Text("** AMBIENT **************");
+
+    auto result = material.diffuseColour * light.ambientColour * light.intensityMultiplier;
+    GuiHelper::Text("AmbientResult: " + result.ToString());
+
+    result.Clamp(0.0f, 1.0f);
+    GuiHelper::Text("AmbientResult (C): " + result.ToString());
+
+    return result;
+}
+
+Vector4<float> CalculateDiffuse(const Light& light, const Material& material, const Vector3<float>& vertexPosition, const Vector3<float>& vertexNormal, const MeshInstance& meshInstance)
+{
+    GuiHelper::Text("** DIFFUSE **************");
+
+    auto vertexPositionWorld = meshInstance.GetModelMatrix().Transform(vertexPosition);
+    GuiHelper::Text("V Position: " + vertexPosition.ToString());
+
+    auto vertexNormalDirection = meshInstance.GetNormalMatrix().Transform(vertexNormal);
+    vertexNormalDirection.Normalise();
+    GuiHelper::Text("V Normal: " + vertexNormalDirection.ToString());
+
+    auto vertexToLightDirection = light.position - vertexPositionWorld;
+    GuiHelper::Text("Vertex -> Light: " + vertexToLightDirection.ToString());
+    vertexToLightDirection.Normalise();
+    GuiHelper::Text("Vertex -> Light (N): " + vertexToLightDirection.ToString());
+
+    auto diffuseDot = MathsHelper::Maximum(vertexNormalDirection.Dot(vertexToLightDirection), 0.0f);
+    GuiHelper::Text("DiffuseDot: " + std::to_string(diffuseDot));
+
+    auto result = material.diffuseColour * light.diffuseColour * diffuseDot * light.intensityMultiplier;
+    GuiHelper::Text("DiffuseResult: " + result.ToString());
+
+    result.Clamp(0.0f, 1.0f);
+    GuiHelper::Text("DiffuseResult (C): " + result.ToString());
+
+    return result;
+}
+
+Vector4<float> CalculateSpecular(const Light& light, const Material& material, const Vector3<float>& vertexPosition, const Vector3<float>& vertexNormal, const MeshInstance& meshInstance, const Vector3<float>& cameraPosition)
+{
+    GuiHelper::Text("** SPECULAR **************");
+
+    auto vertexPositionWorld = meshInstance.GetModelMatrix().Transform(vertexPosition);
+    GuiHelper::Text("V Position: " + vertexPosition.ToString());
+
+    auto vertexNormalDirection = meshInstance.GetNormalMatrix().Transform(vertexNormal);
+    vertexNormalDirection.Normalise();
+    GuiHelper::Text("V Normal: " + vertexNormalDirection.ToString());
+
+    auto vertexToLightDirection = light.position - vertexPositionWorld;
+    GuiHelper::Text("Vertex -> Light: " + vertexToLightDirection.ToString());
+
+    auto lightReflectionDirection = Vector3<float>::CreateReflectioneOf(Vector3<float>::CreateInverseOf(vertexToLightDirection), vertexNormalDirection);
+    GuiHelper::Text("Reflection: " + lightReflectionDirection.ToString());
+    lightReflectionDirection.Normalise();
+    GuiHelper::Text("Reflection (N): " + lightReflectionDirection.ToString());
+
+    // TODO - probably wrong
+    auto vertexToCameraDirection = cameraPosition - vertexPositionWorld;
+    GuiHelper::Text("Vertex -> Camera: " + vertexToCameraDirection.ToString());
+    vertexToCameraDirection.Normalise();
+    GuiHelper::Text("Vertex -> Camera (N): " + vertexToCameraDirection.ToString());
+
+    auto specularDot = MathsHelper::Maximum(lightReflectionDirection.Dot(vertexToCameraDirection), 0.0f);
+    GuiHelper::Text("SpecularDot: " + std::to_string(specularDot));
+
+    auto result = material.specularColour * light.specularColour * MathsHelper::Power(specularDot, 0.3 * material.shininess) * light.intensityMultiplier;
+    GuiHelper::Text("SpecularResult: " + result.ToString());
+
+    result.Clamp(0.0f, 1.0f);
+    GuiHelper::Text("SpecularResult (C): " + result.ToString());
+
+    return result;
+}
 
 int main(int, char**)
 {
@@ -67,8 +143,8 @@ int main(int, char**)
     std::cout << "Creating camera..." << std::endl;
 
     Camera camera;
-    camera.position.y = 50.0f;
-    camera.position.z = 50.0f;
+    camera.position.y = 10.0f;
+    camera.position.z = 10.0f;
     camera.rotationDegrees.pitch = 45.0f;
 
     std::cout << "Camera created" << std::endl;
@@ -116,14 +192,14 @@ int main(int, char**)
     auto planeMesh = PrimitiveFactory::CreatePlane(1.0f, 1.0f);
 
     MeshInstance planeInstance(planeMesh, checkerboardMaterial);
-    planeInstance.SetUniformScale(100.0f);
+    planeInstance.SetUniformScale(10.0f);
     planeInstance.rotationDegrees.x = -90.0f;
 
     MeshInstance boxInstance(boxMesh, metalMaterial);
-    boxInstance.SetUniformScale(20.0f);
+    boxInstance.SetUniformScale(5.0f);
 
     MeshInstance lightInstance(boxMesh, lightMaterial);
-    lightInstance.SetUniformScale(5.0f);
+    lightInstance.SetUniformScale(1.0f);
 
     std::cout << "Meshes created" << std::endl;
     std::cout << boxMesh.ToString() << std::endl;
@@ -136,8 +212,9 @@ int main(int, char**)
     light.diffuseColour = Vector4<float>({ 1.0f, 1.0f, 1.0f, 1.0f });
     light.specularColour = Vector4<float>({ 0.5f, 0.5f, 0.5f, 0.5f });
     light.intensityMultiplier = 1.0f;
-    light.position.y = 20.0f;
-    light.position.z = 20.0f;
+    light.position.x = -5.0f;
+    light.position.y = 5.0f;
+    light.position.z = 5.0f;
     light.isEnabled = true;
 
     std::cout << "Light created" << std::endl;
@@ -207,30 +284,29 @@ int main(int, char**)
         GuiHelper::ColourEdit3("Ambient", &light.ambientColour.red);
         GuiHelper::ColourEdit3("Diffuse", &light.diffuseColour.red);
         GuiHelper::ColourEdit3("Specular", &light.specularColour.red);
-
-        auto planeVertex1Normal = Vector3<float>(0.0f, 0.0f, 1.0f);
-        auto vertexNormalDirection = planeInstance.GetNormalMatrix().Transform(planeVertex1Normal);
-        vertexNormalDirection.Normalise();
-
-        auto planeVertex1Position = Vector3<float>(-0.5f, -0.5f, 0.0f);
-        auto planeVertex1PositionWorld = planeInstance.GetModelMatrix().Transform(planeVertex1Position);
-        auto vertexToLightDirection = light.position - planeVertex1PositionWorld;
-        vertexToLightDirection.Normalise();
-
-        auto diffuseDot = MathsHelper::Maximum(vertexNormalDirection.Dot(vertexToLightDirection), 0.0f);
-        auto diffuseResult = checkerboardMaterial.diffuseColour * light.diffuseColour * diffuseDot;
-        diffuseResult.red = MathsHelper::Clamp(diffuseResult.red, 0.0f, 1.0f);
-        diffuseResult.green = MathsHelper::Clamp(diffuseResult.green, 0.0f, 1.0f);
-        diffuseResult.blue = MathsHelper::Clamp(diffuseResult.blue, 0.0f, 1.0f);
+        GuiHelper::SliderFloat("Intensity", light.intensityMultiplier, 0.0f, 100.0f);
 
         GuiHelper::CollapsingHeader("Debug");
-        GuiHelper::Text("Plane V1 Nml: (" + std::to_string(vertexNormalDirection.x) + "," + std::to_string(vertexNormalDirection.y) + "," + std::to_string(vertexNormalDirection.z) + ")");
-        GuiHelper::Text("Plane V1 Pos: (" + std::to_string(planeVertex1PositionWorld.x) + "," + std::to_string(planeVertex1PositionWorld.y) + "," + std::to_string(planeVertex1PositionWorld.z) + ")");
-        GuiHelper::Text("Light Pos: (" + std::to_string(light.position.x) + "," + std::to_string(light.position.y) + "," + std::to_string(light.position.z) + ")");
-        GuiHelper::Text("Plane V1 -> Light: (" + std::to_string(vertexToLightDirection.x) + "," + std::to_string(vertexToLightDirection.y) + "," + std::to_string(vertexToLightDirection.z) + ")");
 
-        GuiHelper::Text("DiffuseDot: " + std::to_string(diffuseDot));
-        GuiHelper::Text("DiffuseResult: (" + std::to_string(diffuseResult.red) + "," + std::to_string(diffuseResult.green) + "," + std::to_string(diffuseResult.blue) + "," + std::to_string(diffuseResult.alpha) + ")");
+        auto ambient = CalculateAmbient(light, checkerboardMaterial);
+        auto diffuse = CalculateDiffuse(light, checkerboardMaterial, Vector3<float>(-0.5f, -0.5f, 0.0f), Vector3<float>(0.0f, 0.0f, 1.0f), planeInstance);
+        auto specular = CalculateSpecular(light, checkerboardMaterial, Vector3<float>(-0.5f, -0.5f, 0.0f), Vector3<float>(0.0f, 0.0f, 1.0f), planeInstance, camera.position);
+
+        GuiHelper::Text("** RESULT **************");
+
+        auto vertexPositionWorld = planeInstance.GetModelMatrix().Transform(Vector3<float>(-0.5f, -0.5f, 0.0f));
+        auto vertexToLightDirection = light.position - vertexPositionWorld;
+        auto vertexToLightDistance = vertexToLightDirection.Length();
+        GuiHelper::Text("V -> L Dist: " + std::to_string(vertexToLightDistance));
+
+        auto attenuation = 1.0f / (light.constantAttenuation +
+            (light.linearAttenuation * vertexToLightDistance) +
+            (light.quadraticAttenuation * vertexToLightDistance * vertexToLightDistance));
+
+        GuiHelper::Text("Attenuation: " + std::to_string(attenuation));
+
+        auto lightContribution = ambient + (diffuse * attenuation) + (specular * attenuation);
+        GuiHelper::Text("Light Contribution: " + lightContribution.ToString());
 
         GuiHelper::PopWindow();
 

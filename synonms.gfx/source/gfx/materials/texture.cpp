@@ -13,6 +13,12 @@ Texture::Texture(const std::string& filePath)
     stbi_set_flip_vertically_on_load(1);
     auto data = stbi_load(filePath.c_str(), &_width, &_height, &_bitsPerPixel, 4); // 4 = RGBA
 
+    if (!data)
+    {
+        auto message = stbi_failure_reason();
+        throw std::exception(message);
+    }
+
     _textureId = proxies::opengl::Texture::Generate(true);
     Bind();
 

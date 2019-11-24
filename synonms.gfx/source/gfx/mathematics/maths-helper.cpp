@@ -103,3 +103,8 @@ float MathsHelper::Snap(float p, float grid)
 {
     return grid ? float(floor((p + grid * 0.5f) / grid) * grid) : p;
 }
+
+float MathsHelper::Power(float base, float exponent)
+{
+    return ::pow(base, exponent);
+}

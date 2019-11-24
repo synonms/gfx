@@ -1,8 +1,9 @@
 #include "primitive-factory.h"
 
-#include <gfx\primitives\vertex-definition.h>
+#include <gfx/primitives/vertex.h>
 
-using namespace synonms::gfx::enumerators;
+#include <vector>
+
 using namespace synonms::gfx::primitives;
 
 // OpenGL is right handed (+x - thumb, y - pointer, z - middle)
@@ -20,29 +21,23 @@ Mesh PrimitiveFactory::CreatePlane(float width, float height)
     const auto& halfWidth = width / 2.0f;
     const auto& halfHeight = height / 2.0f;
 
-    float vertexData[] = {
-        //    x           y       z     nx    ny    nz    u     v
-        -halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-         halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-         halfWidth,  halfHeight, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-         halfWidth,  halfHeight, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-        -halfWidth,  halfHeight, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -halfWidth, -halfHeight, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+    auto vertices = std::vector<Vertex> {
+        //    x           y         z       nx    ny    nz      u     v
+        {{-halfWidth, -halfHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 0.0f}},
+        {{ halfWidth,  halfHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        {{ halfWidth,  halfHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {1.0f, 1.0f}},
+        {{-halfWidth,  halfHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 1.0f}},
+        {{-halfWidth, -halfHeight, 0.0f}, {0.0f, 0.0f, 1.0f}, {0.0f, 0.0f}}
     };
 
     // TODO - Solve problem re indexed vertices needing different normals for different faces, otherwise indexes are pointless
-    unsigned int indexData[] = {
+    auto indices = std::vector<unsigned int> {
         0, 1, 2,
         3, 4, 5
     };
 
-    VertexDefinition vertexDefinition({
-        VertexAttribute(AttributeType::Position, DataType::Float, 3, sizeof(float), false),
-        VertexAttribute(AttributeType::Normal, DataType::Float, 3, sizeof(float), false ),
-        VertexAttribute(AttributeType::TextureCoordinates, DataType::Float, 2, sizeof(float), false )
-        });
-
-    return Mesh(vertexDefinition, vertexData, 3 * 2, indexData, 3 * 2);
+    return Mesh(vertices, indices);
 }
 
 Mesh PrimitiveFactory::CreateBox(float width, float height, float depth)
@@ -51,58 +46,58 @@ Mesh PrimitiveFactory::CreateBox(float width, float height, float depth)
     const auto& halfHeight = height / 2.0f;
     const auto& halfDepth = depth / 2.0f;
 
-    float vertexData[] = {
-        //    x           y          z       nx    ny    nz    u     v
+    auto vertices = std::vector<Vertex>{
+        //    x           y             z            nx    ny      nz    u     v
         // FRONT
-        -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
-         halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f,
-         halfWidth,  halfHeight, halfDepth, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-         halfWidth,  halfHeight, halfDepth, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f,
-        -halfWidth,  halfHeight, halfDepth, 0.0f, 0.0f, 1.0f, 0.0f, 1.0f,
-        -halfWidth, -halfHeight, halfDepth, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f,
+        {{-halfWidth, -halfHeight,  halfDepth}, { 0.0f,  0.0f,  1.0f}, {0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight,  halfDepth}, { 0.0f,  0.0f,  1.0f}, {1.0f, 0.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, { 0.0f,  0.0f,  1.0f}, {1.0f, 1.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, { 0.0f,  0.0f,  1.0f}, {1.0f, 1.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, { 0.0f,  0.0f,  1.0f}, {0.0f, 1.0f}},
+        {{-halfWidth, -halfHeight,  halfDepth}, { 0.0f,  0.0f,  1.0f}, {0.0f, 0.0f}},
 
         // BACK
-         halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
-        -halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f, -1.0f, 1.0f, 0.0f,
-        -halfWidth,  halfHeight, -halfDepth, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-        -halfWidth,  halfHeight, -halfDepth, 0.0f, 0.0f, -1.0f, 1.0f, 1.0f,
-         halfWidth,  halfHeight, -halfDepth, 0.0f, 0.0f, -1.0f, 0.0f, 1.0f,
-         halfWidth, -halfHeight, -halfDepth, 0.0f, 0.0f, -1.0f, 0.0f, 0.0f,
+        {{ halfWidth, -halfHeight, -halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}},
+        {{-halfWidth, -halfHeight, -halfDepth}, { 0.0f,  0.0f, -1.0f}, {1.0f, 0.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 0.0f,  0.0f, -1.0f}, {1.0f, 1.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 0.0f,  0.0f, -1.0f}, {1.0f, 1.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 1.0f}},
+        {{ halfWidth, -halfHeight, -halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}},
 
-         // TOP
-        -halfWidth,  halfHeight,  halfDepth, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
-         halfWidth,  halfHeight,  halfDepth, 0.0f, 1.0f, 0.0f, 1.0f, 0.0f,
-         halfWidth,  halfHeight, -halfDepth, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-         halfWidth,  halfHeight, -halfDepth, 0.0f, 1.0f, 0.0f, 1.0f, 1.0f,
-        -halfWidth,  halfHeight, -halfDepth, 0.0f, 1.0f, 0.0f, 0.0f, 1.0f,
-        -halfWidth,  halfHeight,  halfDepth, 0.0f, 1.0f, 0.0f, 0.0f, 0.0f,
+        // TOP 
+        {{-halfWidth,  halfHeight,  halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, { 0.0f,  1.0f,  0.0f}, {1.0f, 0.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 0.0f,  1.0f,  0.0f}, {1.0f, 1.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 0.0f,  1.0f,  0.0f}, {1.0f, 1.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 1.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}},
 
-         // BOTTOM
-         halfWidth,  -halfHeight,  halfDepth, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-        -halfWidth,  -halfHeight,  halfDepth, 0.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-        -halfWidth,  -halfHeight, -halfDepth, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-        -halfWidth,  -halfHeight, -halfDepth, 0.0f, -1.0f, 0.0f, 1.0f, 1.0f,
-         halfWidth,  -halfHeight, -halfDepth, 0.0f, -1.0f, 0.0f, 0.0f, 1.0f,
-         halfWidth,  -halfHeight,  halfDepth, 0.0f, -1.0f, 0.0f, 0.0f, 0.0f,
+        // BOTTOM
+        {{ halfWidth, -halfHeight,  halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}},
+        {{-halfWidth, -halfHeight,  halfDepth}, { 0.0f, -1.0f,  0.0f}, {1.0f, 0.0f}},
+        {{-halfWidth, -halfHeight, -halfDepth}, { 0.0f, -1.0f,  0.0f}, {1.0f, 1.0f}},
+        {{-halfWidth, -halfHeight, -halfDepth}, { 0.0f, -1.0f,  0.0f}, {1.0f, 1.0f}},
+        {{ halfWidth, -halfHeight, -halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 1.0f}},
+        {{ halfWidth, -halfHeight,  halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}},
 
-         // LEFT
-        -halfWidth, -halfHeight, -halfDepth, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-        -halfWidth, -halfHeight,  halfDepth, -1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-        -halfWidth,  halfHeight,  halfDepth, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        -halfWidth,  halfHeight,  halfDepth, -1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-        -halfWidth,  halfHeight, -halfDepth, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-        -halfWidth, -halfHeight, -halfDepth, -1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        // LEFT
+        {{-halfWidth, -halfHeight, -halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}},
+        {{-halfWidth, -halfHeight,  halfDepth}, {-1.0f,  0.0f,  0.0f}, {1.0f, 0.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, {-1.0f,  0.0f,  0.0f}, {1.0f, 1.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, {-1.0f,  0.0f,  0.0f}, {1.0f, 1.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 1.0f}},
+        {{-halfWidth, -halfHeight, -halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}},
 
-         // RIGHT
-         halfWidth, -halfHeight,  halfDepth, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
-         halfWidth, -halfHeight, -halfDepth, 1.0f, 0.0f, 0.0f, 1.0f, 0.0f,
-         halfWidth,  halfHeight, -halfDepth, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-         halfWidth,  halfHeight, -halfDepth, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f,
-         halfWidth,  halfHeight,  halfDepth, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f,
-         halfWidth, -halfHeight,  halfDepth, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f,
+        // RIGHT
+        {{ halfWidth, -halfHeight,  halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight, -halfDepth}, { 1.0f,  0.0f,  0.0f}, {1.0f, 0.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 1.0f,  0.0f,  0.0f}, {1.0f, 1.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 1.0f,  0.0f,  0.0f}, {1.0f, 1.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 1.0f}},
+        {{ halfWidth, -halfHeight,  halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}}
     };
 
-    unsigned int indexData[] = {
+    auto indices = std::vector<unsigned int>{
          0,  1,  2,
          3,  4,  5,
          6,  7,  8,
@@ -117,11 +112,5 @@ Mesh PrimitiveFactory::CreateBox(float width, float height, float depth)
         33, 34, 35,
     };
 
-    VertexDefinition vertexDefinition({
-        VertexAttribute(AttributeType::Position, DataType::Float, 3, sizeof(float), false),
-        VertexAttribute(AttributeType::Normal, DataType::Float, 3, sizeof(float), false),
-        VertexAttribute(AttributeType::TextureCoordinates, DataType::Float, 2, sizeof(float), false)
-        });
-
-    return Mesh(vertexDefinition, vertexData, 3 * 2 * 6, indexData, 3 * 2 * 6);
+    return Mesh(vertices, indices);
 }

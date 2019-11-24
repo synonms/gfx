@@ -27,6 +27,7 @@ namespace synonms
                 static void PushWindow(const std::string& title, float x, float y, float width, float height);
                 static void Render();
                 static void Shutdown();
+                static void SliderFloat(const std::string& label, float& value, float min = 0.0f, float max = 1.0f);
                 static void SliderFloat3(const std::string& label, float* values, float min = 0.0f, float max = 1.0f);
                 static void Text(const std::string& text);
 

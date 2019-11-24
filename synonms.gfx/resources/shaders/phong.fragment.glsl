@@ -56,7 +56,7 @@ uniform Light fu_lights[MAX_LIGHTS];
 
 // Fragment shader requires a vec4 color output variable otherwise geometry renders black or white
 // Can be named anything
-//out vec4 p_fragmentColour;
+out vec4 p_fragmentColour;
 
 vec4 CalculateAmbient(int lightIndex, vec4 materialDiffuseColour);
 vec4 CalculateDiffuse(int lightIndex, vec4 materialDiffuseColour);
@@ -83,59 +83,56 @@ void main()
                                             (fu_lights[i].linearAttenuation * p_vertexToLightDistance[i]) +
                                             (fu_lights[i].quadraticAttenuation * p_vertexToLightDistance[i] * p_vertexToLightDistance[i]));
 
-            cumulativeLightColour += fu_materialSceneProduct.sceneColour + ambient + diffuse + specular;
-            
-//			if(fu_light.type == 1)
-//            {
-//                // Positional
-//                cumulativeLightColour = (ambientLightColour * materialDiffuseColour)
-//                    + (diffuseLightColour * materialDiffuseColour * attenuation) 
-//                    + (specularLightColour * materialSpecularColour * attenuation);
-//            } 
-//            else if (fu_light.type == 2)
-//            {
-//                // Spot
-//                // Calculate angle between spot direction and spot to fragment (i.e. how far from centre of cone)
-//                float theta = dot(p_vertexToLightDirection, normalize(-fu_light.direction));
-//
-//                if(theta > fu_light.spotOuterCutoffCosine) 
-//                {   
-//                    float epsilon = fu_light.spotInnerCutoffCosine - fu_light.spotOuterCutoffCosine;
-//                    float spotIntensity = clamp((theta - fu_light.spotOuterCutoffCosine) / epsilon, 0.0, 1.0);    
-//
-//                    cumulativeLightColour = (ambientLightColour * materialDiffuseColour)
-//                        + (diffuseLightColour * materialDiffuseColour * attenuation * spotIntensity) 
-//                        + (specularLightColour * materialSpecularColour * attenuation * spotIntensity);
-//                }
-//                else
-//                {
-//                    // Fragment is outside of spot cone - use ambient only
-//                    cumulativeLightColour = ambientLightColour * materialDiffuseColour;
-//                }
-//            } 
-//            else 
-//            {
-//                // Directional
-//                // Attentuation ignored
-//                cumulativeLightColour = (ambientLightColour * materialDiffuseColour)
-//                    + (diffuseLightColour * materialDiffuseColour) 
-//                    + (specularLightColour * materialSpecularColour);
-//            }
+            vec4 lightContribution = vec4(0.0);
+
+            if(fu_lights[i].type == 1)
+            {
+                // Positional
+                lightContribution = ambient + (diffuse * attenuation) + (specular * attenuation);
+            } 
+            else if (fu_lights[i].type == 2)
+            {
+                // Spot
+                // Calculate angle between spot direction and spot to fragment (i.e. how far from centre of cone)
+                float theta = dot(p_vertexToLightDirection[i], normalize(-fu_lights[i].direction));
+
+                if(theta > fu_lights[i].spotOuterCutoffCosine) 
+                {   
+                    float epsilon = fu_lights[i].spotInnerCutoffCosine - fu_lights[i].spotOuterCutoffCosine;
+                    float spotIntensity = clamp((theta - fu_lights[i].spotOuterCutoffCosine) / epsilon, 0.0, 1.0);    
+
+                    lightContribution = ambient + (diffuse * attenuation * spotIntensity) + (specular * attenuation * spotIntensity);
+                }
+                else
+                {
+                    // Fragment is outside of spot cone - use ambient only
+                    lightContribution = ambient;
+                }
+            } 
+            else 
+            {
+                // Directional
+                // Attentuation only on specular
+                lightContribution = ambient + diffuse + (specular * attenuation);
+            }
+
+            cumulativeLightColour += fu_materialSceneProduct.sceneColour + lightContribution;
         }
     }
 
-    gl_FragColor = fu_materialSceneProduct.sceneColour + cumulativeLightColour + materialEmissiveColour;
+    p_fragmentColour = fu_materialSceneProduct.sceneColour + cumulativeLightColour + materialEmissiveColour;
 }
 
 vec4 CalculateAmbient(int lightIndex, vec4 materialDiffuseColour)
 {
-    return materialDiffuseColour * fu_lights[lightIndex].ambientColour;
+    vec4 ambientResult = materialDiffuseColour * fu_lights[lightIndex].ambientColour * fu_lights[lightIndex].intensityMultiplier;
+    return clamp(ambientResult, 0.0, 1.0);
 }
 
 vec4 CalculateDiffuse(int lightIndex, vec4 materialDiffuseColour)
 {
     float diffuseDot = max(dot(p_vertexNormalDirection, p_vertexToLightDirection[lightIndex]), 0.0);
-    vec4 diffuseResult = materialDiffuseColour * fu_lights[lightIndex].diffuseColour * diffuseDot;
+    vec4 diffuseResult = materialDiffuseColour * fu_lights[lightIndex].diffuseColour * diffuseDot * fu_lights[lightIndex].intensityMultiplier;
     return clamp(diffuseResult, 0.0, 1.0);
 }
 
@@ -143,6 +140,6 @@ vec4 CalculateSpecular(int lightIndex, vec4 materialSpecularColour)
 {
     vec3 lightReflectionDirection = normalize(reflect(-p_vertexToLightDirection[lightIndex], p_vertexNormalDirection));
     float specularDot = max(dot(lightReflectionDirection, p_vertexToCameraDirection), 0.0);
-    vec4 specularResult = materialSpecularColour * fu_lights[lightIndex].specularColour * pow(specularDot, 0.3 * fu_material.shininess);
+    vec4 specularResult = materialSpecularColour * fu_lights[lightIndex].specularColour * pow(specularDot, 0.3 * fu_material.shininess) * fu_lights[lightIndex].intensityMultiplier;
     return clamp(specularResult, 0.0, 1.0); 
 }

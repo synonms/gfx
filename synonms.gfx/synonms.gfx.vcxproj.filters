@@ -30,12 +30,6 @@
     <ClCompile Include="source\gfx\shaders\shader-set.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gfx\primitives\vertex-attribute.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gfx\primitives\vertex-definition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\gfx\enumerators\data-type.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -84,15 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\shaders\shader-set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gfx\enumerators\attribute-type.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gfx\primitives\vertex-attribute.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gfx\primitives\vertex-definition.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\enumerators\data-type.h">
@@ -159,6 +144,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\primitives\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

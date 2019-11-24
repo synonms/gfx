@@ -2,6 +2,8 @@
 
 #include <gfx\mathematics\maths-helper.h>
 
+#include <string>
+
 namespace synonms
 {
     namespace gfx
@@ -75,6 +77,12 @@ namespace synonms
                         return *this + other; 
                     }
 
+                    void Clamp(float min, float max)
+                    {
+                        x = MathsHelper::Clamp(x, min, max);
+                        y = MathsHelper::Clamp(y, min, max);
+                    }
+
                     /// Dot product is the projection of the second vector onto the first
                     /// Positive result means they are in the same direction (to some degree)
                     /// 0 means they are perpendicular
@@ -114,6 +122,11 @@ namespace synonms
 
                     Vector2<T> Subtract(const Vector2<T>& other) const { 
                         return *this - other; 
+                    }
+
+                    std::string ToString() const
+                    {
+                        return "(" + std::to_string(x) + "," + std::to_string(y) + ")";
                     }
 
                 public:

@@ -14,35 +14,33 @@
 using namespace synonms::gfx::primitives;
 using namespace synonms::gfx::enumerators;
 
-Mesh::Mesh(const VertexDefinition& vertexDefinition, float* vertexData, unsigned int noOfVertices, unsigned int* indexData, unsigned int noOfIndices)
-    : _noOfVertices(noOfVertices)
-    , _noOfIndices(noOfIndices)
+Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices)
+    : _vertices(vertices)
+    , _indices(indices)
 {
-    const auto vertexSize = vertexDefinition.Size();
-
     _vertexArrayId = proxies::opengl::VertexArray::Generate(true);
     proxies::opengl::VertexArray::Bind(_vertexArrayId, true);
 
     _vertexBufferId = proxies::opengl::VertexBuffer::Generate(true);
     proxies::opengl::VertexBuffer::Bind(_vertexBufferId, true);
-    proxies::opengl::VertexBuffer::SendData(vertexData, (size_t)_noOfVertices * (size_t)vertexSize, proxies::opengl::enumerators::DataUsage::StaticDraw, true);
+    proxies::opengl::VertexBuffer::SendData(&_vertices[0], _vertices.size() * sizeof(Vertex), proxies::opengl::enumerators::DataUsage::StaticDraw, true);
 
-    const auto& attributes = vertexDefinition.GetAttributes();
-    auto offset = 0u;
-    for (auto index = 0; index < attributes.size(); ++index)
-    {
-        const auto& attribute = attributes[index];
+    // Positions
+    proxies::opengl::VertexAttributeArray::Enable(0, true);
+    proxies::opengl::VertexAttributeArray::Configure(0, 3, proxies::opengl::enumerators::DataType::Float, sizeof(Vertex), false, 0, true);
 
-        std::cout << "Configuring attribute " << index << " with " << attribute.GetNoOfComponents() << " components and offset " << offset << std::endl;
+    // Normals
+    proxies::opengl::VertexAttributeArray::Enable(1, true);
+    proxies::opengl::VertexAttributeArray::Configure(1, 3, proxies::opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, normal), true);
 
-        proxies::opengl::VertexAttributeArray::Enable(index, true);
-        proxies::opengl::VertexAttributeArray::Configure(index, attribute.GetNoOfComponents(), static_cast<proxies::opengl::enumerators::DataType>(DataTypeMapper::ConvertForProxy(attribute.GetDataType())), vertexSize, attribute.GetIsNormalised(), offset, true);
-        offset += attribute.GetNoOfBytes();
-    }
+    // Tex Coords
+    proxies::opengl::VertexAttributeArray::Enable(2, true);
+    proxies::opengl::VertexAttributeArray::Configure(2, 2, proxies::opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, textureCoords), true);
+
 
     _indexBufferId = proxies::opengl::IndexBuffer::Generate(true);
     proxies::opengl::IndexBuffer::Bind(_indexBufferId, true);
-    proxies::opengl::IndexBuffer::SendData(indexData, _noOfIndices * sizeof(unsigned int), proxies::opengl::enumerators::DataUsage::StaticDraw, true);
+    proxies::opengl::IndexBuffer::SendData(&_indices[0], _indices.size() * sizeof(unsigned int), proxies::opengl::enumerators::DataUsage::StaticDraw, true);
 }
 
 void Mesh::Draw() const
@@ -52,13 +50,13 @@ void Mesh::Draw() const
     proxies::opengl::VertexArray::Bind(_vertexArrayId, true);
 
     proxies::opengl::IndexBuffer::Bind(_indexBufferId, true);
-    proxies::opengl::IndexBuffer::Draw(proxies::opengl::enumerators::DrawMode::Triangles, _noOfIndices, proxies::opengl::enumerators::DataType::UnsignedInt, true);
+    proxies::opengl::IndexBuffer::Draw(proxies::opengl::enumerators::DrawMode::Triangles, _indices.size(), proxies::opengl::enumerators::DataType::UnsignedInt, true);
 }
 
 std::string Mesh::ToString() const
 {
     std::stringstream stream;
-    stream << "[Mesh: VertexArrayId " << _vertexArrayId << ", VertexBufferId " << _vertexBufferId << ", IndexBufferId " << _indexBufferId << ", " << _noOfVertices << " vertices, " << _noOfIndices << " indices]";
+    stream << "[Mesh: VertexArrayId " << _vertexArrayId << ", VertexBufferId " << _vertexBufferId << ", IndexBufferId " << _indexBufferId << ", " << _vertices.size() << " vertices, " << _indices.size() << " indices]";
 
     return stream.str();
 }

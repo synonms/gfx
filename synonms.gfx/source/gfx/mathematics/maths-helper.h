@@ -71,6 +71,9 @@ namespace synonms
                 /// snap floating point number to grid.
                 static float Snap(float p, float grid);
 
+                /// Base raised to the power exponent
+                static float Power(float base, float exponent);
+
                 /// Clamp number to a given range
                 template <typename T>
                 static T Clamp(const T& _value, const T& _min, const T& _max)
