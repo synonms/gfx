@@ -1,3 +1,5 @@
+#ifndef GLPROXY_ATTRIBUTE_BIT_H
+#define GLPROXY_ATTRIBUTE_BIT_H
 #pragma once
 
 namespace synonms
@@ -34,12 +36,17 @@ namespace synonms
                         Scissor = 0x00080000,
                         AllAttributes = 0x000fffff
                     };
+
+                    inline AttributeBit operator |(AttributeBit lhs, AttributeBit rhs)
+                    {
+                        return static_cast<AttributeBit>(
+                            static_cast<unsigned int>(lhs) | static_cast<unsigned int>(rhs)
+                            );
+                    }
                 }
             }
         }
     }
 }
 
-
-
-
+#endif

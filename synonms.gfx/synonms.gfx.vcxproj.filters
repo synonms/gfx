@@ -63,6 +63,12 @@
     <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\gfx\environment\depth-buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\shaders\shadowmap-shader-set.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\environment\engine.h">
@@ -149,10 +155,21 @@
     <ClInclude Include="source\gfx\primitives\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\gfx\environment\depth-buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\shadowmap-shader-set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\shadowmap-shader-uniforms.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\phong.fragment.glsl" />
     <None Include="resources\shaders\phong.vertex.glsl" />
+    <None Include="resources\shaders\shadowmap.vertex.glsl" />
+    <None Include="resources\shaders\shadowmap.fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">

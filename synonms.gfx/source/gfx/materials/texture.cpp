@@ -27,7 +27,13 @@ Texture::Texture(const std::string& filePath)
     proxies::opengl::Texture::SetWrapModeS(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::TextureWrapMode::ClampToEdge);
     proxies::opengl::Texture::SetWrapModeT(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::TextureWrapMode::ClampToEdge);
 
-    proxies::opengl::Texture::SendData(proxies::opengl::enumerators::TargetTexture::Texture2D, _width, _height, data, true);
+    proxies::opengl::Texture::SendData(
+        proxies::opengl::enumerators::TargetTexture::Texture2D, 
+        proxies::opengl::enumerators::TextureInternalFormat::GL_RGB8,
+        _width, _height,
+        proxies::opengl::enumerators::TextureFormat::GL_RGBA,
+        proxies::opengl::enumerators::DataType::UnsignedByte,
+        data, true);
 
     Unbind();
 

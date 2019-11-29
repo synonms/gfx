@@ -155,19 +155,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="source\glproxy\buffer.h" />
+    <ClInclude Include="source\glproxy\enumerators\attachment-point.h" />
     <ClInclude Include="source\glproxy\enumerators\attribute-bit.h" />
     <ClInclude Include="source\glproxy\enumerators\blend-factor.h" />
+    <ClInclude Include="source\glproxy\enumerators\texture-compare-func.h" />
+    <ClInclude Include="source\glproxy\enumerators\texture-compare-mode.h" />
+    <ClInclude Include="source\glproxy\enumerators\texture-format.h" />
+    <ClInclude Include="source\glproxy\enumerators\texture-internal-format.h" />
+    <ClInclude Include="source\glproxy\enumerators\draw-buffer-mode.h" />
     <ClInclude Include="source\glproxy\enumerators\data-type.h" />
     <ClInclude Include="source\glproxy\enumerators\data-usage.h" />
     <ClInclude Include="source\glproxy\enumerators\draw-mode.h" />
+    <ClInclude Include="source\glproxy\enumerators\framebuffer-status.h" />
+    <ClInclude Include="source\glproxy\enumerators\framebuffer-target.h" />
     <ClInclude Include="source\glproxy\enumerators\magnification-filter-value.h" />
     <ClInclude Include="source\glproxy\enumerators\minification-filter-value.h" />
     <ClInclude Include="source\glproxy\enumerators\opengl-profile.h" />
+    <ClInclude Include="source\glproxy\enumerators\read-buffer-mode.h" />
     <ClInclude Include="source\glproxy\enumerators\target-texture.h" />
     <ClInclude Include="source\glproxy\enumerators\texture-parameter.h" />
     <ClInclude Include="source\glproxy\enumerators\texture-wrap-mode.h" />
     <ClInclude Include="source\glproxy\enumerators\window-hint.h" />
     <ClInclude Include="source\glproxy\error.h" />
+    <ClInclude Include="source\glproxy\frame-buffer.h" />
     <ClInclude Include="source\glproxy\opengl-exception.h" />
     <ClInclude Include="source\glproxy\shader-program.h" />
     <ClInclude Include="source\glproxy\enumerators\shader-type.h" />
@@ -184,6 +194,7 @@
   <ItemGroup>
     <ClCompile Include="source\glproxy\buffer.cpp" />
     <ClCompile Include="source\glproxy\error.cpp" />
+    <ClCompile Include="source\glproxy\frame-buffer.cpp" />
     <ClCompile Include="source\glproxy\index-buffer.cpp" />
     <ClCompile Include="source\glproxy\opengl-exception.cpp" />
     <ClCompile Include="source\glproxy\shader-program.cpp" />

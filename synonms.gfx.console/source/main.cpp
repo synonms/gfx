@@ -18,6 +18,7 @@
 #include <gfx\primitives\mesh-instance.h>
 #include <gfx\primitives\primitive-factory.h>
 #include <gfx\shaders\phong-shader-set.h>
+#include <gfx\shaders\shadowmap-shader-set.h>
 
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::gui;
@@ -177,13 +178,19 @@ int main(int, char**)
 
     FileSystem fileSystem;
 
-    std::string vertexShaderSource = fileSystem.ReadFile("resources/shaders/phong.vertex.glsl");
-    std::string fragmentShaderSource = fileSystem.ReadFile("resources/shaders/phong.fragment.glsl");
+    std::string phongVertexShaderSource = fileSystem.ReadFile("resources/shaders/phong.vertex.glsl");
+    std::string phongFragmentShaderSource = fileSystem.ReadFile("resources/shaders/phong.fragment.glsl");
 
-    PhongShaderSet shaderSet(vertexShaderSource, fragmentShaderSource);
+    PhongShaderSet phongShaderSet(phongVertexShaderSource, phongFragmentShaderSource);
+
+    std::string shadowmapVertexShaderSource = fileSystem.ReadFile("resources/shaders/shadowmap.vertex.glsl");
+    std::string shadowmapFragmentShaderSource = fileSystem.ReadFile("resources/shaders/shadowmap.fragment.glsl");
+
+    ShadowmapShaderSet shadowmapShaderSet(shadowmapVertexShaderSource, shadowmapFragmentShaderSource);
 
     std::cout << "Shaders created" << std::endl;
-    std::cout << shaderSet.ToString() << std::endl;
+    std::cout << phongShaderSet.ToString() << std::endl;
+    std::cout << shadowmapShaderSet.ToString() << std::endl;
 
     // MESH **************************
     std::cout << "Creating mesh..." << std::endl;
@@ -253,14 +260,14 @@ int main(int, char**)
             auto modelMatrix = planeInstance.GetModelMatrix();
             auto normalMatrix = planeInstance.GetNormalMatrix();
 
-            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, planeInstance.GetMaterial(), light, sceneAmbientColour), planeInstance.GetMesh());
+            phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, planeInstance.GetMaterial(), light, sceneAmbientColour), planeInstance.GetMesh());
         }
 
         {
             auto modelMatrix = boxInstance.GetModelMatrix();
             auto normalMatrix = boxInstance.GetNormalMatrix();
 
-            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, boxInstance.GetMaterial(), light, sceneAmbientColour), boxInstance.GetMesh());
+            phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, boxInstance.GetMaterial(), light, sceneAmbientColour), boxInstance.GetMesh());
         }
 
         {
@@ -269,22 +276,22 @@ int main(int, char**)
             auto modelMatrix = lightInstance.GetModelMatrix();
             auto normalMatrix = lightInstance.GetNormalMatrix();
 
-            shaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), light, sceneAmbientColour), lightInstance.GetMesh());
+            phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), light, sceneAmbientColour), lightInstance.GetMesh());
         }
 
         GuiHelper::PushWindow("gfx", 100.0f, 100.0f, 400.0f, 400.0f);
 
         GuiHelper::CollapsingHeader("Box");
-        GuiHelper::SliderFloat3("Translation", &boxInstance.position.x, -200.0f, 200.0f);
-        GuiHelper::SliderFloat3("Scale", &boxInstance.scale.x, 1.0f, 100.0f);
+        GuiHelper::SliderFloat3("Translation", &boxInstance.position.x, -20.0f, 20.0f);
+        GuiHelper::SliderFloat3("Scale", &boxInstance.scale.x, 1.0f, 20.0f);
         GuiHelper::SliderFloat3("Rotation", &boxInstance.rotationDegrees.pitch, -180.0f, 180.0f);
 
         GuiHelper::CollapsingHeader("Light");
-        GuiHelper::SliderFloat3("Position", &light.position.x, -100.0f, 100.0f);
+        GuiHelper::SliderFloat3("Position", &light.position.x, -20.0f, 20.0f);
         GuiHelper::ColourEdit3("Ambient", &light.ambientColour.red);
         GuiHelper::ColourEdit3("Diffuse", &light.diffuseColour.red);
         GuiHelper::ColourEdit3("Specular", &light.specularColour.red);
-        GuiHelper::SliderFloat("Intensity", light.intensityMultiplier, 0.0f, 100.0f);
+        GuiHelper::SliderFloat("Intensity", light.intensityMultiplier, 0.0f, 20.0f);
 
         GuiHelper::CollapsingHeader("Debug");
 

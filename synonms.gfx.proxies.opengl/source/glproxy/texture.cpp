@@ -56,16 +56,38 @@ unsigned int Texture::Generate(bool throwOnError)
     return textureId;
 }
 
-void Texture::SendData(TargetTexture targetTexture, int width, int height, unsigned char* data, bool throwOnError)
+void Texture::SendData(TargetTexture targetTexture, TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data, bool throwOnError)
 {
     if (throwOnError) Error::Clear();
 
-    glTexImage2D(static_cast<unsigned int>(targetTexture), 0, GL_RGB8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    glTexImage2D(static_cast<unsigned int>(targetTexture), 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
 
     if (throwOnError) Error::ThrowIf({
         {GL_INVALID_ENUM, "Invalid enum in call to glTexImage2D." },
         {GL_INVALID_VALUE, "Invalid value in call to glTexImage2D." },
         {GL_INVALID_OPERATION, "Invalid operation in call to glTexImage2D." },
+        });
+}
+
+void Texture::SetCompareFunc(TargetTexture targetTexture, TextureCompareFunc compareFunc, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glTexParameteri(static_cast<unsigned int>(targetTexture), GL_TEXTURE_COMPARE_FUNC, static_cast<int>(compareFunc));
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "TargetTexture or FilterValue are invalid." }
+        });
+}
+
+void Texture::SetCompareMode(TargetTexture targetTexture, TextureCompareMode compareMode, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glTexParameteri(static_cast<unsigned int>(targetTexture), GL_TEXTURE_COMPARE_MODE, static_cast<int>(compareMode));
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "TargetTexture or FilterValue are invalid." }
         });
 }
 

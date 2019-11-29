@@ -13,6 +13,16 @@ void System::EnableBlending()
     glEnable(GL_BLEND);
 }
 
+void System::EnableDepthTesting()
+{
+    glEnable(GL_DEPTH_TEST);
+}
+
+void System::EnableStencilTest()
+{
+    glEnable(GL_STENCIL_TEST);
+}
+
 std::string System::GetVersion()
 {
     std::stringstream stream;

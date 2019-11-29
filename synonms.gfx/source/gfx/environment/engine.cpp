@@ -15,8 +15,9 @@ Engine::Engine()
         throw std::exception("Failed to intialise system");
     }
 
-//    proxies::opengl::System::SetBlendFunction(proxies::opengl::enumerators::BlendFactor::SourceAlpha, proxies::opengl::enumerators::BlendFactor::OneMinusSourceAlpha);
-//    proxies::opengl::System::EnableBlending();
+    proxies::opengl::System::SetBlendFunction(proxies::opengl::enumerators::BlendFactor::SourceAlpha, proxies::opengl::enumerators::BlendFactor::OneMinusSourceAlpha);
+    proxies::opengl::System::EnableBlending();
+    proxies::opengl::System::EnableDepthTesting();
 
     std::cout << "System initialised" << std::endl;
 }

@@ -34,7 +34,9 @@ Window::~Window()
 
 void Window::Clear()
 {
-    proxies::opengl::Window::Clear(proxies::opengl::enumerators::AttributeBit::ColourBuffer);
+    proxies::opengl::Window::Clear(proxies::opengl::enumerators::AttributeBit::ColourBuffer 
+        | proxies::opengl::enumerators::AttributeBit::DepthBuffer
+        | proxies::opengl::enumerators::AttributeBit::StencilBuffer);
 
     // TODO - set viewport
 }

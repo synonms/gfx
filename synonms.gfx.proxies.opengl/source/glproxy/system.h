@@ -16,6 +16,8 @@ namespace synonms
                 {
                 public:
                     static void EnableBlending();
+                    static void EnableDepthTesting();
+                    static void EnableStencilTest();
                     static std::string GetVersion();
                     static bool Initialise();
                     static bool InitialiseExtensions();

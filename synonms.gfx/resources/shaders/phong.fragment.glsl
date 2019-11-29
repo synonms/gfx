@@ -56,7 +56,7 @@ uniform Light fu_lights[MAX_LIGHTS];
 
 // Fragment shader requires a vec4 color output variable otherwise geometry renders black or white
 // Can be named anything
-out vec4 p_fragmentColour;
+layout(location = 0) out vec4 p_fragmentColour;
 
 vec4 CalculateAmbient(int lightIndex, vec4 materialDiffuseColour);
 vec4 CalculateDiffuse(int lightIndex, vec4 materialDiffuseColour);

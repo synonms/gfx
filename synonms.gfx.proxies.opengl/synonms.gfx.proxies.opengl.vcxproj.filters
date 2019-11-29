@@ -93,6 +93,36 @@
     <ClInclude Include="source\glproxy\enumerators\blend-factor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\glproxy\frame-buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\framebuffer-target.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\attachment-point.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\draw-buffer-mode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\read-buffer-mode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\framebuffer-status.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\texture-internal-format.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\texture-format.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\texture-compare-mode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\texture-compare-func.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\glproxy\buffer.cpp">
@@ -129,6 +159,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\glproxy\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\glproxy\frame-buffer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

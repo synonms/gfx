@@ -155,6 +155,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
+    <ClCompile Include="source\gfx\environment\depth-buffer.cpp" />
     <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
     <ClCompile Include="source\gfx\environment\window.cpp" />
@@ -169,10 +170,12 @@
     <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-set.cpp" />
+    <ClCompile Include="source\gfx\shaders\shadowmap-shader-set.cpp" />
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
+    <ClInclude Include="source\gfx\environment\depth-buffer.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
     <ClInclude Include="source\gfx\environment\light.h" />
     <ClInclude Include="source\gfx\environment\perspective-view.h" />
@@ -199,6 +202,8 @@
     <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\shader-builder.h" />
     <ClInclude Include="source\gfx\shaders\shader-set.h" />
+    <ClInclude Include="source\gfx\shaders\shadowmap-shader-set.h" />
+    <ClInclude Include="source\gfx\shaders\shadowmap-shader-uniforms.h" />
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -214,6 +219,18 @@
     <Content Include="resources\shaders\phong.vertex.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+      <None Include="resources\shaders\shadowmap.fragment.glsl">
+          <DeploymentContent>true</DeploymentContent>
+      </None>
+      <Content Include="resources\shaders\shadowmap.fragment.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Include="resources\shaders\shadowmap.vertex.glsl">
+          <DeploymentContent>true</DeploymentContent>
+      </None>
+      <Content Include="resources\shaders\shadowmap.vertex.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">
