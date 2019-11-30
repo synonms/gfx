@@ -4,12 +4,12 @@ namespace synonms
 {
     namespace gfx
     {
-        namespace environment
+        namespace buffers
         {
             class DepthBuffer
             {
             public:
-                DepthBuffer(int width, int height);
+                DepthBuffer(int width = 1024, int height = 1024);
                 DepthBuffer(DepthBuffer&& other) noexcept;
                 DepthBuffer& operator=(DepthBuffer&& other) noexcept;
                 ~DepthBuffer();
@@ -18,11 +18,13 @@ namespace synonms
                 DepthBuffer(const DepthBuffer& other) = delete;
                 DepthBuffer& operator=(const DepthBuffer& other) = delete;
 
-                void Bind() const;
-                bool IsReady() const;
+                inline int GetWidth() const { return _width; }
+                inline int GetHeight() const { return _height; }
+                inline int GetTextureId() const { return _textureId; }
 
             private:
-                unsigned int _framebufferId;
+                int _width;
+                int _height;
                 unsigned int _textureId;
             };
         }

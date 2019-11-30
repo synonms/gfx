@@ -12,6 +12,7 @@ namespace synonms
                 {
                     enum class ReadBufferMode : unsigned int
                     {
+                        None = 0,
                         FrontLeft = 0x0400,
                         FrontRight = 0x0401,
                         BackLeft = 0x0402,

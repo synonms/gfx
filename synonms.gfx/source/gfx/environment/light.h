@@ -1,5 +1,6 @@
 #pragma once
 
+#include <gfx\mathematics\linear\matrix4x4.h>
 #include <gfx\mathematics\linear\vector4.h>
 #include <gfx\mathematics\linear\vector3.h>
 
@@ -27,7 +28,7 @@ namespace synonms
                 LightType Type;
 
                 mathematics::linear::Vector3<float> position{ 0.0f, 0.0f, 0.0f };
-                mathematics::linear::Vector3<float> direction{ 0.0f, 0.0f, 1.0f };
+                mathematics::linear::Vector3<float> direction{ 0.0f, 0.0f, 0.0f };
 
                 mathematics::linear::Vector4<float> ambientColour{0.005f, 0.005f, 0.005f, 1.0f};
                 mathematics::linear::Vector4<float> diffuseColour{1.0f, 1.0f, 1.0f, 1.0f};
@@ -40,6 +41,8 @@ namespace synonms
                 float constantAttenuation{1.0f};
                 float linearAttenuation{0.1f};
                 float quadraticAttenuation{0.01f};
+
+                inline mathematics::linear::Matrix4x4 GetViewMatrix() const { return mathematics::linear::Matrix4x4::CreateViewFrom(position, mathematics::linear::Vector3<float>::CreateRotationDegreesFrom(direction), false); }
             };
         }
     }

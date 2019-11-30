@@ -12,15 +12,15 @@ namespace synonms
                 {
                     enum class FramebufferStatus : unsigned int
                     {
-                        GL_FRAMEBUFFER_COMPLETE = 0x8CD5,
-                        GL_FRAMEBUFFER_UNDEFINED,
-                        GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT = 0x8CD6,
-                        GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT = 0x8CD7,
-                        GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER = 0x8CDB,
-                        GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER = 0x8CDC,
-                        GL_FRAMEBUFFER_UNSUPPORTED = 0x8CDD,
-                        GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE = 0x8D56,
-                        GL_FRAMEBUFFER_INCOMPLETE_LAYER_TARGETS = 0x8DA8
+                        Complete = 0x8CD5,
+                        Undefined = 0x8219,
+                        IncompleteAttachment = 0x8CD6,
+                        IncompleteMissingAttachment = 0x8CD7,
+                        IncompleteDrawBuffer = 0x8CDB,
+                        IncompleteReadBuffer = 0x8CDC,
+                        Unsupported = 0x8CDD,
+                        IncompleteMultisample = 0x8D56,
+                        IncompleteLayerTargets = 0x8DA8
                     };
                 }
             }

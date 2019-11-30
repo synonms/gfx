@@ -1,7 +1,9 @@
 #include "phong-shader-set.h"
 
+#include <gfx\enumerators\texture-slot.h>
 #include <gfx\mathematics\maths-helper.h>
 
+using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::materials;
 using namespace synonms::gfx::mathematics;
@@ -17,7 +19,15 @@ void PhongShaderSet::Render(const PhongShaderUniforms& uniforms, const Mesh& mes
 {
     Use();
 
-    SetUniform("vu_modelMatrix", uniforms.ModelMatrix);
+    auto isDiffuseTextureEnabled = uniforms.ShaderMaterial.IsTextureEnabled(TextureSlot::Colour);
+    auto isSpecularTextureEnabled = uniforms.ShaderMaterial.IsTextureEnabled(TextureSlot::Specular);
+    auto isEmissiveTextureEnabled = uniforms.ShaderMaterial.IsTextureEnabled(TextureSlot::Emissive);
+
+    if (isDiffuseTextureEnabled) uniforms.ShaderMaterial.ActivateTexture(TextureSlot::Colour);
+    if (isSpecularTextureEnabled) uniforms.ShaderMaterial.ActivateTexture(TextureSlot::Specular);
+    if (isEmissiveTextureEnabled) uniforms.ShaderMaterial.ActivateTexture(TextureSlot::Emissive);
+
+        SetUniform("vu_modelMatrix", uniforms.ModelMatrix);
     SetUniform("vu_viewMatrix", uniforms.ViewMatrix);
     SetUniform("vu_projectionMatrix", uniforms.ProjectionMatrix);
     SetUniform("vu_normalMatrix", uniforms.NormalMatrix);
@@ -28,14 +38,14 @@ void PhongShaderSet::Render(const PhongShaderUniforms& uniforms, const Mesh& mes
     SetUniform("vu_lights[0].direction", uniforms.ShaderLight.direction);
 
     SetUniform("fu_material.diffuseColour", uniforms.ShaderMaterial.diffuseColour);
-    SetUniform("fu_material.isDiffuseTextureEnabled", uniforms.ShaderMaterial.IsTextureEnabled(Material::TextureSlot::Diffuse));
-    SetUniform("fu_material.diffuseTextureSlot", static_cast<int>(Material::TextureSlot::Diffuse));
+    SetUniform("fu_material.isDiffuseTextureEnabled", isDiffuseTextureEnabled);
+    SetUniform("fu_material.diffuseTextureSlot", static_cast<int>(TextureSlot::Colour));
     SetUniform("fu_material.specularColour", uniforms.ShaderMaterial.specularColour);
-    SetUniform("fu_material.isSpecularTextureEnabled", uniforms.ShaderMaterial.IsTextureEnabled(Material::TextureSlot::Specular));
-    SetUniform("fu_material.specularTextureSlot", static_cast<int>(Material::TextureSlot::Specular));
+    SetUniform("fu_material.isSpecularTextureEnabled", isSpecularTextureEnabled);
+    SetUniform("fu_material.specularTextureSlot", static_cast<int>(TextureSlot::Specular));
     SetUniform("fu_material.emissiveColour", uniforms.ShaderMaterial.emissiveColour);
-    SetUniform("fu_material.isEmissiveTextureEnabled", uniforms.ShaderMaterial.IsTextureEnabled(Material::TextureSlot::Emissive));
-    SetUniform("fu_material.emissiveTextureSlot", static_cast<int>(Material::TextureSlot::Emissive));
+    SetUniform("fu_material.isEmissiveTextureEnabled", isEmissiveTextureEnabled);
+    SetUniform("fu_material.emissiveTextureSlot", static_cast<int>(TextureSlot::Emissive));
     SetUniform("fu_material.shininess", uniforms.ShaderMaterial.shininess);
 
     SetUniform("fu_materialSceneProduct.sceneColour", uniforms.SceneAmbientColour);

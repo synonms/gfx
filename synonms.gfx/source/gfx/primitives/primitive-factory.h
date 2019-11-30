@@ -2,6 +2,8 @@
 
 #include <gfx/primitives/mesh.h>
 
+#include <memory>
+
 namespace synonms
 {
     namespace gfx
@@ -11,8 +13,9 @@ namespace synonms
             class PrimitiveFactory
             {
             public:
-                static Mesh CreateBox(float width, float height, float depth);
-                static Mesh CreatePlane(float width, float height);
+                static std::unique_ptr<Mesh> CreateBox(float width, float height, float depth);
+                static std::unique_ptr<Mesh> CreatePlane(float width, float height);
+                static std::unique_ptr<Mesh> CreatePlane(float left, float bottom, float width, float height);
             };
         }
     }

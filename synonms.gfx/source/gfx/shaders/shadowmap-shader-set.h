@@ -1,6 +1,6 @@
 #pragma once
 
-#include <gfx\shaders\shadowmap-shader-uniforms.h>
+#include <gfx\mathematics\linear\matrix4x4.h>
 #include <gfx\shaders\shader-set.h>
 #include <gfx\primitives\mesh.h>
 
@@ -16,7 +16,7 @@ namespace synonms
             public:
                 ShadowmapShaderSet(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
 
-                void Render(const ShadowmapShaderUniforms& uniforms, const primitives::Mesh& mesh);
+                void Render(const mathematics::linear::Matrix4x4& modelViewProjectionMatrix, const primitives::Mesh& mesh);
             };
         }
     }

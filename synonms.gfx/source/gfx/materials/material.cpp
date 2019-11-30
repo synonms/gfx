@@ -1,7 +1,15 @@
 #include "material.h"
 
+using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::materials;
 using namespace synonms::gfx::mathematics::linear;
+
+void Material::ActivateTexture(TextureSlot slot) const
+{
+    if (_textures.find(slot) != std::end(_textures)) {
+        _textures.at(slot)->Bind(slot);
+    }
+}
 
 Material& Material::WithDiffuseColour(const Vector4<float>& colour)
 {
@@ -38,7 +46,7 @@ Material& Material::WithTexture(TextureSlot slot, std::shared_ptr<Texture> textu
     }
 
     _textures.insert(std::make_pair(slot, texture));
-    _textures[slot]->Bind(static_cast<unsigned int>(slot));
+    _textures.at(slot)->Bind(slot);
 
     return *this;
 }

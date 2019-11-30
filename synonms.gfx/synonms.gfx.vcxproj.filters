@@ -63,10 +63,22 @@
     <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gfx\environment\depth-buffer.cpp">
+    <ClCompile Include="source\gfx\shaders\shadowmap-shader-set.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gfx\shaders\shadowmap-shader-set.cpp">
+    <ClCompile Include="source\gfx\buffers\buffer-set.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\buffers\depth-buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\buffers\colour-buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\shaders\buffer-shader-set.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\output\pane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -155,13 +167,25 @@
     <ClInclude Include="source\gfx\primitives\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\gfx\environment\depth-buffer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\gfx\shaders\shadowmap-shader-set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\gfx\shaders\shadowmap-shader-uniforms.h">
+    <ClInclude Include="source\gfx\buffers\buffer-set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\buffers\depth-buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\buffers\colour-buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\buffer-shader-set.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\output\pane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\enumerators\texture-slot.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -170,12 +194,20 @@
     <None Include="resources\shaders\phong.vertex.glsl" />
     <None Include="resources\shaders\shadowmap.vertex.glsl" />
     <None Include="resources\shaders\shadowmap.fragment.glsl" />
+    <None Include="resources\shaders\buffer.vertex.glsl" />
+    <None Include="resources\shaders\buffer.fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\textures\UVCheckerBoard-specular-2048x2048.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\UVCubemap-2048x1536.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\UVCubemap-2048-1536.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

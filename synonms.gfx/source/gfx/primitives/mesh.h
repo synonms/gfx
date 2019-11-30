@@ -15,6 +15,14 @@ namespace synonms
             {
             public:
                 Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>& indices);
+                Mesh(Mesh&& other) noexcept;
+                Mesh& operator=(Mesh&& other) noexcept;
+                ~Mesh();
+
+                Mesh() = delete;
+                Mesh(const Mesh& other) = delete;
+                Mesh& operator=(const Mesh& other) = delete;
+
                 void Draw() const;
                 std::string ToString() const;
 

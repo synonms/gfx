@@ -43,6 +43,32 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
     proxies::opengl::IndexBuffer::SendData(&_indices[0], _indices.size() * sizeof(unsigned int), proxies::opengl::enumerators::DataUsage::StaticDraw, true);
 }
 
+Mesh::Mesh(Mesh&& other) noexcept
+    : _vertices(std::exchange(other._vertices, {}))
+    , _indices(std::exchange(other._indices, {}))
+    , _indexBufferId(std::exchange(other._indexBufferId, 0))
+    , _vertexArrayId(std::exchange(other._vertexArrayId, 0))
+    , _vertexBufferId(std::exchange(other._vertexBufferId, 0))
+    , _isBackFaceCulled(std::exchange(other._isBackFaceCulled, false))
+{
+}
+
+Mesh& Mesh::operator=(Mesh&& other) noexcept
+{
+    _vertices = std::exchange(other._vertices, {});
+    _indices = std::exchange(other._indices, {});
+    _indexBufferId = std::exchange(other._indexBufferId, 0);
+    _vertexArrayId = std::exchange(other._vertexArrayId, 0);
+    _vertexBufferId = std::exchange(other._vertexBufferId, 0);
+    _isBackFaceCulled = std::exchange(other._isBackFaceCulled, false);
+        
+    return *this;
+}
+
+Mesh::~Mesh()
+{
+}
+
 void Mesh::Draw() const
 {
     proxies::opengl::System::SetFaceCulling(_isBackFaceCulled);

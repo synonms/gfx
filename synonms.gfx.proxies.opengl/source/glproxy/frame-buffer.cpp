@@ -56,7 +56,7 @@ unsigned int FrameBuffer::Generate(bool throwOnError)
     return id;
 }
 
-FramebufferStatus GetStatus(FramebufferTarget target, bool throwOnError)
+FramebufferStatus FrameBuffer::GetStatus(FramebufferTarget target, bool throwOnError)
 {
     if (throwOnError) Error::Clear();
 

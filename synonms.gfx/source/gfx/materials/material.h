@@ -1,5 +1,6 @@
 #pragma once
 
+#include <gfx/enumerators/texture-slot.h>
 #include <gfx/mathematics/linear/vector3.h>
 #include <gfx/mathematics/linear/vector4.h>
 #include <gfx/materials/texture.h>
@@ -16,29 +17,23 @@ namespace synonms
             class Material
             {
             public:
-                enum class TextureSlot : unsigned int
-                {
-                    Diffuse = 0,
-                    Specular = 1,
-                    Emissive = 2
-                };
-
-            public:
                 mathematics::linear::Vector4<float> diffuseColour{ 1.0f, 1.0f, 1.0f, 1.0f };
                 mathematics::linear::Vector4<float> specularColour{ 0.5f, 0.5f, 0.5f, 1.0f };
                 mathematics::linear::Vector4<float> emissiveColour{ 0.0f, 0.0f, 0.0f, 1.0f };
                 float shininess{ 1.0f };    // Larger number = smaller specular highlight
 
-                inline bool IsTextureEnabled(TextureSlot slot) const 
+                inline bool IsTextureEnabled(enumerators::TextureSlot slot) const 
                 {
                     return _textures.find(slot) != std::end(_textures);
                 }
+
+                void ActivateTexture(enumerators::TextureSlot slot) const;
 
                 Material& WithDiffuseColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithSpecularColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithEmissiveColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithShininess(float shininess);    // Larger number = smaller specular highlight
-                Material& WithTexture(TextureSlot slot, std::shared_ptr<Texture> texture);
+                Material& WithTexture(enumerators::TextureSlot slot, std::shared_ptr<Texture> texture);
 
             public:
                 static Material Create()
@@ -47,7 +42,7 @@ namespace synonms
                 }
 
             private:
-                std::unordered_map<TextureSlot, std::shared_ptr<Texture>> _textures;
+                std::unordered_map<enumerators::TextureSlot, std::shared_ptr<Texture>> _textures;
             };
         }
     }

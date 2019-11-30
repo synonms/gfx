@@ -154,8 +154,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\gfx\buffers\buffer-set.cpp" />
+    <ClCompile Include="source\gfx\buffers\colour-buffer.cpp" />
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
-    <ClCompile Include="source\gfx\environment\depth-buffer.cpp" />
+    <ClCompile Include="source\gfx\buffers\depth-buffer.cpp" />
     <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
     <ClCompile Include="source\gfx\environment\window.cpp" />
@@ -165,8 +167,10 @@
     <ClCompile Include="source\gfx\materials\material.cpp" />
     <ClCompile Include="source\gfx\materials\texture.cpp" />
     <ClCompile Include="source\gfx\mathematics\maths-helper.cpp" />
+    <ClCompile Include="source\gfx\output\pane.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
     <ClCompile Include="source\gfx\primitives\primitive-factory.cpp" />
+    <ClCompile Include="source\gfx\shaders\buffer-shader-set.cpp" />
     <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-set.cpp" />
@@ -174,8 +178,11 @@
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\gfx\buffers\buffer-set.h" />
+    <ClInclude Include="source\gfx\buffers\colour-buffer.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
-    <ClInclude Include="source\gfx\environment\depth-buffer.h" />
+    <ClInclude Include="source\gfx\buffers\depth-buffer.h" />
+    <ClInclude Include="source\gfx\enumerators\texture-slot.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
     <ClInclude Include="source\gfx\environment\light.h" />
     <ClInclude Include="source\gfx\environment\perspective-view.h" />
@@ -194,16 +201,17 @@
     <ClInclude Include="source\gfx\mathematics\linear\vector3.h" />
     <ClInclude Include="source\gfx\mathematics\linear\vector4.h" />
     <ClInclude Include="source\gfx\mathematics\maths-helper.h" />
+    <ClInclude Include="source\gfx\output\pane.h" />
     <ClInclude Include="source\gfx\primitives\primitive-factory.h" />
     <ClInclude Include="source\gfx\primitives\mesh-instance.h" />
     <ClInclude Include="source\gfx\primitives\mesh.h" />
     <ClInclude Include="source\gfx\primitives\vertex.h" />
+    <ClInclude Include="source\gfx\shaders\buffer-shader-set.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader-set.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\shader-builder.h" />
     <ClInclude Include="source\gfx\shaders\shader-set.h" />
     <ClInclude Include="source\gfx\shaders\shadowmap-shader-set.h" />
-    <ClInclude Include="source\gfx\shaders\shadowmap-shader-uniforms.h" />
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -219,18 +227,30 @@
     <Content Include="resources\shaders\phong.vertex.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-      <None Include="resources\shaders\shadowmap.fragment.glsl">
-          <DeploymentContent>true</DeploymentContent>
-      </None>
-      <Content Include="resources\shaders\shadowmap.fragment.glsl">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Include="resources\shaders\shadowmap.vertex.glsl">
-          <DeploymentContent>true</DeploymentContent>
-      </None>
-      <Content Include="resources\shaders\shadowmap.vertex.glsl">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
+    <None Include="resources\shaders\shadowmap.fragment.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\shadowmap.fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\shadowmap.vertex.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\shadowmap.vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\buffer.fragment.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\buffer.fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\buffer.vertex.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\buffer.vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">
@@ -243,6 +263,12 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Content Include="resources\textures\UVCheckerBoard-specular-2048x2048.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\textures\UVCubemap-2048x1536.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Content Include="resources\textures\UVCubemap-2048x1536.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

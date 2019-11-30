@@ -178,6 +178,17 @@ namespace synonms
                         return incident - 2.0f * normal.Dot(incident) * normal;
                     }
 
+                    static Vector3<T> CreateRotationDegreesFrom(const Vector3<T>& direction)
+                    {
+                        // NOTE: Can't really determine roll from a direction, so assume 0.0
+                        Vector3<T> result;
+                        result.yaw = static_cast<T>(MathsHelper::RadiansToDegrees(MathsHelper::ArcTangent(static_cast<float>(direction.x), static_cast<float>(direction.z))));
+                        result.pitch = static_cast<T>(MathsHelper::RadiansToDegrees(MathsHelper::ArcSine(static_cast<float>(-direction.y))));
+                        result.roll = static_cast<T>(0);
+
+                        return result;
+                    }
+
                 public:
                     friend bool operator==(const Vector3<T>& left, const Vector3<T>& right) {
                         return left.x == right.x && left.y == right.y && left.z == right.z;

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gfx\enumerators\texture-slot.h>
+
 #include <string>
 
 namespace synonms
@@ -20,7 +22,7 @@ namespace synonms
                 Texture(const Texture& other) = delete;
                 Texture& operator=(const Texture& other) = delete;
 
-                void Bind(unsigned int slot = 0) const;
+                void Bind(enumerators::TextureSlot slot = enumerators::TextureSlot::Colour) const;
                 int GetHeight() const;
                 int GetWidth() const;
 

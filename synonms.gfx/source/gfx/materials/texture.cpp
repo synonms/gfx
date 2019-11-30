@@ -4,7 +4,9 @@
 
 #include <vendor\stb_image\stb-image.h>
 
+using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::materials;
+using namespace synonms::gfx::proxies;
 
 Texture::Texture(const std::string& filePath)
     : _filePath(filePath)
@@ -19,20 +21,20 @@ Texture::Texture(const std::string& filePath)
         throw std::exception(message);
     }
 
-    _textureId = proxies::opengl::Texture::Generate(true);
+    _textureId = opengl::Texture::Generate(true);
     Bind();
 
-    proxies::opengl::Texture::SetMinificationFilter(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::MinificationFilterValue::Linear);
-    proxies::opengl::Texture::SetMagnificationFilter(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::MagnificationFilterValue::Linear);
-    proxies::opengl::Texture::SetWrapModeS(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::TextureWrapMode::ClampToEdge);
-    proxies::opengl::Texture::SetWrapModeT(proxies::opengl::enumerators::TargetTexture::Texture2D, proxies::opengl::enumerators::TextureWrapMode::ClampToEdge);
+    opengl::Texture::SetMinificationFilter(opengl::enumerators::TargetTexture::Texture2D, opengl::enumerators::MinificationFilterValue::Linear);
+    opengl::Texture::SetMagnificationFilter(opengl::enumerators::TargetTexture::Texture2D, opengl::enumerators::MagnificationFilterValue::Linear);
+    opengl::Texture::SetWrapModeS(opengl::enumerators::TargetTexture::Texture2D, opengl::enumerators::TextureWrapMode::ClampToEdge);
+    opengl::Texture::SetWrapModeT(opengl::enumerators::TargetTexture::Texture2D, opengl::enumerators::TextureWrapMode::ClampToEdge);
 
-    proxies::opengl::Texture::SendData(
-        proxies::opengl::enumerators::TargetTexture::Texture2D, 
-        proxies::opengl::enumerators::TextureInternalFormat::GL_RGB8,
+    opengl::Texture::SendData(
+        opengl::enumerators::TargetTexture::Texture2D, 
+        opengl::enumerators::TextureInternalFormat::GL_RGB8,
         _width, _height,
-        proxies::opengl::enumerators::TextureFormat::GL_RGBA,
-        proxies::opengl::enumerators::DataType::UnsignedByte,
+        opengl::enumerators::TextureFormat::GL_RGBA,
+        opengl::enumerators::DataType::UnsignedByte,
         data, true);
 
     Unbind();
@@ -70,15 +72,15 @@ Texture& Texture::operator=(Texture&& other) noexcept
 Texture::~Texture()
 {
     if (_textureId > 0) {
-        proxies::opengl::Texture::Delete(_textureId, true);
+        opengl::Texture::Delete(_textureId, true);
     }
 }
 
-void Texture::Bind(unsigned int slot) const
+void Texture::Bind(TextureSlot slot) const
 {
     if (_textureId > 0) {
-        proxies::opengl::Texture::ActivateSlot(slot);
-        proxies::opengl::Texture::Bind(proxies::opengl::enumerators::TargetTexture::Texture2D, _textureId, true);
+        opengl::Texture::ActivateSlot(static_cast<unsigned int>(slot));
+        opengl::Texture::Bind(opengl::enumerators::TargetTexture::Texture2D, _textureId, true);
     }
 }
 
