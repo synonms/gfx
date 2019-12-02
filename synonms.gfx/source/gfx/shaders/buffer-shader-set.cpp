@@ -7,11 +7,11 @@ BufferShaderSet::BufferShaderSet(const std::string& vertexShaderSource, const st
     : ShaderSet(vertexShaderSource, fragmentShaderSource)
 {}
 
-void BufferShaderSet::Render(int bufferTextureId, const Mesh& mesh)
+void BufferShaderSet::Render(int textureSlot, const Mesh& mesh)
 {
     Use();
 
-    SetUniform("fu_bufferTextureSlot", bufferTextureId);
+    SetUniform("fu_bufferTextureSlot", textureSlot);
 
     mesh.Draw();
 }

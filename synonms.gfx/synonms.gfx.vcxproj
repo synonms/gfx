@@ -155,17 +155,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\gfx\buffers\buffer-set.cpp" />
-    <ClCompile Include="source\gfx\buffers\colour-buffer.cpp" />
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
-    <ClCompile Include="source\gfx\buffers\depth-buffer.cpp" />
     <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
     <ClCompile Include="source\gfx\environment\window.cpp" />
     <ClCompile Include="source\gfx\environment\engine.cpp" />
     <ClCompile Include="source\gfx\gui\gui-helper.cpp" />
     <ClCompile Include="source\gfx\io\file-system.cpp" />
+    <ClCompile Include="source\gfx\io\image-file.cpp" />
     <ClCompile Include="source\gfx\materials\material.cpp" />
-    <ClCompile Include="source\gfx\materials\texture.cpp" />
     <ClCompile Include="source\gfx\mathematics\maths-helper.cpp" />
     <ClCompile Include="source\gfx\output\pane.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
@@ -179,9 +177,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\buffers\buffer-set.h" />
-    <ClInclude Include="source\gfx\buffers\colour-buffer.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
-    <ClInclude Include="source\gfx\buffers\depth-buffer.h" />
     <ClInclude Include="source\gfx\enumerators\texture-slot.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
     <ClInclude Include="source\gfx\environment\light.h" />
@@ -192,8 +188,8 @@
     <ClInclude Include="source\gfx\environment\engine.h" />
     <ClInclude Include="source\gfx\gui\gui-helper.h" />
     <ClInclude Include="source\gfx\io\file-system.h" />
+    <ClInclude Include="source\gfx\io\image-file.h" />
     <ClInclude Include="source\gfx\materials\material.h" />
-    <ClInclude Include="source\gfx\materials\texture.h" />
     <ClInclude Include="source\gfx\mathematics\linear\matrix2x2.h" />
     <ClInclude Include="source\gfx\mathematics\linear\matrix3x3.h" />
     <ClInclude Include="source\gfx\mathematics\linear\matrix4x4.h" />

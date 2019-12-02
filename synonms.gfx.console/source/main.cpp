@@ -12,7 +12,6 @@
 #include <gfx\environment\window.h>
 #include <gfx\gui\gui-helper.h>
 #include <gfx\io\file-system.h>
-#include <gfx\materials\texture.h>
 #include <gfx\materials\material.h>
 #include <gfx\mathematics\linear\matrix4x4.h>
 #include <gfx\mathematics\maths-helper.h>
@@ -24,6 +23,11 @@
 #include <gfx\shaders\phong-shader-set.h>
 #include <gfx\shaders\shadowmap-shader-set.h>
 
+#include <glproxy\renderer.h>
+#include <glproxy\system.h>
+#include <glproxy\window.h>
+#include <glproxy\factories\texture-factory.h>
+
 using namespace synonms::gfx::buffers;
 using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::environment;
@@ -34,6 +38,7 @@ using namespace synonms::gfx::mathematics;
 using namespace synonms::gfx::mathematics::linear;
 using namespace synonms::gfx::output;
 using namespace synonms::gfx::primitives;
+using namespace synonms::gfx::proxies;
 using namespace synonms::gfx::shaders;
 
 //static void glfw_error_callback(int error, const char* description)
@@ -136,7 +141,7 @@ int main(int, char**)
     // WINDOW *******************
     std::cout << "Creating window..." << std::endl;
 
-    Window window(windowWidth, windowHeight, "GLOOP");
+    Window window(windowWidth, windowHeight, "GFX");
     window.MakeContextCurrent();
     window.EnableVsync();
 
@@ -152,14 +157,16 @@ int main(int, char**)
     // PANES **********************
     std::cout << "Creating panes..." << std::endl;
 
-    Pane debugPane(0.5f, 0.5f, 0.4f, 0.4f);
+    Pane mainPane(-1.0f, -1.0f, 2.0f, 2.0f);
+    Pane debugPane1(0.5f, 0.0f, 0.5f, 0.5f);
+    Pane debugPane2(0.5f, 0.5f, 0.5f, 0.5f);
 
     std::cout << "Panes created" << std::endl;
 
     // VIEW *******************
     std::cout << "Creating view..." << std::endl;
 
-    PerspectiveView view(60.0f, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 100.0f);
+    PerspectiveView view(60.0f, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 50.0f);
 
     std::cout << "View created" << std::endl;
 
@@ -174,9 +181,26 @@ int main(int, char**)
     std::cout << "Camera created" << std::endl;
 
     // MATERIALS ***********************
-    auto checkerboardDiffuseTexture = std::make_shared<Texture>("resources/textures/UVCheckerBoard-2048x2048.png");
-    auto checkerboardSpecularTexture = std::make_shared<Texture>("resources/textures/UVCheckerBoard-specular-2048x2048.png");
-    auto cubemapDiffuseTexture = std::make_shared<Texture>("resources/textures/UVCubemap-2048x1536.png");
+    FileSystem fileSystem;
+
+    std::shared_ptr<opengl::Texture> checkerboardDiffuseTexture;
+    std::shared_ptr<opengl::Texture> checkerboardSpecularTexture;
+    std::shared_ptr<opengl::Texture> cubemapDiffuseTexture;
+
+    {
+        auto checkerboardImage = fileSystem.ReadImage("resources/textures/UVCheckerBoard-2048x2048.png");
+        checkerboardDiffuseTexture = opengl::factories::TextureFactory::CreateColour(checkerboardImage.width, checkerboardImage.height, checkerboardImage.data);
+    }
+
+    {
+        auto checkerboardSpecularImage = fileSystem.ReadImage("resources/textures/UVCheckerBoard-specular-2048x2048.png");
+        checkerboardSpecularTexture = opengl::factories::TextureFactory::CreateColour(checkerboardSpecularImage.width, checkerboardSpecularImage.height, checkerboardSpecularImage.data);
+    }
+
+    {
+        auto cubemapImage = fileSystem.ReadImage("resources/textures/UVCubemap-2048x1536.png");
+        cubemapDiffuseTexture = opengl::factories::TextureFactory::CreateColour(cubemapImage.width, cubemapImage.height, cubemapImage.data);
+    }
 
     auto checkerboardMaterial = Material::Create()
         .WithTexture(TextureSlot::Colour, checkerboardDiffuseTexture)
@@ -191,8 +215,6 @@ int main(int, char**)
 
     // SHADERS ***********************
     std::cout << "Creating shaders..." << std::endl;
-
-    FileSystem fileSystem;
 
     std::string phongVertexShaderSource = fileSystem.ReadFile("resources/shaders/phong.vertex.glsl");
     std::string phongFragmentShaderSource = fileSystem.ReadFile("resources/shaders/phong.fragment.glsl");
@@ -251,21 +273,9 @@ int main(int, char**)
     // BUFFERS **********************************
     std::cout << "Creating buffers..." << std::endl;
 
-    BufferSet bufferSet;
+    BufferSet bufferSet(windowWidth, windowHeight);
 
-    auto colourBuffer0 = std::make_shared<ColourBuffer>(windowWidth, windowHeight);
-    auto depthBuffer = std::make_shared<DepthBuffer>(1024, 1024);
-
-    bufferSet.Bind();
-    bufferSet.SetColourBuffer(colourBuffer0, 0);
-    bufferSet.SetDepthBuffer(depthBuffer);
-    bufferSet.Unbind();
-
-    if (bufferSet.IsReady()) {
-        std::cout << "Buffer set created and ready" << std::endl;
-    } else {
-        std::cout << "ERROR: Buffer set created but not ready" << std::endl;
-    }
+    std::cout << "Buffer set created" << std::endl;
 
     // IMGUI **********************************
     std::cout << "Initialising IMGUI..." << std::endl;
@@ -289,25 +299,19 @@ int main(int, char**)
     {
         const auto currentWindowSize = window.GetSize();
 
-        window.Clear();
-        window.SetViewport(0, 0, currentWindowSize.width, currentWindowSize.height);
-
         GuiHelper::NewFrame();
 
         auto projectionMatrix = view.GetProjectionMatrix();
         auto viewMatrix = camera.GetViewMatrix();
 
-        {
-            // Draw box to offline buffer
-            bufferSet.Bind();
+        // Draw box to offline buffer
+        bufferSet.Bind();
 
-            auto modelMatrix = boxInstance.GetModelMatrix();
-            auto normalMatrix = boxInstance.GetNormalMatrix();
+        opengl::Window::SetViewport(0, 0, currentWindowSize.width, currentWindowSize.height);
 
-            phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, boxInstance.GetMaterial(), light, sceneAmbientColour), boxInstance.GetMesh());
-
-            bufferSet.Unbind();
-        }
+        opengl::System::EnableDepthTesting();
+        opengl::Renderer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
+        opengl::Renderer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
 
         {
             auto modelMatrix = planeInstance.GetModelMatrix();
@@ -332,10 +336,22 @@ int main(int, char**)
             phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), light, sceneAmbientColour), lightInstance.GetMesh());
         }
 
+        // Revert to default buffer
+        opengl::FrameBuffer::BindDefault(opengl::enumerators::FramebufferTarget::Framebuffer);
+
+        opengl::Window::SetViewport(0, 0, currentWindowSize.width, currentWindowSize.height);
+
+        opengl::System::DisableDepthTesting();
+        opengl::Renderer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
+
         {
-            // Draw buffer to pane
-            colourBuffer0->Bind();
-            bufferShaderSet.Render(colourBuffer0->GetTextureId(), debugPane.GetMesh());
+            // Draw buffers to panes
+            opengl::Texture::ActivateSlot(0);
+            bufferSet.GetColourTexture(0)->Bind();
+            bufferShaderSet.Render(0, mainPane.GetMesh());
+//            bufferShaderSet.Render(0, debugPane1.GetMesh());
+//            depthBuffer->Bind();
+//            bufferShaderSet.Render(0, debugPane2.GetMesh());
         }
 
         GuiHelper::PushWindow("gfx", 100.0f, 100.0f, 400.0f, 400.0f);

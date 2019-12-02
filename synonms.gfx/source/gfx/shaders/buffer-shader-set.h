@@ -14,7 +14,7 @@ namespace synonms
             public:
                 BufferShaderSet(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
 
-                void Render(int bufferTextureId, const primitives::Mesh& mesh);
+                void Render(int textureSlot, const primitives::Mesh& mesh);
             };
         }
     }

@@ -7,6 +7,56 @@
 using namespace synonms::gfx::proxies::opengl;
 using namespace synonms::gfx::proxies::opengl::enumerators;
 
+FrameBuffer::FrameBuffer()
+{
+    glGenFramebuffers(1, &_frameBufferId);
+}
+
+FrameBuffer::FrameBuffer(FrameBuffer&& other) noexcept
+    : _frameBufferId(std::exchange(other._frameBufferId, 0))
+{
+}
+
+FrameBuffer& FrameBuffer::operator=(FrameBuffer&& other) noexcept
+{
+    _frameBufferId = std::exchange(other._frameBufferId, 0);
+
+    return *this;
+}
+
+FrameBuffer::~FrameBuffer()
+{
+    if (_frameBufferId > 0) {
+        glDeleteFramebuffers(1, &_frameBufferId);
+    }
+}
+
+
+void FrameBuffer::Bind(FramebufferTarget target, bool throwOnError) const
+{
+    if (throwOnError) Error::Clear();
+
+    glBindFramebuffer(static_cast<unsigned int>(target), _frameBufferId);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "Target is not one of the allowable values." },
+        {GL_INVALID_OPERATION , "Buffer is not a name previously returned from a call to glGenFramebuffers." }
+        });
+}
+
+
+void FrameBuffer::AttachRenderBuffer(FramebufferTarget target, AttachmentPoint attachmentPoint, unsigned int renderBufferId, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glFramebufferRenderbuffer(static_cast<unsigned int>(target), static_cast<unsigned int>(attachmentPoint), GL_RENDERBUFFER, renderBufferId);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "Target is not one of the allowable values." },
+        {GL_INVALID_OPERATION, "Framebuffer is not bound to target." }
+        });
+}
+
 void FrameBuffer::AttachTexture2d(FramebufferTarget target, AttachmentPoint attachmentPoint, TargetTexture targetTexture, unsigned int textureId, bool throwOnError)
 {
     if (throwOnError) Error::Clear();
@@ -19,41 +69,16 @@ void FrameBuffer::AttachTexture2d(FramebufferTarget target, AttachmentPoint atta
         });
 }
 
-void FrameBuffer::Bind(FramebufferTarget target, unsigned int framebufferId, bool throwOnError)
+void FrameBuffer::BindDefault(enumerators::FramebufferTarget target, bool throwOnError)
 {
     if (throwOnError) Error::Clear();
 
-    glBindFramebuffer(static_cast<unsigned int>(target), framebufferId);
+    glBindFramebuffer(static_cast<unsigned int>(target), 0);
 
     if (throwOnError) Error::ThrowIf({
         {GL_INVALID_ENUM, "Target is not one of the allowable values." },
         {GL_INVALID_OPERATION , "Buffer is not a name previously returned from a call to glGenFramebuffers." }
         });
-}
-
-void FrameBuffer::Delete(unsigned int framebufferId, bool throwOnError)
-{
-    if (throwOnError) Error::Clear();
-
-    glDeleteFramebuffers(1, &framebufferId);
-
-    if (throwOnError) Error::ThrowIf({
-        {GL_INVALID_VALUE, "Size is negative." }
-        });
-}
-
-unsigned int FrameBuffer::Generate(bool throwOnError)
-{
-    if (throwOnError) Error::Clear();
-
-    unsigned int id;
-    glGenFramebuffers(1, &id);
-
-    if (throwOnError) Error::ThrowIf({
-        {GL_INVALID_VALUE, "Number of buffers is negative." }
-        });
-
-    return id;
 }
 
 FramebufferStatus FrameBuffer::GetStatus(FramebufferTarget target, bool throwOnError)
@@ -67,6 +92,59 @@ FramebufferStatus FrameBuffer::GetStatus(FramebufferTarget target, bool throwOnE
         });
 
     return static_cast<FramebufferStatus>(status);
+}
+
+void FrameBuffer::ReadColourPixels(int left, int bottom, int width, int height, enumerators::PixelReadColourFormat pixelReadFormat, enumerators::DataType dataType, void* data, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glReadPixels(left, bottom, width, height, static_cast<unsigned int>(pixelReadFormat), static_cast<unsigned int>(dataType), data);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "PixelReadFormat or DataType are invalid." },
+        {GL_INVALID_VALUE, "Dimensions are negative"}
+        // TODO
+        });
+}
+
+void FrameBuffer::ReadDepthPixels(int left, int bottom, int width, int height, enumerators::DataType dataType, void* data, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glReadPixels(left, bottom, width, height, GL_DEPTH_COMPONENT, static_cast<unsigned int>(dataType), data);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "PixelReadFormat or DataType are invalid." },
+        {GL_INVALID_VALUE, "Dimensions are negative"}
+        // TODO
+        });
+}
+
+// GL_UNSIGNED_INT_24_8 or GL_FLOAT_32_UNSIGNED_INT_24_8_REV
+void FrameBuffer::ReadDepthStencilPixels(int left, int bottom, int width, int height, enumerators::DataType dataType, void* data, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glReadPixels(left, bottom, width, height, GL_DEPTH_STENCIL, static_cast<unsigned int>(dataType), data);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "PixelReadFormat or DataType are invalid." },
+        {GL_INVALID_VALUE, "Dimensions are negative"}
+        // TODO
+        });
+}
+
+void FrameBuffer::ReadStencilPixels(int left, int bottom, int width, int height, enumerators::DataType dataType, void* data, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glReadPixels(left, bottom, width, height, GL_STENCIL_INDEX, static_cast<unsigned int>(dataType), data);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "PixelReadFormat or DataType are invalid." },
+        {GL_INVALID_VALUE, "Dimensions are negative"}
+        // TODO
+        });
 }
 
 void FrameBuffer::SetDrawBuffer(DrawBufferMode mode, bool throwOnError)

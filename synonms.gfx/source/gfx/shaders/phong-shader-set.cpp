@@ -27,7 +27,7 @@ void PhongShaderSet::Render(const PhongShaderUniforms& uniforms, const Mesh& mes
     if (isSpecularTextureEnabled) uniforms.ShaderMaterial.ActivateTexture(TextureSlot::Specular);
     if (isEmissiveTextureEnabled) uniforms.ShaderMaterial.ActivateTexture(TextureSlot::Emissive);
 
-        SetUniform("vu_modelMatrix", uniforms.ModelMatrix);
+    SetUniform("vu_modelMatrix", uniforms.ModelMatrix);
     SetUniform("vu_viewMatrix", uniforms.ViewMatrix);
     SetUniform("vu_projectionMatrix", uniforms.ProjectionMatrix);
     SetUniform("vu_normalMatrix", uniforms.NormalMatrix);

@@ -1,79 +1,64 @@
 #include "buffer-set.h"
 
 #include <glproxy\frame-buffer.h>
+#include <glproxy\factories\render-buffer-factory.h>
+#include <glproxy\factories\texture-factory.h>
 
 #include <utility>
 
 using namespace synonms::gfx::buffers;
 using namespace synonms::gfx::proxies;
 
-BufferSet::BufferSet()
+BufferSet::BufferSet(int width, int height)
 {
-    _framebufferId = opengl::FrameBuffer::Generate(true);
+    _frameBuffer = std::make_unique<opengl::FrameBuffer>();
+
+    Bind();
+
+    _colourTextures.emplace(std::make_pair(0, opengl::factories::TextureFactory::CreateColour(width, height)));
+
+    opengl::FrameBuffer::AttachTexture2d(
+        opengl::enumerators::FramebufferTarget::Framebuffer,
+        opengl::enumerators::AttachmentPoint::Colour0,
+        opengl::enumerators::TargetTexture::Texture2D,
+        _colourTextures.at(0)->GetTextureId(),
+        true);
+
+    _depthStencilBuffer = opengl::factories::RenderBufferFactory::CreateDepthStencilBuffer(width, height);
+
+    opengl::FrameBuffer::AttachRenderBuffer(
+        opengl::enumerators::FramebufferTarget::Framebuffer,
+        opengl::enumerators::AttachmentPoint::DepthStencil,
+        _depthStencilBuffer->GetRenderBufferId(),
+        true);
+
+    opengl::FrameBuffer::BindDefault(opengl::enumerators::FramebufferTarget::Framebuffer);
 }
 
 BufferSet::BufferSet(BufferSet&& other) noexcept
-    : _framebufferId(std::exchange(other._framebufferId, 0))
+    : _frameBuffer(std::exchange(other._frameBuffer, nullptr))
+    , _colourTextures(std::exchange(other._colourTextures, {}))
+    , _depthStencilBuffer(std::exchange(other._depthStencilBuffer, nullptr))
 {
 }
 
 BufferSet& BufferSet::operator=(BufferSet&& other) noexcept
 {
-    _framebufferId = std::exchange(other._framebufferId, 0);
+    _frameBuffer = std::exchange(other._frameBuffer, nullptr);
+    _colourTextures = std::exchange(other._colourTextures, {});
+    _depthStencilBuffer = std::exchange(other._depthStencilBuffer, nullptr);
 
     return *this;
 }
 
 BufferSet::~BufferSet()
 {
-    if (_framebufferId > 0)
-    {
-        opengl::FrameBuffer::Delete(_framebufferId, true);
-    }
 }
 
 void BufferSet::Bind() const
 {
-    if (_framebufferId > 0)
+    if (_frameBuffer != nullptr)
     {
-        opengl::FrameBuffer::Bind(opengl::enumerators::FramebufferTarget::Framebuffer, _framebufferId, true);
+        _frameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
     }
-}
-
-bool BufferSet::IsReady() const
-{
-    return opengl::FrameBuffer::GetStatus(opengl::enumerators::FramebufferTarget::Framebuffer) == opengl::enumerators::FramebufferStatus::Complete;
-}
-
-void BufferSet::SetColourBuffer(std::shared_ptr<ColourBuffer> buffer, int bufferIndex)
-{
-    _colourBuffers.emplace(std::make_pair(bufferIndex, buffer));
-
-    opengl::FrameBuffer::AttachTexture2d(
-        opengl::enumerators::FramebufferTarget::Framebuffer,
-        opengl::enumerators::AttachmentPoint::Colour0,
-        opengl::enumerators::TargetTexture::Texture2D,
-        buffer->GetTextureId(),
-        true);
-}
-
-void BufferSet::SetDepthBuffer(std::shared_ptr<DepthBuffer> buffer)
-{
-    _depthBuffer = buffer;
-
-    opengl::FrameBuffer::AttachTexture2d(
-        opengl::enumerators::FramebufferTarget::Framebuffer,
-        opengl::enumerators::AttachmentPoint::Depth,
-        opengl::enumerators::TargetTexture::Texture2D,
-        buffer->GetTextureId(),
-        true);
-
-    // TODO - Call these if no colour buffer
-//    opengl::FrameBuffer::SetDrawBuffer(opengl::enumerators::DrawBufferMode::None);
-//    opengl::FrameBuffer::SetReadBuffer(opengl::enumerators::ReadBufferMode::None);
-}
-
-void BufferSet::Unbind() const
-{
-    opengl::FrameBuffer::Bind(opengl::enumerators::FramebufferTarget::Framebuffer, 0);
 }

@@ -123,6 +123,21 @@
     <ClInclude Include="source\glproxy\enumerators\texture-compare-func.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\glproxy\factories\texture-factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\enumerators\pixel-read-colour-format.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\render-buffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\glproxy\factories\render-buffer-factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\glproxy\buffer.cpp">
@@ -162,6 +177,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\glproxy\frame-buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\glproxy\factories\texture-factory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\glproxy\renderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\glproxy\render-buffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\glproxy\factories\render-buffer-factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

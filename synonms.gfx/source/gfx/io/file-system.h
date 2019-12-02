@@ -1,5 +1,7 @@
 #pragma once
 
+#include <gfx\io\image-file.h>
+
 #include <string>
 
 namespace synonms
@@ -12,6 +14,7 @@ namespace synonms
             {
             public:
                 std::string ReadFile(const std::string& filePath);
+                ImageFile ReadImage(const std::string& filePath);
             };
         }
     }

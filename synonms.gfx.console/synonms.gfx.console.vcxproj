@@ -72,25 +72,25 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
     <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(SolutionDir)synonms.gfx/source;$(SolutionDir)synonms.gfx.gui/source;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

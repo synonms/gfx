@@ -1,7 +1,8 @@
 #pragma once
 
-#include <gfx\buffers\colour-buffer.h>
-#include <gfx\buffers\depth-buffer.h>
+#include <glproxy\frame-buffer.h>
+#include <glproxy\render-buffer.h>
+#include <glproxy\texture.h>
 
 #include <map>
 #include <memory>
@@ -15,24 +16,23 @@ namespace synonms
             class BufferSet
             {
             public:
-                BufferSet();
+                BufferSet(int width, int height);
                 BufferSet(BufferSet&& other) noexcept;
                 BufferSet& operator=(BufferSet&& other) noexcept;
                 ~BufferSet();
 
+                BufferSet() = delete;
                 BufferSet(const BufferSet& other) = delete;
                 BufferSet& operator=(const BufferSet& other) = delete;
 
                 void Bind() const;
-                bool IsReady() const;
-                void SetColourBuffer(std::shared_ptr<ColourBuffer> buffer, int bufferIndex);
-                void SetDepthBuffer(std::shared_ptr<DepthBuffer> buffer);
-                void Unbind() const;
+
+                inline const proxies::opengl::Texture* const GetColourTexture(int index) const { return _colourTextures.find(index) != std::end(_colourTextures) ? _colourTextures.at(index).get() : nullptr; }
 
             private:
-                unsigned int _framebufferId;
-                std::shared_ptr<DepthBuffer> _depthBuffer;
-                std::map<int, std::shared_ptr<ColourBuffer>> _colourBuffers;
+                std::unique_ptr<proxies::opengl::FrameBuffer> _frameBuffer{ nullptr };
+                std::unique_ptr<proxies::opengl::RenderBuffer> _depthStencilBuffer{ nullptr };
+                std::map<int, std::shared_ptr<proxies::opengl::Texture>> _colourTextures;
             };
         }
     }

@@ -17,12 +17,11 @@ namespace synonms
                 Window(int width = 640, int height = 480, const std::string& title = "");
                 ~Window();
 
-                void Clear();
                 void EnableVsync();
                 void* GetContext();
                 mathematics::linear::Vector2<int> GetSize() const;
                 void MakeContextCurrent();
-                void SetViewport(int lowerLeftX, int lowerLeftY, int width, int height);
+                void SetViewport(int left, int bottom, int width, int height);
                 bool ShouldClose();
                 void SwapBuffers();
 

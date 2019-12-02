@@ -8,6 +8,21 @@
 using namespace synonms::gfx::proxies::opengl;
 using namespace synonms::gfx::proxies::opengl::enumerators;
 
+void System::DisableBlending()
+{
+    glDisable(GL_BLEND);
+}
+
+void System::DisableDepthTesting()
+{
+    glDisable(GL_DEPTH_TEST);
+}
+
+void System::DisableStencilTest()
+{
+    glDisable(GL_STENCIL_TEST);
+}
+
 void System::EnableBlending()
 {
     glEnable(GL_BLEND);

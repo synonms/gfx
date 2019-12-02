@@ -5,11 +5,6 @@
 using namespace synonms::gfx::proxies::opengl;
 using namespace synonms::gfx::proxies::opengl::enumerators;
 
-void Window::Clear(AttributeBit attributeBit)
-{
-    glClear(static_cast<unsigned int>(attributeBit));
-}
-
 GLFWwindow* Window::Create(int width, int height, const std::string& title)
 {
     return glfwCreateWindow(width, height, title.c_str(), nullptr, nullptr);

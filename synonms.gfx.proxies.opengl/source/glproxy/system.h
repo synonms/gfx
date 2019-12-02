@@ -15,6 +15,9 @@ namespace synonms
                 class System
                 {
                 public:
+                    static void DisableBlending();
+                    static void DisableDepthTesting();
+                    static void DisableStencilTest();
                     static void EnableBlending();
                     static void EnableDepthTesting();
                     static void EnableStencilTest();

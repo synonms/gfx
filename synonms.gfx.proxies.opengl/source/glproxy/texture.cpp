@@ -7,22 +7,39 @@
 using namespace synonms::gfx::proxies::opengl;
 using namespace synonms::gfx::proxies::opengl::enumerators;
 
-void Texture::ActivateSlot(unsigned int slot, bool throwOnError)
+Texture::Texture(TargetTexture targetTexture)
+    : _targetTexture(targetTexture)
 {
-    if (throwOnError) Error::Clear();
-
-    glActiveTexture(GL_TEXTURE0 + slot);
-
-    if (throwOnError) Error::ThrowIf({
-        {GL_INVALID_ENUM, "Slot is outside of acceptabble range." }
-        });
+    glGenTextures(1, &_textureId);
 }
 
-void Texture::Bind(TargetTexture targetTexture, unsigned int textureId, bool throwOnError)
+Texture::Texture(Texture&& other) noexcept
+    : _targetTexture(std::exchange(other._targetTexture, TargetTexture::None))
+    , _textureId(std::exchange(other._textureId, 0))
+{
+}
+
+Texture& Texture::operator=(Texture&& other) noexcept
+{
+    _targetTexture = std::exchange(other._targetTexture, TargetTexture::None);
+    _textureId = std::exchange(other._textureId, 0);
+
+    return *this;
+}
+
+Texture::~Texture()
+{
+    if (_textureId > 0) {
+        glDeleteTextures(1, &_textureId);
+    }
+}
+
+
+void Texture::Bind(bool throwOnError) const
 {
     if (throwOnError) Error::Clear();
 
-    glBindTexture(static_cast<unsigned int>(targetTexture), textureId);
+    glBindTexture(static_cast<unsigned int>(_targetTexture), _textureId);
 
     if (throwOnError) Error::ThrowIf({
         {GL_INVALID_ENUM, "Target is not one of the allowable values." },
@@ -31,41 +48,28 @@ void Texture::Bind(TargetTexture targetTexture, unsigned int textureId, bool thr
         });
 }
 
-void Texture::Delete(unsigned int textureId, bool throwOnError)
+void Texture::SendData(TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data, bool throwOnError) const
 {
     if (throwOnError) Error::Clear();
 
-    glDeleteTextures(1, &textureId);
-
-    if (throwOnError) Error::ThrowIf({
-        {GL_INVALID_VALUE, "Count is negative." }
-    });
-}
-
-unsigned int Texture::Generate(bool throwOnError)
-{
-    if (throwOnError) Error::Clear();
-
-    unsigned int textureId;
-    glGenTextures(1, &textureId);
-
-    if (throwOnError) Error::ThrowIf({
-        {GL_INVALID_VALUE, "Count is negative." }
-        });
-
-    return textureId;
-}
-
-void Texture::SendData(TargetTexture targetTexture, TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data, bool throwOnError)
-{
-    if (throwOnError) Error::Clear();
-
-    glTexImage2D(static_cast<unsigned int>(targetTexture), 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
+    glTexImage2D(static_cast<unsigned int>(_targetTexture), 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
 
     if (throwOnError) Error::ThrowIf({
         {GL_INVALID_ENUM, "Invalid enum in call to glTexImage2D." },
         {GL_INVALID_VALUE, "Invalid value in call to glTexImage2D." },
         {GL_INVALID_OPERATION, "Invalid operation in call to glTexImage2D." },
+        });
+}
+
+
+void Texture::SetBorderColour(enumerators::TargetTexture targetTexture, const float* rgba, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glTexParameterfv(static_cast<unsigned int>(targetTexture), GL_TEXTURE_BORDER_COLOR, rgba);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "TargetTexture is invalid." }
         });
 }
 
@@ -76,7 +80,7 @@ void Texture::SetCompareFunc(TargetTexture targetTexture, TextureCompareFunc com
     glTexParameteri(static_cast<unsigned int>(targetTexture), GL_TEXTURE_COMPARE_FUNC, static_cast<int>(compareFunc));
 
     if (throwOnError) Error::ThrowIf({
-        {GL_INVALID_ENUM, "TargetTexture or FilterValue are invalid." }
+        {GL_INVALID_ENUM, "TargetTexture or CompareFunc are invalid." }
         });
 }
 
@@ -87,7 +91,7 @@ void Texture::SetCompareMode(TargetTexture targetTexture, TextureCompareMode com
     glTexParameteri(static_cast<unsigned int>(targetTexture), GL_TEXTURE_COMPARE_MODE, static_cast<int>(compareMode));
 
     if (throwOnError) Error::ThrowIf({
-        {GL_INVALID_ENUM, "TargetTexture or FilterValue are invalid." }
+        {GL_INVALID_ENUM, "TargetTexture or CompareMode are invalid." }
         });
 }
 
@@ -132,6 +136,18 @@ void Texture::SetWrapModeT(TargetTexture targetTexture, TextureWrapMode wrapMode
 
     if (throwOnError) Error::ThrowIf({
         {GL_INVALID_ENUM, "TargetTexture or WrapMode are invalid." }
+        });
+}
+
+
+void Texture::ActivateSlot(unsigned int slot, bool throwOnError)
+{
+    if (throwOnError) Error::Clear();
+
+    glActiveTexture(GL_TEXTURE0 + slot);
+
+    if (throwOnError) Error::ThrowIf({
+        {GL_INVALID_ENUM, "Slot is outside of acceptabble range." }
         });
 }
 

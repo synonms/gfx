@@ -12,6 +12,7 @@ namespace synonms
                 {
                     enum class TargetTexture : unsigned int
                     {
+                        None = 0,
                         Texture1D = 0x0DE0,
                         Texture2D = 0x0DE1,
                         Texture3D = 0x806F,

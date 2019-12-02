@@ -13,7 +13,7 @@ namespace synonms
             class Pane
             {
             public:
-                Pane(float left, float bottom, float width, float height);  // All 0.0f..1.0f
+                Pane(float left, float bottom, float width, float height);
 
                 inline primitives::Mesh& GetMesh() { return *_mesh.get(); }
 

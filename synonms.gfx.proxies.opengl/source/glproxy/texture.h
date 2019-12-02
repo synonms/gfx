@@ -24,11 +24,22 @@ namespace synonms
                 class Texture
                 {
                 public:
+                    Texture(enumerators::TargetTexture targetTexture = enumerators::TargetTexture::Texture2D);
+                    Texture(Texture&& other) noexcept;
+                    Texture& operator=(Texture&& other) noexcept;
+                    ~Texture();
+
+                    Texture(const Texture& other) = delete;
+                    Texture& operator=(const Texture& other) = delete;
+
+                public:
+                    void Bind(bool throwOnError = false) const;
+                    inline unsigned int GetTextureId() const { return _textureId; }
+                    void SendData(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data, bool throwOnError = false) const;
+
+                public:
                     static void ActivateSlot(unsigned int slot, bool throwOnError = false);
-                    static void Bind(enumerators::TargetTexture targetTexture, unsigned int textureId, bool throwOnError = false);
-                    static void Delete(unsigned int textureId, bool throwOnError = false);
-                    static unsigned int Generate(bool throwOnError = false);
-                    static void SendData(enumerators::TargetTexture targetTexture, enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data, bool throwOnError = false);
+                    static void SetBorderColour(enumerators::TargetTexture targetTexture, const float* rgba, bool throwOnError = false);
                     static void SetCompareFunc(enumerators::TargetTexture targetTexture, enumerators::TextureCompareFunc compareFunc, bool throwOnError = false);
                     static void SetCompareMode(enumerators::TargetTexture targetTexture, enumerators::TextureCompareMode compareMode, bool throwOnError = false);
                     static void SetMinificationFilter(enumerators::TargetTexture targetTexture, enumerators::MinificationFilterValue filterValue, bool throwOnError = false);
@@ -36,6 +47,10 @@ namespace synonms
                     static void SetWrapModeS(enumerators::TargetTexture targetTexture, enumerators::TextureWrapMode wrapMode, bool throwOnError = false);
                     static void SetWrapModeT(enumerators::TargetTexture targetTexture, enumerators::TextureWrapMode wrapMode, bool throwOnError = false);
                     static void Unbind(enumerators::TargetTexture targetTexture, bool throwOnError = false);
+
+                private:
+                    enumerators::TargetTexture _targetTexture{ enumerators::TargetTexture::Texture2D };
+                    unsigned int _textureId{ 0 };
                 };
             }
         }

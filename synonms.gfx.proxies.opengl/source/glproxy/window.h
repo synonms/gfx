@@ -3,7 +3,6 @@
 #include <string>
 #include <tuple>
 
-#include <glproxy\enumerators\attribute-bit.h>
 #include <glproxy\enumerators\opengl-profile.h>
 #include <glproxy\enumerators\window-hint.h>
 
@@ -20,7 +19,6 @@ namespace synonms
                 class Window
                 {
                 public:
-                    static void Clear(enumerators::AttributeBit attributeBit = enumerators::AttributeBit::ColourBuffer);
                     static GLFWwindow* Create(int width, int height, const std::string& title);
                     static int GetHeight(GLFWwindow* window);
                     static std::tuple<int, int> GetSize(GLFWwindow* window);
