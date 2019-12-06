@@ -4,7 +4,7 @@
 #include <gfx/mathematics/linear/vector3.h>
 #include <gfx/mathematics/linear/vector4.h>
 
-#include <glproxy\texture.h>
+#include <opengl\texture.h>
 
 #include <unordered_map>
 #include <memory>
@@ -34,7 +34,7 @@ namespace synonms
                 Material& WithSpecularColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithEmissiveColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithShininess(float shininess);    // Larger number = smaller specular highlight
-                Material& WithTexture(enumerators::TextureSlot slot, std::shared_ptr<proxies::opengl::Texture> texture);
+                Material& WithTexture(enumerators::TextureSlot slot, std::shared_ptr<api::opengl::Texture> texture);
 
             public:
                 static Material Create()
@@ -43,7 +43,7 @@ namespace synonms
                 }
 
             private:
-                std::unordered_map<enumerators::TextureSlot, std::shared_ptr<proxies::opengl::Texture>> _textures;
+                std::unordered_map<enumerators::TextureSlot, std::shared_ptr<api::opengl::Texture>> _textures;
             };
         }
     }

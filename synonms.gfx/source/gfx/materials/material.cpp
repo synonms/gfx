@@ -3,12 +3,12 @@
 using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::materials;
 using namespace synonms::gfx::mathematics::linear;
-using namespace synonms::gfx::proxies;
+using namespace synonms::gfx::api;
 
 void Material::ActivateTexture(TextureSlot slot) const
 {
     if (_textures.find(slot) != std::end(_textures)) {
-        proxies::opengl::Texture::ActivateSlot(static_cast<unsigned int>(slot));
+        opengl::Texture::ActivateSlot(static_cast<unsigned int>(slot));
         _textures.at(slot)->Bind();
     }
 }

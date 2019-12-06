@@ -72,22 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.proxies.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -154,12 +154,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\gfx\buffers\buffer-set.cpp" />
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
     <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
-    <ClCompile Include="source\gfx\environment\window.cpp" />
-    <ClCompile Include="source\gfx\environment\engine.cpp" />
     <ClCompile Include="source\gfx\gui\gui-helper.cpp" />
     <ClCompile Include="source\gfx\io\file-system.cpp" />
     <ClCompile Include="source\gfx\io\image-file.cpp" />
@@ -168,15 +165,14 @@
     <ClCompile Include="source\gfx\output\pane.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
     <ClCompile Include="source\gfx\primitives\primitive-factory.cpp" />
-    <ClCompile Include="source\gfx\shaders\buffer-shader-set.cpp" />
-    <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp" />
+    <ClCompile Include="source\gfx\shaders\buffer-shader.cpp" />
+    <ClCompile Include="source\gfx\shaders\phong-shader.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
-    <ClCompile Include="source\gfx\shaders\shader-set.cpp" />
-    <ClCompile Include="source\gfx\shaders\shadowmap-shader-set.cpp" />
+    <ClCompile Include="source\gfx\shaders\shader-extensions.cpp" />
+    <ClCompile Include="source\gfx\shaders\shadowmap-shader.cpp" />
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\gfx\buffers\buffer-set.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
     <ClInclude Include="source\gfx\enumerators\texture-slot.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
@@ -184,8 +180,6 @@
     <ClInclude Include="source\gfx\environment\perspective-view.h" />
     <ClInclude Include="source\gfx\environment\orthographic-view.h" />
     <ClInclude Include="source\gfx\environment\i-view.h" />
-    <ClInclude Include="source\gfx\environment\window.h" />
-    <ClInclude Include="source\gfx\environment\engine.h" />
     <ClInclude Include="source\gfx\gui\gui-helper.h" />
     <ClInclude Include="source\gfx\io\file-system.h" />
     <ClInclude Include="source\gfx\io\image-file.h" />
@@ -202,12 +196,12 @@
     <ClInclude Include="source\gfx\primitives\mesh-instance.h" />
     <ClInclude Include="source\gfx\primitives\mesh.h" />
     <ClInclude Include="source\gfx\primitives\vertex.h" />
-    <ClInclude Include="source\gfx\shaders\buffer-shader-set.h" />
-    <ClInclude Include="source\gfx\shaders\phong-shader-set.h" />
+    <ClInclude Include="source\gfx\shaders\buffer-shader.h" />
+    <ClInclude Include="source\gfx\shaders\phong-shader.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\shader-builder.h" />
-    <ClInclude Include="source\gfx\shaders\shader-set.h" />
-    <ClInclude Include="source\gfx\shaders\shadowmap-shader-set.h" />
+    <ClInclude Include="source\gfx\shaders\shader-extensions.h" />
+    <ClInclude Include="source\gfx\shaders\shadowmap-shader.h" />
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />
   </ItemGroup>
   <ItemGroup>

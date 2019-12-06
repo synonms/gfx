@@ -15,19 +15,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="source\gfx\environment\engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gfx\environment\window.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\gfx\io\file-system.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gfx\primitives\mesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gfx\shaders\shader-set.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gfx\enumerators\data-type.cpp">
@@ -57,39 +48,30 @@
     <ClCompile Include="source\gfx\materials\material.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gfx\shaders\phong-shader-set.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gfx\shaders\shadowmap-shader-set.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gfx\buffers\buffer-set.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\gfx\shaders\buffer-shader-set.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\gfx\output\pane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\gfx\io\image-file.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\gfx\shaders\shader-extensions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\shaders\phong-shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\shaders\buffer-shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\gfx\shaders\shadowmap-shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\gfx\environment\engine.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gfx\environment\window.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\gfx\io\file-system.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\primitives\mesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gfx\shaders\shader-set.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\enumerators\data-type.h">
@@ -146,9 +128,6 @@
     <ClInclude Include="source\gfx\materials\material.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\gfx\shaders\phong-shader-set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\gfx\environment\i-view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -158,15 +137,6 @@
     <ClInclude Include="source\gfx\primitives\vertex.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\gfx\shaders\shadowmap-shader-set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gfx\buffers\buffer-set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\gfx\shaders\buffer-shader-set.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\gfx\output\pane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -174,6 +144,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\io\image-file.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\shader-extensions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\phong-shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\buffer-shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\shaders\shadowmap-shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

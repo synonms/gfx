@@ -3,13 +3,10 @@
 #include <vendor\glm\glm.hpp>
 #include <vendor\glm\gtc\matrix_transform.hpp>
 
-#include <gfx\buffers\buffer-set.h>
 #include <gfx\enumerators\texture-slot.h>
 #include <gfx\environment\camera.h>
-#include <gfx\environment\engine.h>
 #include <gfx\environment\light.h>
 #include <gfx\environment\perspective-view.h>
-#include <gfx\environment\window.h>
 #include <gfx\gui\gui-helper.h>
 #include <gfx\io\file-system.h>
 #include <gfx\materials\material.h>
@@ -19,16 +16,17 @@
 #include <gfx\primitives\mesh.h>
 #include <gfx\primitives\mesh-instance.h>
 #include <gfx\primitives\primitive-factory.h>
-#include <gfx\shaders\buffer-shader-set.h>
-#include <gfx\shaders\phong-shader-set.h>
-#include <gfx\shaders\shadowmap-shader-set.h>
+#include <gfx\shaders\buffer-shader.h>
+#include <gfx\shaders\phong-shader.h>
+#include <gfx\shaders\shadowmap-shader.h>
 
-#include <glproxy\renderer.h>
-#include <glproxy\system.h>
-#include <glproxy\window.h>
-#include <glproxy\factories\texture-factory.h>
+#include <opengl\state-manager.h>
+#include <opengl\system.h>
+#include <opengl\window.h>
+#include <opengl\factories\frame-buffer-factory.h>
+#include <opengl\factories\render-buffer-factory.h>
+#include <opengl\factories\texture-factory.h>
 
-using namespace synonms::gfx::buffers;
 using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::gui;
@@ -38,8 +36,39 @@ using namespace synonms::gfx::mathematics;
 using namespace synonms::gfx::mathematics::linear;
 using namespace synonms::gfx::output;
 using namespace synonms::gfx::primitives;
-using namespace synonms::gfx::proxies;
 using namespace synonms::gfx::shaders;
+
+using namespace synonms::gfx::api;
+
+/*
+RENDERER (Implementation agnostic)
+-----------------------------------
+2D/3D renderer (forward/deferred)
+Scene Graph
+Sorting
+Culling
+Materials
+LOD
+Animation
+Camera
+VFX
+PostFX
+Reflections/AO etc.
+
+RENDER API (implementation specific)
+--------------------------------------
+Render Context
+Swap Chain
+Framebuffer
+Vertex Buffer
+Index Buffer
+Texture
+Shader
+States
+Pipelines
+Render Passes
+*/
+
 
 //static void glfw_error_callback(int error, const char* description)
 //{
@@ -134,23 +163,32 @@ int main(int, char**)
     // SYSTEM ********************
     std::cout << "Initialising system..." << std::endl;
 
-    Engine engine;
+    if (!opengl::System::Initialise())
+    {
+        throw std::exception("Failed to intialise system");
+    }
+
+    opengl::StateManager::SetBlendFunction(opengl::enumerators::BlendFactor::SourceAlpha, opengl::enumerators::BlendFactor::OneMinusSourceAlpha);
+    opengl::StateManager::EnableBlending();
 
     std::cout << "System initialised" << std::endl;
 
     // WINDOW *******************
     std::cout << "Creating window..." << std::endl;
 
-    Window window(windowWidth, windowHeight, "GFX");
-    window.MakeContextCurrent();
-    window.EnableVsync();
+    opengl::Window::SetOpenGlContextVersion(3, 3);
+    opengl::Window::SetOpenGlProfile(opengl::enumerators::OpenGlProfile::Core);
+    opengl::Window::SetSwapInterval(1);
+
+    opengl::Window window(windowWidth, windowHeight, "GFX");
+    window.MakeCurrent();
 
     std::cout << "Window created" << std::endl;
 
     // GLEW EXTENSIONS **************
     std::cout << "Initialising extensions..." << std::endl;
 
-    engine.InitialiseExtensions();
+    opengl::System::InitialiseExtensions();
 
     std::cout << "Extensions initialised" << std::endl;
 
@@ -219,22 +257,19 @@ int main(int, char**)
     std::string phongVertexShaderSource = fileSystem.ReadFile("resources/shaders/phong.vertex.glsl");
     std::string phongFragmentShaderSource = fileSystem.ReadFile("resources/shaders/phong.fragment.glsl");
 
-    PhongShaderSet phongShaderSet(phongVertexShaderSource, phongFragmentShaderSource);
+    PhongShader phongShaderSet(phongVertexShaderSource, phongFragmentShaderSource);
 
     std::string shadowmapVertexShaderSource = fileSystem.ReadFile("resources/shaders/shadowmap.vertex.glsl");
     std::string shadowmapFragmentShaderSource = fileSystem.ReadFile("resources/shaders/shadowmap.fragment.glsl");
 
-    ShadowmapShaderSet shadowmapShaderSet(shadowmapVertexShaderSource, shadowmapFragmentShaderSource);
+    ShadowmapShader shadowmapShaderSet(shadowmapVertexShaderSource, shadowmapFragmentShaderSource);
 
     std::string bufferVertexShaderSource = fileSystem.ReadFile("resources/shaders/buffer.vertex.glsl");
     std::string bufferFragmentShaderSource = fileSystem.ReadFile("resources/shaders/buffer.fragment.glsl");
 
-    BufferShaderSet bufferShaderSet(bufferVertexShaderSource, bufferFragmentShaderSource);
+    BufferShader bufferShaderSet(bufferVertexShaderSource, bufferFragmentShaderSource);
 
     std::cout << "Shaders created" << std::endl;
-    std::cout << phongShaderSet.ToString() << std::endl;
-    std::cout << shadowmapShaderSet.ToString() << std::endl;
-    std::cout << bufferShaderSet.ToString() << std::endl;
 
     // MESH **************************
     std::cout << "Creating mesh..." << std::endl;
@@ -273,14 +308,16 @@ int main(int, char**)
     // BUFFERS **********************************
     std::cout << "Creating buffers..." << std::endl;
 
-    BufferSet bufferSet(windowWidth, windowHeight);
+    auto offscreenColourTexture = opengl::factories::TextureFactory::CreateColour(windowWidth, windowHeight);
+    auto offscreenDepthStencilBuffer = opengl::factories::RenderBufferFactory::CreateDepthStencilBuffer(windowWidth, windowHeight);
+    auto offscreenFrameBuffer = opengl::factories::FrameBufferFactory::CreateOffscreenBuffer(windowWidth, windowHeight, offscreenColourTexture->GetTextureId(), offscreenDepthStencilBuffer->GetRenderBufferId());
 
-    std::cout << "Buffer set created" << std::endl;
+    std::cout << "Buffers created" << std::endl;
 
     // IMGUI **********************************
     std::cout << "Initialising IMGUI..." << std::endl;
 
-    auto imguiContext = GuiHelper::Initialise(window.GetContext(), "#version 330 core");
+    auto imguiContext = GuiHelper::Initialise(window.GetWindow(), "#version 330 core");
     GuiHelper::ApplyDarkStyle();
 
     auto displaySize = GuiHelper::GetDisplaySize();
@@ -298,6 +335,8 @@ int main(int, char**)
     while (!window.ShouldClose())
     {
         const auto currentWindowSize = window.GetSize();
+        const auto currentWindowWidth = std::get<0>(currentWindowSize);
+        const auto currentWindowHeight = std::get<1>(currentWindowSize);
 
         GuiHelper::NewFrame();
 
@@ -305,13 +344,13 @@ int main(int, char**)
         auto viewMatrix = camera.GetViewMatrix();
 
         // Draw box to offline buffer
-        bufferSet.Bind();
+        offscreenFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
 
-        opengl::Window::SetViewport(0, 0, currentWindowSize.width, currentWindowSize.height);
+        opengl::Window::SetViewport(0, 0, currentWindowWidth, currentWindowHeight);
 
-        opengl::System::EnableDepthTesting();
-        opengl::Renderer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
-        opengl::Renderer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
+        opengl::StateManager::EnableDepthTesting();
+        opengl::FrameBuffer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
+        opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
 
         {
             auto modelMatrix = planeInstance.GetModelMatrix();
@@ -339,15 +378,15 @@ int main(int, char**)
         // Revert to default buffer
         opengl::FrameBuffer::BindDefault(opengl::enumerators::FramebufferTarget::Framebuffer);
 
-        opengl::Window::SetViewport(0, 0, currentWindowSize.width, currentWindowSize.height);
+        opengl::Window::SetViewport(0, 0, currentWindowWidth, currentWindowHeight);
 
-        opengl::System::DisableDepthTesting();
-        opengl::Renderer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
+        opengl::StateManager::DisableDepthTesting();
+        opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
 
         {
             // Draw buffers to panes
             opengl::Texture::ActivateSlot(0);
-            bufferSet.GetColourTexture(0)->Bind();
+            offscreenColourTexture->Bind();
             bufferShaderSet.Render(0, mainPane.GetMesh());
 //            bufferShaderSet.Render(0, debugPane1.GetMesh());
 //            depthBuffer->Bind();
@@ -396,7 +435,7 @@ int main(int, char**)
 
         window.SwapBuffers();
 
-        engine.PollEvents();
+        opengl::System::PollEvents();
     }
 
     GuiHelper::Shutdown();

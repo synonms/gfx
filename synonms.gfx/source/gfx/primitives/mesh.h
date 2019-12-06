@@ -2,6 +2,11 @@
 
 #include <gfx\primitives\vertex.h>
 
+#include <opengl\index-buffer.h>
+#include <opengl\vertex-array.h>
+#include <opengl\vertex-buffer.h>
+
+#include <memory>
 #include <string>
 #include <vector>
 
@@ -30,9 +35,9 @@ namespace synonms
                 std::vector<Vertex> _vertices;
                 std::vector<unsigned int> _indices;
 
-                unsigned int _indexBufferId{ 0 };
-                unsigned int _vertexArrayId{ 0 };
-                unsigned int _vertexBufferId{ 0 };
+                std::unique_ptr<api::opengl::IndexBuffer> _indexBuffer{ nullptr };
+                std::unique_ptr<api::opengl::VertexArray> _vertexArray{ nullptr };
+                std::unique_ptr<api::opengl::VertexBuffer> _vertexBuffer{ nullptr };
                 bool _isBackFaceCulled{ true };
             };
         }

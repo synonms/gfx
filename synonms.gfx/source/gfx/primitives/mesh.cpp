@@ -2,15 +2,13 @@
 
 #include <gfx\enumerators\data-type.h>
 
-#include <glproxy\index-buffer.h>
-#include <glproxy\system.h>
-#include <glproxy\vertex-array.h>
-#include <glproxy\vertex-attribute-array.h>
-#include <glproxy\vertex-buffer.h>
+#include <opengl\state-manager.h>
+#include <opengl\vertex-attribute-array.h>
 
 #include <iostream>
 #include <sstream>
 
+using namespace synonms::gfx::api;
 using namespace synonms::gfx::primitives;
 using namespace synonms::gfx::enumerators;
 
@@ -18,37 +16,37 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
     : _vertices(vertices)
     , _indices(indices)
 {
-    _vertexArrayId = proxies::opengl::VertexArray::Generate(true);
-    proxies::opengl::VertexArray::Bind(_vertexArrayId, true);
+    _vertexArray = std::make_unique<opengl::VertexArray>();
+    _vertexArray->Bind();
 
-    _vertexBufferId = proxies::opengl::VertexBuffer::Generate(true);
-    proxies::opengl::VertexBuffer::Bind(_vertexBufferId, true);
-    proxies::opengl::VertexBuffer::SendData(&_vertices[0], _vertices.size() * sizeof(Vertex), proxies::opengl::enumerators::DataUsage::StaticDraw, true);
+    _vertexBuffer = std::make_unique<opengl::VertexBuffer>();
+    _vertexBuffer->Bind();
+    opengl::VertexBuffer::SendData(&_vertices[0], _vertices.size() * sizeof(Vertex), opengl::enumerators::DataUsage::StaticDraw);
 
     // Positions
-    proxies::opengl::VertexAttributeArray::Enable(0, true);
-    proxies::opengl::VertexAttributeArray::Configure(0, 3, proxies::opengl::enumerators::DataType::Float, sizeof(Vertex), false, 0, true);
+    opengl::VertexAttributeArray::Enable(0);
+    opengl::VertexAttributeArray::Configure(0, 3, opengl::enumerators::DataType::Float, sizeof(Vertex), false, 0);
 
     // Normals
-    proxies::opengl::VertexAttributeArray::Enable(1, true);
-    proxies::opengl::VertexAttributeArray::Configure(1, 3, proxies::opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, normal), true);
+    opengl::VertexAttributeArray::Enable(1);
+    opengl::VertexAttributeArray::Configure(1, 3, opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, normal));
 
     // Tex Coords
-    proxies::opengl::VertexAttributeArray::Enable(2, true);
-    proxies::opengl::VertexAttributeArray::Configure(2, 2, proxies::opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, textureCoords), true);
+    opengl::VertexAttributeArray::Enable(2);
+    opengl::VertexAttributeArray::Configure(2, 2, opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, textureCoords));
 
 
-    _indexBufferId = proxies::opengl::IndexBuffer::Generate(true);
-    proxies::opengl::IndexBuffer::Bind(_indexBufferId, true);
-    proxies::opengl::IndexBuffer::SendData(&_indices[0], _indices.size() * sizeof(unsigned int), proxies::opengl::enumerators::DataUsage::StaticDraw, true);
+    _indexBuffer = std::make_unique<opengl::IndexBuffer>();
+    _indexBuffer->Bind();
+    opengl::IndexBuffer::SendData(&_indices[0], _indices.size() * sizeof(unsigned int), opengl::enumerators::DataUsage::StaticDraw);
 }
 
 Mesh::Mesh(Mesh&& other) noexcept
     : _vertices(std::exchange(other._vertices, {}))
     , _indices(std::exchange(other._indices, {}))
-    , _indexBufferId(std::exchange(other._indexBufferId, 0))
-    , _vertexArrayId(std::exchange(other._vertexArrayId, 0))
-    , _vertexBufferId(std::exchange(other._vertexBufferId, 0))
+    , _indexBuffer(std::exchange(other._indexBuffer, nullptr))
+    , _vertexArray(std::exchange(other._vertexArray, nullptr))
+    , _vertexBuffer(std::exchange(other._vertexBuffer, nullptr))
     , _isBackFaceCulled(std::exchange(other._isBackFaceCulled, false))
 {
 }
@@ -57,9 +55,9 @@ Mesh& Mesh::operator=(Mesh&& other) noexcept
 {
     _vertices = std::exchange(other._vertices, {});
     _indices = std::exchange(other._indices, {});
-    _indexBufferId = std::exchange(other._indexBufferId, 0);
-    _vertexArrayId = std::exchange(other._vertexArrayId, 0);
-    _vertexBufferId = std::exchange(other._vertexBufferId, 0);
+    _indexBuffer = std::exchange(other._indexBuffer, nullptr);
+    _vertexArray = std::exchange(other._vertexArray, nullptr);
+    _vertexBuffer = std::exchange(other._vertexBuffer, nullptr);
     _isBackFaceCulled = std::exchange(other._isBackFaceCulled, false);
         
     return *this;
@@ -71,18 +69,18 @@ Mesh::~Mesh()
 
 void Mesh::Draw() const
 {
-    proxies::opengl::System::SetFaceCulling(_isBackFaceCulled);
+    opengl::StateManager::SetFaceCulling(_isBackFaceCulled);
 
-    proxies::opengl::VertexArray::Bind(_vertexArrayId, true);
+    _vertexArray->Bind();
 
-    proxies::opengl::IndexBuffer::Bind(_indexBufferId, true);
-    proxies::opengl::IndexBuffer::Draw(proxies::opengl::enumerators::DrawMode::Triangles, _indices.size(), proxies::opengl::enumerators::DataType::UnsignedInt, true);
+    _indexBuffer->Bind();
+    opengl::IndexBuffer::Draw(opengl::enumerators::DrawMode::Triangles, _indices.size(), opengl::enumerators::DataType::UnsignedInt);
 }
 
 std::string Mesh::ToString() const
 {
     std::stringstream stream;
-    stream << "[Mesh: VertexArrayId " << _vertexArrayId << ", VertexBufferId " << _vertexBufferId << ", IndexBufferId " << _indexBufferId << ", " << _vertices.size() << " vertices, " << _indices.size() << " indices]";
+    stream << "[Mesh: VertexArrayId " << _vertexArray->GetVertexArrayId() << ", VertexBufferId " << _vertexBuffer->GetVertexBufferId() << ", IndexBufferId " << _indexBuffer->GetIndexBufferId() << ", " << _vertices.size() << " vertices, " << _indices.size() << " indices]";
 
     return stream.str();
 }
