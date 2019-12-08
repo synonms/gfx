@@ -12,169 +12,6 @@ namespace synonms
         {
             namespace linear
             {
-                /// Given three basis vectors I (1.0, 0.0, 0.0), J (0.0, 1.0, 0.0) and K (0.0, 0.0, 1.0), 
-                /// a 3x3 matrix represents a linear transformation by holding the resulting positions of I, J and K:
-                ///   I J K
-                /// [ x x x ]
-                /// [ y y y ]
-                /// [ z z z ]
-                /// e.g. the matrix
-                /// [ 2 0 0 ]
-                /// [ 0 2 0 ]
-                /// [ 0 0 2 ]
-                /// represents scaling by factor 2, as I is transformed from (1, 0, 0) to (2, 0, 0), J from (0, 1, 0) to (0, 2, 0) and K from (0, 0, 1) to (0, 0, 2)
-                /// An input vector of (3, 2, 1) would be transfornmed to (6, 4, 2) by this matrix
-                //template <typename T>
-                //class Matrix4x4
-                //{
-                //public:
-                //    Matrix4x4(
-                //        T vectorIx = static_cast<T>(1), T vectorIy = static_cast<T>(0), T vectorIz = static_cast<T>(0), T vectorIw = static_cast<T>(0),
-                //        T vectorJx = static_cast<T>(0), T vectorJy = static_cast<T>(1), T vectorJz = static_cast<T>(0), T vectorJw = static_cast<T>(0),
-                //        T vectorKx = static_cast<T>(0), T vectorKy = static_cast<T>(0), T vectorKz = static_cast<T>(1), T vectorKw = static_cast<T>(0),
-                //        T vectorLx = static_cast<T>(0), T vectorLy = static_cast<T>(0), T vectorLz = static_cast<T>(0), T vectorLw = static_cast<T>(1))
-                //        : iX(vectorIx), jX(vectorJx), kX(vectorKx), lX(vectorLx)
-                //        , iY(vectorIy), jY(vectorJy), kY(vectorKy), lY(vectorLy)
-                //        , iZ(vectorIz), jZ(vectorJz), kZ(vectorKz), lZ(vectorLz)
-                //        , iW(vectorIw), jW(vectorJw), kW(vectorKw), lW(vectorLw)
-                //    {
-                //    }
-
-                //    Matrix4x4(const Vector4<T>& vectorI, const Vector4<T>& vectorJ, const Vector4<T>& vectorK, const Vector4<T>& vectorL)
-                //        : iX(vectorI.x), jX(vectorJ.x), kX(vectorK.x), lX(vectorL.x)
-                //        , iY(vectorI.y), jY(vectorJ.y), kY(vectorK.y), lY(vectorL.y)
-                //        , iZ(vectorI.z), jZ(vectorJ.z), kZ(vectorK.z), lZ(vectorL.z)
-                //        , iW(vectorI.w), jW(vectorJ.w), kW(vectorK.w), lW(vectorL.w)
-                //    {
-                //    }
-
-                //    T iX, jX, kX, lX;
-                //    T iY, jY, kY, lY;
-                //    T iZ, jZ, kZ, lZ;
-                //    T iW, jW, kW, lW;
-
-                //public:
-                //    /// Determinant is the factor by which the area/volume represented by the basis vectors is increased/decreased by the transform
-                //    /// e.g. with the matrix
-                //    /// [ 2 0 ]
-                //    /// [ 0 2 ]
-                //    /// the area increases from 1x1 to 2x2 so the Determinant is 4
-                //    /// Negative Determinant means that the plane is flipped (orientation of space is inverted) for 2D
-                //    /// For 3D it means that the coordinate system has flipped from right handed to left handed
-                //    float Determinant() const
-                //    {
-                //        // plus a times the determinant of the matrix that is not in a's row or column,
-                //        auto determinantA = Matrix3x3<T>(jY, jZ, jW, kY, kZ, kW, lY, lZ, lW).Determinant();
-                //        // minus b times the determinant of the matrix that is not in b's row or column,
-                //        auto determinantB = Matrix3x3<T>(iY, iZ, iW, kY, kZ, kW, lY, lZ, lW).Determinant();
-                //        // plus c times the determinant of the matrix that is not in c's row or column,
-                //        auto determinantC = Matrix3x3<T>(iY, iZ, iW, jY, jZ, jW, lY, lZ, lW).Determinant();
-                //        // minus d times the determinant of the matrix that is not in d's row or column,
-                //        auto determinantD = Matrix3x3<T>(iY, iZ, iW, jY, jZ, jW, kY, kZ, kW).Determinant();
-
-                //        return (iX * determinantA) - (jX * determinantB) + (kX * determinantC) - (lX * determinantD);
-                //    }
-
-                //    T* Data()
-                //    {
-                //        return &iX;
-                //    }
-
-                //    Vector4<T> GetIColumn() const
-                //    {
-                //        return { iX, iY, iZ, iW };
-                //    }
-
-                //    Vector4<T> GetJColumn() const
-                //    {
-                //        return { jX, jY, jZ, jW };
-                //    }
-
-                //    Vector4<T> GetKColumn() const
-                //    {
-                //        return { kX, kY, kZ, kW };
-                //    }
-
-                //    Vector4<T> GetLColumn() const
-                //    {
-                //        return { lX, lY, lZ, lW };
-                //    }
-
-                //    Vector4<T> GetXRow() const
-                //    {
-                //        return { iX, jX, kX, lX };
-                //    }
-
-                //    Vector4<T> GetYRow() const
-                //    {
-                //        return { iY, jY, kY, lY };
-                //    }
-
-                //    Vector4<T> GetZRow() const
-                //    {
-                //        return { iZ, jZ, kZ, lZ };
-                //    }
-
-                //    Vector4<T> GetWRow() const
-                //    {
-                //        return { iW, jW, kW, lW };
-                //    }
-
-                //    /// Reset to Identity
-                //    void Reset()
-                //    {
-                //        iX = static_cast<T>(1); jX = static_cast<T>(0); kX = static_cast<T>(0); lX = static_cast<T>(0);
-                //        iY = static_cast<T>(0); jY = static_cast<T>(1); kY = static_cast<T>(0); lY = static_cast<T>(0);
-                //        iZ = static_cast<T>(0); jZ = static_cast<T>(0); kZ = static_cast<T>(1); lZ = static_cast<T>(0);
-                //        iW = static_cast<T>(0); jW = static_cast<T>(0); kW = static_cast<T>(0); lW = static_cast<T>(1);
-                //    }
-
-                //    Vector3<T> Transform(const Vector3<T>& input) const
-                //    {
-                //        float w = 0.0f;
-
-                //        auto outputX = (iX * input.x) + (jX * input.y) + (kX * input.z) + (lX * w);
-                //        auto outputY = (iY * input.x) + (jY * input.y) + (kY * input.z) + (lY * w);
-                //        auto outputZ = (iZ * input.x) + (jZ * input.y) + (kZ * input.z) + (lZ * w);
-
-                //        return { outputX, outputY, outputZ };
-                //    }
-
-                //public:
-                //    friend Matrix4x4<T> operator*(const Matrix4x4<T>& left, const Matrix4x4<T>& right) {
-                //        return {
-                //            (left.iX * right.iX) + (left.iY * right.jX) + (left.iZ * right.kX) + (left.iW * right.lX),
-                //            (left.iX * right.iY) + (left.iY * right.jY) + (left.iZ * right.kY) + (left.iW * right.lY),
-                //            (left.iX * right.iZ) + (left.iY * right.jZ) + (left.iZ * right.kZ) + (left.iW * right.lZ),
-                //            (left.iX * right.iW) + (left.iY * right.jW) + (left.iZ * right.kW) + (left.iW * right.lW),
-
-                //            (left.jX * right.iX) + (left.jY * right.jX) + (left.jZ * right.kX) + (left.jW * right.lX),
-                //            (left.jX * right.iY) + (left.jY * right.jY) + (left.jZ * right.kY) + (left.jW * right.lY),
-                //            (left.jX * right.iZ) + (left.jY * right.jZ) + (left.jZ * right.kZ) + (left.jW * right.lZ),
-                //            (left.jX * right.iW) + (left.jY * right.jW) + (left.jZ * right.kW) + (left.jW * right.lW),
-
-                //            (left.kX * right.iX) + (left.kY * right.jX) + (left.kZ * right.kX) + (left.kW * right.lX),
-                //            (left.kX * right.iY) + (left.kY * right.jY) + (left.kZ * right.kY) + (left.kW * right.lY),
-                //            (left.kX * right.iZ) + (left.kY * right.jZ) + (left.kZ * right.kZ) + (left.kW * right.lZ),
-                //            (left.kX * right.iW) + (left.kY * right.jW) + (left.kZ * right.kW) + (left.kW * right.lW),
-
-                //            (left.lX * right.iX) + (left.lY * right.jX) + (left.lZ * right.kX) + (left.lW * right.lX),
-                //            (left.lX * right.iY) + (left.lY * right.jY) + (left.lZ * right.kY) + (left.lW * right.lY),
-                //            (left.lX * right.iZ) + (left.lY * right.jZ) + (left.lZ * right.kZ) + (left.lW * right.lZ),
-                //            (left.lX * right.iW) + (left.lY * right.jW) + (left.lZ * right.kW) + (left.lW * right.lW)
-                //        };
-                //    }
-
-                //    friend Matrix4x4<T> operator*(const Matrix4x4<T>& matrix, T factor) {
-                //        return {
-                //            matrix.iX * factor, matrix.iY * factor, matrix.iZ * factor, matrix.iW * factor,
-                //            matrix.jX * factor, matrix.jY * factor, matrix.jZ * factor, matrix.jW * factor,
-                //            matrix.kX * factor, matrix.kY * factor, matrix.kZ * factor, matrix.kW * factor,
-                //            matrix.lX * factor, matrix.lY * factor, matrix.lZ * factor, matrix.lW * factor
-                //        };
-                //    }
-                //};
-
                 class Matrix4x4
                 {
                 public:
@@ -198,7 +35,7 @@ namespace synonms
                     {
                     }
 
-                    ///  X axis Y axis Z axis
+                    ///  X axis Y axis Z axis origin
                     /// [scaleX 0      0      translationX]
                     /// [0      scaleY 0      translationY]
                     /// [0      0      scaleZ translationZ]
@@ -491,6 +328,27 @@ namespace synonms
                         auto inverseRotation = Matrix4x4::CreateInverseOf(rotationMatrix);
 
                         return inverseRotation * translation;
+                    }
+
+                    static Matrix4x4 CreateViewFrom(const Vector3<float>& eyePosition, const Vector3<float>& targetPosition, const Vector3<float>& worldUpDirection = { 0.0f, 1.0f, 0.0f })
+                    {
+                        // Forward actually points away from the target
+                        auto forward = eyePosition - targetPosition;
+                        forward.Normalise();
+
+                        auto right = worldUpDirection.Cross(forward);
+                        right.Normalise();
+
+                        auto up = forward.Cross(right);
+                        up.Normalise();
+
+                        // Transformations are transposed
+                        return {
+                            right.x,                  up.x,                 forward.x,                0.0f,
+                            right.y,                  up.y,                 forward.y,                0.0f, 
+                            right.z,                  up.z,                 forward.z,                0.0f,
+                            -right.Dot(eyePosition), -up.Dot(eyePosition), -forward.Dot(eyePosition), 1.0f
+                        };
                     }
 
                     static Matrix4x4 CreateOrthographic(float left, float right, float bottom, float top, float near, float far)

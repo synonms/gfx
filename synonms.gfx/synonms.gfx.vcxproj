@@ -174,7 +174,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
-    <ClInclude Include="source\gfx\enumerators\texture-slot.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
     <ClInclude Include="source\gfx\environment\light.h" />
     <ClInclude Include="source\gfx\environment\perspective-view.h" />

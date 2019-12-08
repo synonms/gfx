@@ -1,6 +1,6 @@
 #version 330 core
 
-const int MAX_LIGHTS = 3;
+const int MAX_LIGHTS = 1;
 
 // Vertex Attributes - unique per vertex
 layout(location = 0) in vec3 va_position;
@@ -16,18 +16,9 @@ uniform mat3 vu_normalMatrix;
 // Lights
 struct Light {
     int type;		// 0 Directional, 1 Positional, 2 Spot
-    bool isEnabled;
     vec3 position;
     vec3 direction;
-//    float spotInnerCutoffCosine;	// Convert to radians then get Cosine before passing in
-//    float spotOuterCutoffCosine;	// Convert to radians then get Cosine before passing in
-//    vec4 ambientColour;
-//    vec4 diffuseColour;
-//    vec4 specularColour;
-//    float intensityMultiplier;
-//    float constantAttenuation;
-//    float linearAttenuation;
-//    float quadraticAttenuation;
+    mat4 viewProjectionMatrix;
 };
 
 uniform Light vu_lights[MAX_LIGHTS];
@@ -36,16 +27,19 @@ uniform Light vu_lights[MAX_LIGHTS];
 out vec3 p_vertexNormalDirection;
 out vec2 p_vertexTextureUV;
 out vec3 p_vertexToCameraDirection;
+out vec4 p_vertexPositionInLightSpace[MAX_LIGHTS];
 out vec3 p_vertexToLightDirection[MAX_LIGHTS];
 out float p_vertexToLightDistance[MAX_LIGHTS];
 
 void main()
 {
     // Move vertex to World space (1.0f denotes position vector rather than direction)
-    vec4 vertexPositionWorldSpace = vu_modelMatrix * vec4(va_position, 1.0f);
+    vec4 vertexPositionInWorldSpace = vu_modelMatrix * vec4(va_position, 1.0f);
 
     for (int i = 0; i < MAX_LIGHTS; i++)
     {
+        p_vertexPositionInLightSpace[i] = vu_lights[i].viewProjectionMatrix * vertexPositionInWorldSpace;
+
         if(vu_lights[i].type == 0)
         {
             // Directional
@@ -56,14 +50,14 @@ void main()
         {
             // Positional or Spot
             // Calculate the direction and distance from the vertex to each light (lights are already in world space)
-            vec3 vertexToLight = vu_lights[i].position - vertexPositionWorldSpace.xyz;
+            vec3 vertexToLight = vu_lights[i].position - vertexPositionInWorldSpace.xyz;
             p_vertexToLightDistance[i] = length(vertexToLight);
             p_vertexToLightDirection[i] = normalize(vertexToLight);
         } 
     }
 
     // Move vertex to eye/camera space (with camera at 0,0,0)
-    vec4 vertexPositionEyeSpace = vu_viewMatrix * vertexPositionWorldSpace;
+    vec4 vertexPositionEyeSpace = vu_viewMatrix * vertexPositionInWorldSpace;
 
     // Calculate the direction from the vertex to camera
     p_vertexToCameraDirection = normalize(-vertexPositionEyeSpace.xyz);

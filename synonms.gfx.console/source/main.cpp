@@ -3,10 +3,10 @@
 #include <vendor\glm\glm.hpp>
 #include <vendor\glm\gtc\matrix_transform.hpp>
 
-#include <gfx\enumerators\texture-slot.h>
 #include <gfx\environment\camera.h>
 #include <gfx\environment\light.h>
 #include <gfx\environment\perspective-view.h>
+#include <gfx\environment\orthographic-view.h>
 #include <gfx\gui\gui-helper.h>
 #include <gfx\io\file-system.h>
 #include <gfx\materials\material.h>
@@ -27,7 +27,6 @@
 #include <opengl\factories\render-buffer-factory.h>
 #include <opengl\factories\texture-factory.h>
 
-using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::gui;
 using namespace synonms::gfx::io;
@@ -159,6 +158,7 @@ int main(int, char**)
 //    glfwSetErrorCallback(glfw_error_callback);
     auto windowWidth = 2048;
     auto windowHeight = 1024;
+    auto shadowMapSize = 1024;
 
     // SYSTEM ********************
     std::cout << "Initialising system..." << std::endl;
@@ -205,6 +205,7 @@ int main(int, char**)
     std::cout << "Creating view..." << std::endl;
 
     PerspectiveView view(60.0f, static_cast<float>(windowWidth) / static_cast<float>(windowHeight), 0.1f, 50.0f);
+//    OrthographicView view(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 50.0f);
 
     std::cout << "View created" << std::endl;
 
@@ -241,11 +242,11 @@ int main(int, char**)
     }
 
     auto checkerboardMaterial = Material::Create()
-        .WithTexture(TextureSlot::Colour, checkerboardDiffuseTexture)
-        .WithTexture(TextureSlot::Specular, checkerboardSpecularTexture);
+        .WithTexture(0, checkerboardDiffuseTexture)
+        .WithTexture(1, checkerboardSpecularTexture);
 
     auto cubeMaterial = Material::Create()
-        .WithTexture(TextureSlot::Colour, cubemapDiffuseTexture);
+        .WithTexture(0, cubemapDiffuseTexture);
 
     auto lightMaterial = Material::Create()
         .WithDiffuseColour({ 1.0f, 1.0f, 1.0f, 1.0f })
@@ -257,17 +258,17 @@ int main(int, char**)
     std::string phongVertexShaderSource = fileSystem.ReadFile("resources/shaders/phong.vertex.glsl");
     std::string phongFragmentShaderSource = fileSystem.ReadFile("resources/shaders/phong.fragment.glsl");
 
-    PhongShader phongShaderSet(phongVertexShaderSource, phongFragmentShaderSource);
+    PhongShader phongShader(phongVertexShaderSource, phongFragmentShaderSource);
 
     std::string shadowmapVertexShaderSource = fileSystem.ReadFile("resources/shaders/shadowmap.vertex.glsl");
     std::string shadowmapFragmentShaderSource = fileSystem.ReadFile("resources/shaders/shadowmap.fragment.glsl");
 
-    ShadowmapShader shadowmapShaderSet(shadowmapVertexShaderSource, shadowmapFragmentShaderSource);
+    ShadowmapShader shadowmapShader(shadowmapVertexShaderSource, shadowmapFragmentShaderSource);
 
     std::string bufferVertexShaderSource = fileSystem.ReadFile("resources/shaders/buffer.vertex.glsl");
     std::string bufferFragmentShaderSource = fileSystem.ReadFile("resources/shaders/buffer.fragment.glsl");
 
-    BufferShader bufferShaderSet(bufferVertexShaderSource, bufferFragmentShaderSource);
+    BufferShader bufferShader(bufferVertexShaderSource, bufferFragmentShaderSource);
 
     std::cout << "Shaders created" << std::endl;
 
@@ -290,21 +291,6 @@ int main(int, char**)
     std::cout << "Meshes created" << std::endl;
     std::cout << boxMesh->ToString() << std::endl;
 
-    // LIGHT **********************************
-    std::cout << "Creating light..." << std::endl;
-
-    Light light;
-    light.ambientColour = Vector4<float>({ 0.1f, 0.1f, 0.1f, 1.0f });
-    light.diffuseColour = Vector4<float>({ 1.0f, 1.0f, 1.0f, 1.0f });
-    light.specularColour = Vector4<float>({ 0.5f, 0.5f, 0.5f, 0.5f });
-    light.intensityMultiplier = 1.0f;
-    light.position.x = -5.0f;
-    light.position.y = 5.0f;
-    light.position.z = 5.0f;
-    light.isEnabled = true;
-
-    std::cout << "Light created" << std::endl;
-
     // BUFFERS **********************************
     std::cout << "Creating buffers..." << std::endl;
 
@@ -312,7 +298,28 @@ int main(int, char**)
     auto offscreenDepthStencilBuffer = opengl::factories::RenderBufferFactory::CreateDepthStencilBuffer(windowWidth, windowHeight);
     auto offscreenFrameBuffer = opengl::factories::FrameBufferFactory::CreateOffscreenBuffer(windowWidth, windowHeight, offscreenColourTexture->GetTextureId(), offscreenDepthStencilBuffer->GetRenderBufferId());
 
+    auto shadowMapColourTexture = opengl::factories::TextureFactory::CreateColour(shadowMapSize, shadowMapSize);
+    auto shadowMapDepthTexture = opengl::factories::TextureFactory::CreateDepth(shadowMapSize, shadowMapSize);
+    auto shadowMapFrameBuffer = opengl::factories::FrameBufferFactory::CreateShadowmapBuffer(shadowMapSize, shadowMapSize, shadowMapDepthTexture->GetTextureId(), shadowMapColourTexture->GetTextureId());
+
     std::cout << "Buffers created" << std::endl;
+
+    // LIGHT **********************************
+    std::cout << "Creating light..." << std::endl;
+
+    Light sunLight(Light::LightType::Directional);
+    sunLight.ambientColour = Vector4<float>(0.1f, 0.1f, 0.1f, 1.0f);
+    sunLight.diffuseColour = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f);
+    sunLight.specularColour = Vector4<float>(0.5f, 0.5f, 0.5f, 0.5f);
+    sunLight.intensityMultiplier = 1.0f;
+    sunLight.target = Vector3<float>(0.0f, 0.0f, 0.0f);
+    sunLight.position = Vector3<float>(0.0f, 10.0f, 10.0f);
+    sunLight.isEnabled = true;
+    // TODO - figure out how to size this
+    sunLight.shadowMapProjectionMatrix = OrthographicView(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 50.0f).GetProjectionMatrix();
+    sunLight.shadowMapDepthTexture = shadowMapDepthTexture;
+
+    std::cout << "Light created" << std::endl;
 
     // IMGUI **********************************
     std::cout << "Initialising IMGUI..." << std::endl;
@@ -343,10 +350,24 @@ int main(int, char**)
         auto projectionMatrix = view.GetProjectionMatrix();
         auto viewMatrix = camera.GetViewMatrix();
 
-        // Draw box to offline buffer
-        offscreenFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
+        // Draw Sun shadowmap
+        opengl::Window::SetViewport(0, 0, shadowMapSize, shadowMapSize);
+        shadowMapFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
+        opengl::FrameBuffer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
+//        opengl::FrameBuffer::ClearDepth(1.0f);
+        opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer);
+        opengl::StateManager::EnableDepthTesting();
 
+        auto sunViewProjectionMatrix = sunLight.shadowMapProjectionMatrix * sunLight.GetViewMatrix();
+
+        {
+            shadowmapShader.RenderOrthographic(sunViewProjectionMatrix, planeInstance.GetModelMatrix(), planeInstance.GetMesh());
+            shadowmapShader.RenderOrthographic(sunViewProjectionMatrix, boxInstance.GetModelMatrix(), boxInstance.GetMesh());
+        }
+
+        // Draw to offline buffer
         opengl::Window::SetViewport(0, 0, currentWindowWidth, currentWindowHeight);
+        offscreenFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
 
         opengl::StateManager::EnableDepthTesting();
         opengl::FrameBuffer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
@@ -356,29 +377,27 @@ int main(int, char**)
             auto modelMatrix = planeInstance.GetModelMatrix();
             auto normalMatrix = planeInstance.GetNormalMatrix();
 
-            phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, planeInstance.GetMaterial(), light, sceneAmbientColour), planeInstance.GetMesh());
+            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, planeInstance.GetMaterial(), sunLight, sceneAmbientColour), planeInstance.GetMesh());
         }
 
         {
             auto modelMatrix = boxInstance.GetModelMatrix();
             auto normalMatrix = boxInstance.GetNormalMatrix();
 
-            phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, boxInstance.GetMaterial(), light, sceneAmbientColour), boxInstance.GetMesh());
+            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, boxInstance.GetMaterial(), sunLight, sceneAmbientColour), boxInstance.GetMesh());
         }
 
         {
-            lightInstance.position = light.position;
+            lightInstance.position = sunLight.position;
 
             auto modelMatrix = lightInstance.GetModelMatrix();
             auto normalMatrix = lightInstance.GetNormalMatrix();
 
-            phongShaderSet.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), light, sceneAmbientColour), lightInstance.GetMesh());
+            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), sunLight, sceneAmbientColour), lightInstance.GetMesh());
         }
 
         // Revert to default buffer
         opengl::FrameBuffer::BindDefault(opengl::enumerators::FramebufferTarget::Framebuffer);
-
-        opengl::Window::SetViewport(0, 0, currentWindowWidth, currentWindowHeight);
 
         opengl::StateManager::DisableDepthTesting();
         opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
@@ -386,11 +405,12 @@ int main(int, char**)
         {
             // Draw buffers to panes
             opengl::Texture::ActivateSlot(0);
+
             offscreenColourTexture->Bind();
-            bufferShaderSet.Render(0, mainPane.GetMesh());
-//            bufferShaderSet.Render(0, debugPane1.GetMesh());
-//            depthBuffer->Bind();
-//            bufferShaderSet.Render(0, debugPane2.GetMesh());
+            bufferShader.Render(0, mainPane.GetMesh());
+
+            shadowMapColourTexture->Bind();
+            bufferShader.Render(0, debugPane1.GetMesh());
         }
 
         GuiHelper::PushWindow("gfx", 100.0f, 100.0f, 400.0f, 400.0f);
@@ -401,28 +421,28 @@ int main(int, char**)
         GuiHelper::SliderFloat3("Rotation", &boxInstance.rotationDegrees.pitch, -180.0f, 180.0f);
 
         GuiHelper::CollapsingHeader("Light");
-        GuiHelper::SliderFloat3("Position", &light.position.x, -20.0f, 20.0f);
-        GuiHelper::ColourEdit3("Ambient", &light.ambientColour.red);
-        GuiHelper::ColourEdit3("Diffuse", &light.diffuseColour.red);
-        GuiHelper::ColourEdit3("Specular", &light.specularColour.red);
-        GuiHelper::SliderFloat("Intensity", light.intensityMultiplier, 0.0f, 20.0f);
+        GuiHelper::SliderFloat3("Position", &sunLight.position.x, -20.0f, 20.0f);
+        GuiHelper::ColourEdit3("Ambient", &sunLight.ambientColour.red);
+        GuiHelper::ColourEdit3("Diffuse", &sunLight.diffuseColour.red);
+        GuiHelper::ColourEdit3("Specular", &sunLight.specularColour.red);
+        GuiHelper::SliderFloat("Intensity", sunLight.intensityMultiplier, 0.0f, 20.0f);
 
         GuiHelper::CollapsingHeader("Debug");
 
-        auto ambient = CalculateAmbient(light, checkerboardMaterial);
-        auto diffuse = CalculateDiffuse(light, checkerboardMaterial, Vector3<float>(-0.5f, -0.5f, 0.0f), Vector3<float>(0.0f, 0.0f, 1.0f), planeInstance);
-        auto specular = CalculateSpecular(light, checkerboardMaterial, Vector3<float>(-0.5f, -0.5f, 0.0f), Vector3<float>(0.0f, 0.0f, 1.0f), planeInstance, camera.position);
+        auto ambient = CalculateAmbient(sunLight, checkerboardMaterial);
+        auto diffuse = CalculateDiffuse(sunLight, checkerboardMaterial, Vector3<float>(-0.5f, -0.5f, 0.0f), Vector3<float>(0.0f, 0.0f, 1.0f), planeInstance);
+        auto specular = CalculateSpecular(sunLight, checkerboardMaterial, Vector3<float>(-0.5f, -0.5f, 0.0f), Vector3<float>(0.0f, 0.0f, 1.0f), planeInstance, camera.position);
 
         GuiHelper::Text("** RESULT **************");
 
         auto vertexPositionWorld = planeInstance.GetModelMatrix().Transform(Vector3<float>(-0.5f, -0.5f, 0.0f));
-        auto vertexToLightDirection = light.position - vertexPositionWorld;
+        auto vertexToLightDirection = sunLight.position - vertexPositionWorld;
         auto vertexToLightDistance = vertexToLightDirection.Length();
         GuiHelper::Text("V -> L Dist: " + std::to_string(vertexToLightDistance));
 
-        auto attenuation = 1.0f / (light.constantAttenuation +
-            (light.linearAttenuation * vertexToLightDistance) +
-            (light.quadraticAttenuation * vertexToLightDistance * vertexToLightDistance));
+        auto attenuation = 1.0f / (sunLight.constantAttenuation +
+            (sunLight.linearAttenuation * vertexToLightDistance) +
+            (sunLight.quadraticAttenuation * vertexToLightDistance * vertexToLightDistance));
 
         GuiHelper::Text("Attenuation: " + std::to_string(attenuation));
 

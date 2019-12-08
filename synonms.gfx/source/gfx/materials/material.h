@@ -1,6 +1,5 @@
 #pragma once
 
-#include <gfx/enumerators/texture-slot.h>
 #include <gfx/mathematics/linear/vector3.h>
 #include <gfx/mathematics/linear/vector4.h>
 
@@ -23,18 +22,18 @@ namespace synonms
                 mathematics::linear::Vector4<float> emissiveColour{ 0.0f, 0.0f, 0.0f, 1.0f };
                 float shininess{ 1.0f };    // Larger number = smaller specular highlight
 
-                inline bool IsTextureEnabled(enumerators::TextureSlot slot) const 
+                inline bool IsTextureEnabled(unsigned int slot) const 
                 {
                     return _textures.find(slot) != std::end(_textures);
                 }
 
-                void ActivateTexture(enumerators::TextureSlot slot) const;
+                void ActivateTexture(unsigned int slot) const;
 
                 Material& WithDiffuseColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithSpecularColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithEmissiveColour(const mathematics::linear::Vector4<float>& colour);
                 Material& WithShininess(float shininess);    // Larger number = smaller specular highlight
-                Material& WithTexture(enumerators::TextureSlot slot, std::shared_ptr<api::opengl::Texture> texture);
+                Material& WithTexture(unsigned int slot, std::shared_ptr<api::opengl::Texture> texture);
 
             public:
                 static Material Create()
@@ -43,7 +42,7 @@ namespace synonms
                 }
 
             private:
-                std::unordered_map<enumerators::TextureSlot, std::shared_ptr<api::opengl::Texture>> _textures;
+                std::unordered_map<unsigned int, std::shared_ptr<api::opengl::Texture>> _textures;
             };
         }
     }

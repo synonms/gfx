@@ -19,8 +19,8 @@ std::shared_ptr<Texture> TextureFactory::CreateColour(int width, int height, uns
 
     Texture::SetMinificationFilter(TargetTexture::Texture2D, MinificationFilterValue::Linear);
     Texture::SetMagnificationFilter(TargetTexture::Texture2D, MagnificationFilterValue::Linear);
-//    Texture::SetWrapModeS(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
-//    Texture::SetWrapModeT(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
+    Texture::SetWrapModeS(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
+    Texture::SetWrapModeT(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
 
 
     Texture::Unbind(TargetTexture::Texture2D);
@@ -34,19 +34,21 @@ std::shared_ptr<Texture> TextureFactory::CreateDepth(int width, int height, unsi
 
     texture->Bind();
 
-    Texture::SetMinificationFilter(TargetTexture::Texture2D, MinificationFilterValue::Linear);
-    Texture::SetMagnificationFilter(TargetTexture::Texture2D, MagnificationFilterValue::Linear);
-    Texture::SetWrapModeS(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
-    Texture::SetWrapModeT(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
-    Texture::SetCompareMode(TargetTexture::Texture2D, TextureCompareMode::CompareRefToTexture);
-    Texture::SetCompareFunc(TargetTexture::Texture2D, TextureCompareFunc::LessThanOrEqual);
-
     texture->SendData(
         TextureInternalFormat::DepthComponent32F,
         width, height,
         TextureFormat::DepthComponent,
         DataType::Float,
         data);
+
+    Texture::SetMinificationFilter(TargetTexture::Texture2D, MinificationFilterValue::Linear);
+    Texture::SetMagnificationFilter(TargetTexture::Texture2D, MagnificationFilterValue::Linear);
+    Texture::SetWrapModeS(TargetTexture::Texture2D, TextureWrapMode::ClampToBorder);
+    Texture::SetWrapModeT(TargetTexture::Texture2D, TextureWrapMode::ClampToBorder);
+    float borderColour[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+    Texture::SetBorderColour(TargetTexture::Texture2D, borderColour);
+//    Texture::SetCompareMode(TargetTexture::Texture2D, TextureCompareMode::CompareRefToTexture);
+//    Texture::SetCompareFunc(TargetTexture::Texture2D, TextureCompareFunc::LessThanOrEqual);
 
     Texture::Unbind(TargetTexture::Texture2D);
 

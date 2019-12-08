@@ -140,9 +140,6 @@
     <ClInclude Include="source\gfx\output\pane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\gfx\enumerators\texture-slot.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\gfx\io\image-file.h">
       <Filter>Header Files</Filter>
     </ClInclude>

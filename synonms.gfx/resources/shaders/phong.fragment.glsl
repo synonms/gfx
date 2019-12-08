@@ -1,11 +1,12 @@
 #version 330 core
 
-const int MAX_LIGHTS = 3;
+const int MAX_LIGHTS = 1;
 
 // Passed from vertex shader
 in vec3 p_vertexNormalDirection;
 in vec2 p_vertexTextureUV;
 in vec3 p_vertexToCameraDirection;
+in vec4 p_vertexPositionInLightSpace[MAX_LIGHTS];
 in vec3 p_vertexToLightDirection[MAX_LIGHTS];
 in float p_vertexToLightDistance[MAX_LIGHTS];
 
@@ -50,6 +51,7 @@ struct Light {
     float constantAttenuation;
     float linearAttenuation;
     float quadraticAttenuation;
+    sampler2D shadowMapTextureSlot;
 };
 
 uniform Light fu_lights[MAX_LIGHTS];
@@ -61,6 +63,7 @@ layout(location = 0) out vec4 p_fragmentColour;
 vec4 CalculateAmbient(int lightIndex, vec4 materialDiffuseColour);
 vec4 CalculateDiffuse(int lightIndex, vec4 materialDiffuseColour);
 vec4 CalculateSpecular(int lightIndex, vec4 materialSpecularColour);
+float CalculateShadowFactor(int lightIndex);
 
 void main()
 {
@@ -77,6 +80,7 @@ void main()
             vec4 ambient = CalculateAmbient(i, materialDiffuseColour);
             vec4 diffuse = CalculateDiffuse(i, materialDiffuseColour);
             vec4 specular = CalculateSpecular(i, materialSpecularColour);
+            float shadowFactor = CalculateShadowFactor(i);
 
             // Calculate the attenuation factor (falloff over distance)
             float attenuation = 1.0 / (fu_lights[i].constantAttenuation +
@@ -88,7 +92,7 @@ void main()
             if(fu_lights[i].type == 1)
             {
                 // Positional
-                lightContribution = ambient + (diffuse * attenuation) + (specular * attenuation);
+                lightContribution = ambient + (diffuse * attenuation * shadowFactor) + (specular * attenuation * shadowFactor);
             } 
             else if (fu_lights[i].type == 2)
             {
@@ -101,7 +105,7 @@ void main()
                     float epsilon = fu_lights[i].spotInnerCutoffCosine - fu_lights[i].spotOuterCutoffCosine;
                     float spotIntensity = clamp((theta - fu_lights[i].spotOuterCutoffCosine) / epsilon, 0.0, 1.0);    
 
-                    lightContribution = ambient + (diffuse * attenuation * spotIntensity) + (specular * attenuation * spotIntensity);
+                    lightContribution = ambient + (diffuse * attenuation * spotIntensity * shadowFactor) + (specular * attenuation * spotIntensity * shadowFactor);
                 }
                 else
                 {
@@ -113,7 +117,7 @@ void main()
             {
                 // Directional
                 // Attentuation only on specular
-                lightContribution = ambient + diffuse + (specular * attenuation);
+                lightContribution = ambient + (diffuse * shadowFactor) + (specular * attenuation * shadowFactor);
             }
 
             cumulativeLightColour += fu_materialSceneProduct.sceneColour + lightContribution;
@@ -142,4 +146,38 @@ vec4 CalculateSpecular(int lightIndex, vec4 materialSpecularColour)
     float specularDot = max(dot(lightReflectionDirection, p_vertexToCameraDirection), 0.0);
     vec4 specularResult = materialSpecularColour * fu_lights[lightIndex].specularColour * pow(specularDot, 0.3 * fu_material.shininess) * fu_lights[lightIndex].intensityMultiplier;
     return clamp(specularResult, 0.0, 1.0); 
+}
+
+// 1.0 if fragment is lit, 0.0 if in shadow
+float CalculateShadowFactor(int lightIndex)
+{
+    // Perform perspective divide to get fragment position in range [-1..1]
+    vec3 projectionCoords = p_vertexPositionInLightSpace[lightIndex].xyz / p_vertexPositionInLightSpace[lightIndex].w;
+    // Transform to range [0..1] to match depth buffer
+    projectionCoords = projectionCoords * 0.5 + 0.5; 
+    // Check if it's beyond the light's far plane
+    if(projectionCoords.z > 1.0) return 1.0;
+
+    // Sample the depth from the shadowMap texture
+//    float shadowMapDepth = texture(fu_lights[lightIndex].shadowMapTextureSlot, projectionCoords.xy).r;
+    // Get the depth of the fragment
+    float fragmentDepth = projectionCoords.z;
+
+    float bias = max(0.05 * (1.0 - dot(p_vertexNormalDirection, p_vertexToLightDirection[lightIndex])), 0.0025); 
+
+    // Sample a few different depth values for a softer shadow
+    float shadowFactor = 0.0;
+    vec2 texelSize = 1.0 / textureSize(fu_lights[lightIndex].shadowMapTextureSlot, 0);
+    for(int x = -1; x <= 1; ++x)
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+            float pcfDepth = texture(fu_lights[lightIndex].shadowMapTextureSlot, projectionCoords.xy + vec2(x, y) * texelSize).r; 
+            shadowFactor += fragmentDepth - bias < pcfDepth ? 1.0 : 0.0;
+        }    
+    }
+    shadowFactor /= 9.0;
+
+//    return fragmentDepth - bias < shadowMapDepth ? 1.0 : 0.0;  
+    return shadowFactor;
 }

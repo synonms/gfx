@@ -18,6 +18,7 @@ namespace synonms
                     {
                     public:
                         static std::unique_ptr<FrameBuffer> CreateOffscreenBuffer(int width, int height, unsigned int colourTextureId, unsigned int depthStencilRenderBufferId);
+                        static std::unique_ptr<FrameBuffer> CreateShadowmapBuffer(int width, int height, unsigned int depthTextureId, unsigned int colourTextureId = 0);
                     };
                 }
             }

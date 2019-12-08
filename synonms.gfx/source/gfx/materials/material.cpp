@@ -1,11 +1,10 @@
 #include "material.h"
 
-using namespace synonms::gfx::enumerators;
 using namespace synonms::gfx::materials;
 using namespace synonms::gfx::mathematics::linear;
 using namespace synonms::gfx::api;
 
-void Material::ActivateTexture(TextureSlot slot) const
+void Material::ActivateTexture(unsigned int slot) const
 {
     if (_textures.find(slot) != std::end(_textures)) {
         opengl::Texture::ActivateSlot(static_cast<unsigned int>(slot));
@@ -41,7 +40,7 @@ Material& Material::WithShininess(float materialShininess)
     return *this;
 }
 
-Material& Material::WithTexture(TextureSlot slot, std::shared_ptr<opengl::Texture> texture)
+Material& Material::WithTexture(unsigned int slot, std::shared_ptr<opengl::Texture> texture)
 {
     if (_textures.find(slot) != std::end(_textures)) {
         _textures.erase(slot);
