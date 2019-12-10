@@ -3,11 +3,11 @@
 const int MAX_LIGHTS = 1;
 
 // Passed from vertex shader
-in vec3 p_vertexNormalDirection;
+in vec3 p_vertexNormalDirectionInWorldSpace;
 in vec2 p_vertexTextureUV;
 in vec3 p_vertexToCameraDirection;
 in vec4 p_vertexPositionInLightSpace[MAX_LIGHTS];
-in vec3 p_vertexToLightDirection[MAX_LIGHTS];
+in vec3 p_vertexToLightDirectionInWorldSpace[MAX_LIGHTS];
 in float p_vertexToLightDistance[MAX_LIGHTS];
 
 // Material
@@ -98,7 +98,7 @@ void main()
             {
                 // Spot
                 // Calculate angle between spot direction and spot to fragment (i.e. how far from centre of cone)
-                float theta = dot(p_vertexToLightDirection[i], normalize(-fu_lights[i].direction));
+                float theta = dot(p_vertexToLightDirectionInWorldSpace[i], normalize(-fu_lights[i].direction));
 
                 if(theta > fu_lights[i].spotOuterCutoffCosine) 
                 {   
@@ -135,14 +135,14 @@ vec4 CalculateAmbient(int lightIndex, vec4 materialDiffuseColour)
 
 vec4 CalculateDiffuse(int lightIndex, vec4 materialDiffuseColour)
 {
-    float diffuseDot = max(dot(p_vertexNormalDirection, p_vertexToLightDirection[lightIndex]), 0.0);
+    float diffuseDot = max(dot(p_vertexNormalDirectionInWorldSpace, p_vertexToLightDirectionInWorldSpace[lightIndex]), 0.0);
     vec4 diffuseResult = materialDiffuseColour * fu_lights[lightIndex].diffuseColour * diffuseDot * fu_lights[lightIndex].intensityMultiplier;
     return clamp(diffuseResult, 0.0, 1.0);
 }
 
 vec4 CalculateSpecular(int lightIndex, vec4 materialSpecularColour)
 {
-    vec3 lightReflectionDirection = normalize(reflect(-p_vertexToLightDirection[lightIndex], p_vertexNormalDirection));
+    vec3 lightReflectionDirection = normalize(reflect(-p_vertexToLightDirectionInWorldSpace[lightIndex], p_vertexNormalDirectionInWorldSpace));
     float specularDot = max(dot(lightReflectionDirection, p_vertexToCameraDirection), 0.0);
     vec4 specularResult = materialSpecularColour * fu_lights[lightIndex].specularColour * pow(specularDot, 0.3 * fu_material.shininess) * fu_lights[lightIndex].intensityMultiplier;
     return clamp(specularResult, 0.0, 1.0); 
@@ -163,7 +163,7 @@ float CalculateShadowFactor(int lightIndex)
     // Get the depth of the fragment
     float fragmentDepth = projectionCoords.z;
 
-    float bias = max(0.05 * (1.0 - dot(p_vertexNormalDirection, p_vertexToLightDirection[lightIndex])), 0.0025); 
+    float bias = max(0.05 * (1.0 - dot(p_vertexNormalDirectionInWorldSpace, p_vertexToLightDirectionInWorldSpace[lightIndex])), 0.0025); 
 
     // Sample a few different depth values for a softer shadow
     float shadowFactor = 0.0;

@@ -66,6 +66,9 @@
     <ClCompile Include="source\gfx\shaders\shadowmap-shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\gfx\shaders\normal-shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\io\file-system.h">
@@ -155,6 +158,9 @@
     <ClInclude Include="source\gfx\shaders\shadowmap-shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\gfx\shaders\normal-shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\phong.fragment.glsl" />
@@ -163,6 +169,9 @@
     <None Include="resources\shaders\shadowmap.fragment.glsl" />
     <None Include="resources\shaders\buffer.vertex.glsl" />
     <None Include="resources\shaders\buffer.fragment.glsl" />
+    <None Include="resources\shaders\normal.vertex.glsl" />
+    <None Include="resources\shaders\normal.geometry.glsl" />
+    <None Include="resources\shaders\normal.fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">

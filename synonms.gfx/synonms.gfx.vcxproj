@@ -166,6 +166,7 @@
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
     <ClCompile Include="source\gfx\primitives\primitive-factory.cpp" />
     <ClCompile Include="source\gfx\shaders\buffer-shader.cpp" />
+    <ClCompile Include="source\gfx\shaders\normal-shader.cpp" />
     <ClCompile Include="source\gfx\shaders\phong-shader.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-extensions.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="source\gfx\primitives\mesh.h" />
     <ClInclude Include="source\gfx\primitives\vertex.h" />
     <ClInclude Include="source\gfx\shaders\buffer-shader.h" />
+    <ClInclude Include="source\gfx\shaders\normal-shader.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\shader-builder.h" />
@@ -204,7 +206,25 @@
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="resources\shaders\phong.fragment.glsl">
+      <None Include="resources\shaders\normal.fragment.glsl">
+          <DeploymentContent>true</DeploymentContent>
+      </None>
+      <Content Include="resources\shaders\normal.fragment.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Include="resources\shaders\normal.vertex.glsl">
+          <DeploymentContent>true</DeploymentContent>
+      </None>
+      <Content Include="resources\shaders\normal.vertex.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Include="resources\shaders\normal.geometry.glsl">
+          <DeploymentContent>true</DeploymentContent>
+      </None>
+      <Content Include="resources\shaders\normal.geometry.glsl">
+          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Include="resources\shaders\phong.fragment.glsl">
       <DeploymentContent>true</DeploymentContent>
     </None>
     <Content Include="resources\shaders\phong.fragment.glsl">

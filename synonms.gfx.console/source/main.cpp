@@ -19,6 +19,7 @@
 #include <gfx\shaders\buffer-shader.h>
 #include <gfx\shaders\phong-shader.h>
 #include <gfx\shaders\shadowmap-shader.h>
+#include <gfx\shaders\normal-shader.h>
 
 #include <opengl\state-manager.h>
 #include <opengl\system.h>
@@ -270,6 +271,12 @@ int main(int, char**)
 
     BufferShader bufferShader(bufferVertexShaderSource, bufferFragmentShaderSource);
 
+    std::string normalVertexShaderSource = fileSystem.ReadFile("resources/shaders/normal.vertex.glsl");
+    std::string normalFragmentShaderSource = fileSystem.ReadFile("resources/shaders/normal.fragment.glsl");
+    std::string normalGeometryShaderSource = fileSystem.ReadFile("resources/shaders/normal.geometry.glsl");
+
+    NormalShader normalShader(normalVertexShaderSource, normalFragmentShaderSource, normalGeometryShaderSource);
+
     std::cout << "Shaders created" << std::endl;
 
     // MESH **************************
@@ -374,26 +381,17 @@ int main(int, char**)
         opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
 
         {
-            auto modelMatrix = planeInstance.GetModelMatrix();
-            auto normalMatrix = planeInstance.GetNormalMatrix();
-
-            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, planeInstance.GetMaterial(), sunLight, sceneAmbientColour), planeInstance.GetMesh());
-        }
-
-        {
-            auto modelMatrix = boxInstance.GetModelMatrix();
-            auto normalMatrix = boxInstance.GetNormalMatrix();
-
-            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, boxInstance.GetMaterial(), sunLight, sceneAmbientColour), boxInstance.GetMesh());
-        }
-
-        {
             lightInstance.position = sunLight.position;
 
-            auto modelMatrix = lightInstance.GetModelMatrix();
-            auto normalMatrix = lightInstance.GetNormalMatrix();
+            auto planeModelMatrix = planeInstance.GetModelMatrix(); auto planeNormalMatrix = Matrix4x4::CreateNormalFrom(planeModelMatrix);
+            auto boxModelMatrix = boxInstance.GetModelMatrix(); auto boxNormalMatrix = Matrix4x4::CreateNormalFrom(boxModelMatrix);
+            auto lightModelMatrix = lightInstance.GetModelMatrix(); auto lightNormalMatrix = Matrix4x4::CreateNormalFrom(lightModelMatrix);
 
-            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, modelMatrix, normalMatrix, lightInstance.GetMaterial(), sunLight, sceneAmbientColour), lightInstance.GetMesh());
+            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, planeModelMatrix, planeNormalMatrix, planeInstance.GetMaterial(), sunLight, sceneAmbientColour), planeInstance.GetMesh());
+            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, boxModelMatrix, boxNormalMatrix, boxInstance.GetMaterial(), sunLight, sceneAmbientColour), boxInstance.GetMesh());
+            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, lightModelMatrix, lightNormalMatrix, lightInstance.GetMaterial(), sunLight, sceneAmbientColour), lightInstance.GetMesh());
+
+            normalShader.Render(projectionMatrix, viewMatrix, boxModelMatrix, boxNormalMatrix, boxInstance.GetMesh());
         }
 
         // Revert to default buffer

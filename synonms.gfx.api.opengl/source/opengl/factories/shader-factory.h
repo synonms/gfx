@@ -17,7 +17,7 @@ namespace synonms
                     class ShaderFactory
                     {
                     public:
-                        static std::unique_ptr<ShaderProgram> Create(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
+                        static std::unique_ptr<ShaderProgram> Create(const std::string& vertexShaderSource, const std::string& fragmentShaderSource, const std::string& geometryShaderSource = "");
                     };
                 }
             }

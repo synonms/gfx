@@ -50,7 +50,10 @@ namespace synonms
                 float quadraticAttenuation{0.01f};
 
                 inline mathematics::linear::Vector3<float> GetDirection() const {
-                    return Type == LightType::Positional ? target - position : mathematics::linear::Vector3<float>(0.0f, -1.0f, 0.0f);
+                    auto direction = target - position;
+                    direction.Normalise();
+
+                    return direction;
                 }
 
                 inline mathematics::linear::Matrix4x4 GetViewMatrix() const { 
