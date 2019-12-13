@@ -42,7 +42,7 @@ namespace synonms
                     static void SetOpenGlContextVersion(int major, int minor);
                     static void SetOpenGlProfile(enumerators::OpenGlProfile profile);
                     static void SetSwapInterval(int interval = 1);
-                    static void SetViewport(int lowerLeftX, int lowerLeftY, int width, int height);
+                    static void SetViewport(int left, int bottom, int width, int height);
 
                 private:
                     GLFWwindow* _window{ nullptr };

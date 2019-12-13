@@ -13,16 +13,16 @@ namespace synonms
             class Pane
             {
             public:
-                Pane(float left, float bottom, float width, float height);
+                Pane(int leftPixels, int bottomPixels, int widthPixels, int heightPixels);
 
-                inline primitives::Mesh& GetMesh() { return *_mesh.get(); }
+                void Resize(int leftPixels, int bottomPixels, int widthPixels, int heightPixels);
+                void SetAsViewport() const;
 
             private:
-                float _left;
-                float _bottom;
-                float _width;
-                float _height;
-                std::unique_ptr<primitives::Mesh> _mesh;
+                int _leftPixels;
+                int _bottomPixels;
+                int _widthPixels;
+                int _heightPixels;
             };
         }
     }

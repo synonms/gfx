@@ -20,7 +20,9 @@ namespace synonms
                         UnsignedInt = 0x1405,
                         Float = 0x1406,
                         Double = 0x140A,
-                        UnsignedInt_24_8 = 0x84FA
+                        UnsignedInt_24_8 = 0x84FA,
+                        UnsignedShort_5_5_5_1 = 0x8034,
+                        UnsignedShort_5_6_5 = 0x8363
                     };
                 }
             }

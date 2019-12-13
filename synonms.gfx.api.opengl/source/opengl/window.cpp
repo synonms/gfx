@@ -99,7 +99,7 @@ void Window::SetSwapInterval(int interval)
     glfwSwapInterval(interval);
 }
 
-void Window::SetViewport(int lowerLeftX, int lowerLeftY, int width, int height)
+void Window::SetViewport(int left, int bottom, int width, int height)
 {
-    glViewport(lowerLeftX, lowerLeftY, width, height);
+    glViewport(left, bottom, width, height);
 }

@@ -4,24 +4,18 @@ using namespace synonms::gfx::api::opengl;
 using namespace synonms::gfx::api::opengl::enumerators;
 using namespace synonms::gfx::api::opengl::factories;
 
-std::shared_ptr<Texture> TextureFactory::CreateColour(int width, int height, unsigned char* data)
+std::shared_ptr<Texture> TextureFactory::CreateColour(int width, int height, unsigned char* data, TextureInternalFormat internalFormat, TextureFormat format, DataType dataType)
 {
     auto texture = std::make_shared<Texture>(TargetTexture::Texture2D);
 
     texture->Bind();
 
-    texture->SendData(
-        TextureInternalFormat::RGB8,
-        width, height,
-        TextureFormat::RGBA,
-        DataType::UnsignedByte,
-        data);
+    texture->SendData(internalFormat, width, height, format, dataType, data);
 
     Texture::SetMinificationFilter(TargetTexture::Texture2D, MinificationFilterValue::Linear);
     Texture::SetMagnificationFilter(TargetTexture::Texture2D, MagnificationFilterValue::Linear);
     Texture::SetWrapModeS(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
     Texture::SetWrapModeT(TargetTexture::Texture2D, TextureWrapMode::ClampToEdge);
-
 
     Texture::Unbind(TargetTexture::Texture2D);
 

@@ -69,6 +69,9 @@
     <ClCompile Include="source\gfx\shaders\normal-shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\gfx\io\image.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\io\file-system.h">
@@ -159,6 +162,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\gfx\shaders\normal-shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\io\image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
