@@ -1,5 +1,6 @@
 #pragma once
 
+#include <gfx\materials\pbr-material.h>
 #include <gfx\primitives\mesh.h>
 #include <gfx\transforms\matrix3x3.h>
 #include <gfx\transforms\matrix4x4.h>
@@ -17,17 +18,23 @@ namespace synonms
             class MeshInstance
             {
             public:
-                MeshInstance(const Mesh& mesh)
+                MeshInstance(std::shared_ptr<Mesh> mesh, std::shared_ptr<materials::PBRMaterial> material)
                     : _mesh(mesh)
+                    , _material(material)
                 {}
                 
                 geometry::Point3<float> position{ 0.0f, 0.0f, 0.0f };
                 geometry::Vector3<float> rotationDegrees{ 0.0f, 0.0f, 0.0f };
                 geometry::Vector3<float> scale{ 1.0f, 1.0f, 1.0f };
 
+                inline const materials::PBRMaterial& GetMaterial() const
+                {
+                    return *_material.get();
+                }
+
                 inline const Mesh& GetMesh() const 
                 { 
-                    return _mesh; 
+                    return *_mesh.get(); 
                 }
 
                 inline transforms::Matrix4x4 GetModelMatrix() const
@@ -48,7 +55,8 @@ namespace synonms
                 }
 
             private:
-                const Mesh& _mesh;
+                std::shared_ptr<Mesh> _mesh;
+                std::shared_ptr<materials::PBRMaterial> _material;
 
                 inline transforms::Matrix4x4 GetRotationMatrix() const
                 {

@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include <gfx\assets\model.h>
 #include <gfx\environment\camera.h>
 #include <gfx\environment\light.h>
 #include <gfx\environment\perspective-view.h>
@@ -30,6 +31,7 @@
 #include <opengl\factories\frame-buffer-factory.h>
 #include <opengl\factories\render-buffer-factory.h>
 
+using namespace synonms::gfx::assets;
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::gui;
 using namespace synonms::gfx::io;
@@ -131,8 +133,8 @@ int main(int, char**)
 
     // CAMERA *******************
     Camera camera;
-    camera.position = Point3<float>{ 0.0f, 10.0f, 10.0f };
-    camera.rotationDegrees = Vector3<float>{ 45.0f, 0.0f, 0.0f };
+    camera.position = Point3<float>{ 0.0f, 10.0f, 20.0f };
+    camera.rotationDegrees = Vector3<float>{ 11.25f, 0.0f, 0.0f };
 
 
     // MATERIALS ***********************
@@ -146,12 +148,12 @@ int main(int, char**)
     // TODO
     Image planeDisplacementImage("D:\\Nick\\pictures\\textures\\floor\\PavingStones36_disp.jpg");
 
-    PBRMaterial pavingStonesMaterial;
-    pavingStonesMaterial.Albedo = TextureFactory::CreateColour(planeAlbedoImage);
-    pavingStonesMaterial.Normal = TextureFactory::CreateColour(planeNormalImage);
-    pavingStonesMaterial.Roughness = TextureFactory::CreateColour(planeRoughnessImage);
-    pavingStonesMaterial.AmbientOcclusion = TextureFactory::CreateColour(planeAOImage);
-    pavingStonesMaterial.SpecularColourF0 = Vector3<float>(0.04f, 0.04f, 0.04f);
+    auto pavingStonesMaterial = std::make_shared<PBRMaterial>();
+    pavingStonesMaterial->Albedo = TextureFactory::CreateColour(planeAlbedoImage);
+    pavingStonesMaterial->Normal = TextureFactory::CreateColour(planeNormalImage);
+    pavingStonesMaterial->Roughness = TextureFactory::CreateColour(planeRoughnessImage);
+    pavingStonesMaterial->AmbientOcclusion = TextureFactory::CreateColour(planeAOImage);
+    pavingStonesMaterial->SpecularColourF0 = Vector3<float>(0.04f, 0.04f, 0.04f);
 
     Image metalAlbedoImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_col.jpg");
     Image metalNormalImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_nrm.jpg");
@@ -160,12 +162,12 @@ int main(int, char**)
     // TODO
     Image metalDisplacementImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_disp.jpg");
 
-    PBRMaterial metalMaterial;
-    metalMaterial.Albedo = TextureFactory::CreateColour(metalAlbedoImage);
-    metalMaterial.Normal = TextureFactory::CreateColour(metalNormalImage);
-    metalMaterial.Roughness = TextureFactory::CreateColour(metalRoughnessImage);
-    metalMaterial.Metallic = TextureFactory::CreateColour(metalMetallicImage);
-    metalMaterial.SpecularColourF0 = Vector3<float>(0.56f, 0.57f, 0.58f);
+    auto metalMaterial = std::make_shared<PBRMaterial>();
+    metalMaterial->Albedo = TextureFactory::CreateColour(metalAlbedoImage);
+    metalMaterial->Normal = TextureFactory::CreateColour(metalNormalImage);
+    metalMaterial->Roughness = TextureFactory::CreateColour(metalRoughnessImage);
+    metalMaterial->Metallic = TextureFactory::CreateColour(metalMetallicImage);
+    metalMaterial->SpecularColourF0 = Vector3<float>(0.56f, 0.57f, 0.58f);
 
 
     auto lightMaterial = Material::Create()
@@ -210,26 +212,23 @@ int main(int, char**)
 
     DeferredLightingShader deferredLightingShader(deferredLightingVertexShaderSource, deferredLightingFragmentShaderSource);
 
+
     // MESH **************************
     auto boxMesh = PrimitiveFactory::CreateBox(1.0f, 1.0f, 1.0f);
     auto planeMesh = PrimitiveFactory::CreatePlane(1.0f, 1.0f);
     auto screenQuad = PrimitiveFactory::CreatePlane(2.0f, 2.0f);
 
-    MeshInstance planeInstance(*planeMesh.get());
-    planeInstance.SetUniformScale(10.0f);
+    MeshInstance planeInstance(planeMesh, pavingStonesMaterial);
+    planeInstance.SetUniformScale(20.0f);
     planeInstance.rotationDegrees.x = -90.0f;
 
-    MeshInstance boxInstance(*boxMesh.get());
+    MeshInstance boxInstance(boxMesh, metalMaterial);
     boxInstance.SetUniformScale(5.0f);
-    boxInstance.position = Point3<float>(0.0f, 2.5f, 0.0f);
+    boxInstance.position = Point3<float>(0.0f, 2.5f, -5.0f);
 
-    MeshInstance lightInstance(*boxMesh.get());
-    lightInstance.SetUniformScale(1.0f);
+    Model nanosuit("resources/assets/nanosuit/nanosuit.obj");
 
-    std::cout << "Meshes created" << std::endl;
-    std::cout << boxMesh->ToString() << std::endl;
-
-    
+   
     // BUFFERS **********************************
     auto offscreenColourTexture = TextureFactory::CreateColour(windowWidth, windowHeight);
     auto offscreenDepthStencilBuffer = opengl::factories::RenderBufferFactory::CreateDepthStencilBuffer(windowWidth, windowHeight);
@@ -253,9 +252,9 @@ int main(int, char**)
     sunLight.specularColour = Vector4<float>(0.5f, 0.5f, 0.5f, 0.5f);
     sunLight.intensityMultiplier = 1.0f;
     sunLight.target = Point3<float>(0.0f, 0.0f, 0.0f);
-    sunLight.position = Point3<float>(0.0f, 10.0f, 10.0f);
+    sunLight.position = Point3<float>(-5.0f, 10.0f, 10.0f);
     sunLight.isEnabled = true;
-    sunLight.radiance = Vector3<float>(23.47f, 21.31f, 20.79f);
+    sunLight.radiance = Vector3<float>(1.0f, 1.0f, 1.0f);
     // TODO - figure out how to size this
     sunLight.shadowMapProjectionMatrix = OrthographicView(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 50.0f).GetProjectionMatrix();
     sunLight.shadowMapDepthTexture = shadowMapDepthTexture;
@@ -300,6 +299,11 @@ int main(int, char**)
 
             shadowmapShader.RenderOrthographic(sunViewProjectionMatrix, planeInstance.GetModelMatrix(), planeInstance.GetMesh());
             shadowmapShader.RenderOrthographic(sunViewProjectionMatrix, boxInstance.GetModelMatrix(), boxInstance.GetMesh());
+
+            for (const auto& nanosuitMeshInstance : nanosuit.GetMeshInstances())
+            {
+                shadowmapShader.RenderOrthographic(sunViewProjectionMatrix, nanosuitMeshInstance->GetModelMatrix(), nanosuitMeshInstance->GetMesh());
+            }
         }
 
         mainPane.SetAsViewport();
@@ -336,15 +340,13 @@ int main(int, char**)
 //        }
 
         {
-            lightInstance.position = sunLight.position;
+            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, planeInstance, camera, sunLight));
+            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, boxInstance, camera, sunLight));
 
-            auto planeModelMatrix = planeInstance.GetModelMatrix(); auto planeNormalMatrix = Matrix4x4::CreateNormalFrom(planeModelMatrix);
-            auto boxModelMatrix = boxInstance.GetModelMatrix(); auto boxNormalMatrix = Matrix4x4::CreateNormalFrom(boxModelMatrix);
-//            auto lightModelMatrix = lightInstance.GetModelMatrix(); auto lightNormalMatrix = Matrix4x4::CreateNormalFrom(lightModelMatrix);
-
-            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, planeModelMatrix, planeNormalMatrix, pavingStonesMaterial, camera, sunLight), planeInstance.GetMesh());
-            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, boxModelMatrix, boxNormalMatrix, metalMaterial, camera, sunLight), boxInstance.GetMesh());
-//            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, lightModelMatrix, lightNormalMatrix, metalMaterial, camera, sunLight), lightInstance.GetMesh());
+            for (const auto& nanosuitMeshInstance : nanosuit.GetMeshInstances())
+            {
+                pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, *nanosuitMeshInstance.get(), camera, sunLight));
+            }
         }
 
         // Revert to default buffer

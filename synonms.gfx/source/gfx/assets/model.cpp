@@ -37,8 +37,7 @@ public:
     }
 
     std::string directory;
-    std::vector<std::unique_ptr<Mesh>> meshes;
-    std::vector<std::shared_ptr<Texture>> textures;
+    std::vector<std::unique_ptr<MeshInstance>> meshes;
 
     void ProcessNode(aiNode* node, const aiScene* scene)
     {
@@ -55,54 +54,57 @@ public:
         }
     }
 
-    std::unique_ptr<Mesh> ProcessMesh(aiMesh* mesh, const aiScene* scene)
+    std::unique_ptr<MeshInstance> ProcessMesh(aiMesh* assimpMesh, const aiScene* assimpScene)
     {
         std::vector<Vertex> vertices;
         std::vector<unsigned int> indices;
 
-        for (auto i = 0u; i < mesh->mNumVertices; i++)
+        for (auto i = 0u; i < assimpMesh->mNumVertices; i++)
         {
             vertices.push_back(
                 Vertex(
-                    Vector3<float>(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z),
-                    Vector3<float>(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z),
-                    mesh->HasTextureCoords(0) ? Vector2<float>(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y) : Vector2<float>(),
-                    mesh->HasTangentsAndBitangents() ? Vector3<float>(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z) : Vector3<float>()
+                    Vector3<float>(assimpMesh->mVertices[i].x, assimpMesh->mVertices[i].y, assimpMesh->mVertices[i].z),
+                    Vector3<float>(assimpMesh->mNormals[i].x, assimpMesh->mNormals[i].y, assimpMesh->mNormals[i].z),
+                    assimpMesh->HasTextureCoords(0) ? Vector2<float>(assimpMesh->mTextureCoords[0][i].x, assimpMesh->mTextureCoords[0][i].y) : Vector2<float>(),
+                    assimpMesh->HasTangentsAndBitangents() ? Vector3<float>(assimpMesh->mTangents[i].x, assimpMesh->mTangents[i].y, assimpMesh->mTangents[i].z) : Vector3<float>()
                 )
             );
         }
 
-        for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+        for (unsigned int i = 0; i < assimpMesh->mNumFaces; i++)
         {
-            auto face = mesh->mFaces[i];
+            auto face = assimpMesh->mFaces[i];
             for (auto j = 0u; j < face.mNumIndices; j++)
             {
                 indices.push_back(face.mIndices[j]);
             }
         }
 
-        if (mesh->mMaterialIndex >= 0)
+        auto mesh = std::make_shared<Mesh>(vertices, indices);
+        auto pbrMaterial = std::make_shared<PBRMaterial>();
+
+        if (assimpMesh->mMaterialIndex >= 0)
         {
-            aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
-            LoadMaterialTextures(material, aiTextureType_DIFFUSE, "texture_diffuse");
-            LoadMaterialTextures(material, aiTextureType_SPECULAR, "texture_specular");
+            aiMaterial* material = assimpScene->mMaterials[assimpMesh->mMaterialIndex];
+            pbrMaterial->Albedo = LoadMaterialTexture(material, aiTextureType::aiTextureType_DIFFUSE);
+            pbrMaterial->Normal = LoadMaterialTexture(material, aiTextureType::aiTextureType_NORMALS);
+            pbrMaterial->Roughness = LoadMaterialTexture(material, aiTextureType::aiTextureType_DIFFUSE_ROUGHNESS);
+            pbrMaterial->Metallic = LoadMaterialTexture(material, aiTextureType::aiTextureType_METALNESS);
+            pbrMaterial->AmbientOcclusion = LoadMaterialTexture(material, aiTextureType::aiTextureType_AMBIENT_OCCLUSION);
         }
 
-        return std::make_unique<Mesh>(vertices, indices);
+        return std::make_unique<MeshInstance>(mesh, pbrMaterial);
     }
 
-    void LoadMaterialTextures(aiMaterial* material, aiTextureType type, const std::string& typeName)
+    std::shared_ptr<Texture> LoadMaterialTexture(aiMaterial* material, aiTextureType type)
     {
-        // TODO - stick these in a shared map somewhere and link them via a MeshInstance
+        if (material->GetTextureCount(type) <= 0) return nullptr;
 
-        for (auto i = 0u; i < material->GetTextureCount(type); i++)
-        {
-            aiString str;
-            material->GetTexture(type, i, &str);
+        aiString str;
+        material->GetTexture(type, 0, &str);
 
-            Image image(str.C_Str());
-            textures.push_back(TextureFactory::CreateColour(image));
-        }
+        Image image(directory + '/' + str.C_Str());
+        return TextureFactory::CreateColour(image);
     }
 };
 
@@ -110,4 +112,13 @@ public:
 Model::Model(const std::string& filePath)
 {
     _implementation = std::make_unique<Implementation>(filePath);
+}
+
+Model::~Model()
+{
+}
+
+const std::vector<std::unique_ptr<MeshInstance>>& Model::GetMeshInstances() const
+{
+    return _implementation->meshes;
 }

@@ -21,7 +21,7 @@ using namespace synonms::gfx::primitives;
 // Consider Normal as the Z axis (right handed), then set Tangent as X axis
 
 
-std::unique_ptr<Mesh> PrimitiveFactory::CreatePlane(float width, float height)
+std::shared_ptr<Mesh> PrimitiveFactory::CreatePlane(float width, float height)
 {
     const auto& halfWidth = width / 2.0f;
     const auto& halfHeight = height / 2.0f;
@@ -42,10 +42,10 @@ std::unique_ptr<Mesh> PrimitiveFactory::CreatePlane(float width, float height)
         3, 4, 5
     };
 
-    return std::make_unique<Mesh>(vertices, indices);
+    return std::make_shared<Mesh>(vertices, indices);
 }
 
-std::unique_ptr<Mesh> PrimitiveFactory::CreatePlane(float left, float bottom, float width, float height)
+std::shared_ptr<Mesh> PrimitiveFactory::CreatePlane(float left, float bottom, float width, float height)
 {
     const auto& right = left + width;
     const auto& top = bottom + height;
@@ -66,10 +66,10 @@ std::unique_ptr<Mesh> PrimitiveFactory::CreatePlane(float left, float bottom, fl
         3, 4, 5
     };
 
-    return std::make_unique<Mesh>(vertices, indices);
+    return std::make_shared<Mesh>(vertices, indices);
 }
 
-std::unique_ptr<Mesh> PrimitiveFactory::CreateBox(float width, float height, float depth)
+std::shared_ptr<Mesh> PrimitiveFactory::CreateBox(float width, float height, float depth)
 {
     const auto& halfWidth = width / 2.0f;
     const auto& halfHeight = height / 2.0f;
@@ -141,5 +141,5 @@ std::unique_ptr<Mesh> PrimitiveFactory::CreateBox(float width, float height, flo
         33, 34, 35,
     };
 
-    return std::make_unique<Mesh>(vertices, indices);
+    return std::make_shared<Mesh>(vertices, indices);
 }

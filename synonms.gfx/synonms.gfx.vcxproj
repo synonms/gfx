@@ -258,7 +258,6 @@
     <Content Include="resources\shaders\deferred.lighting.vertex.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="resources\shaders\disney.brdf.glsl" />
     <None Include="resources\shaders\normal.fragment.glsl">
       <DeploymentContent>true</DeploymentContent>
     </None>
@@ -327,6 +326,116 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Image Include="resources\assets\nanosuit\arm_dif.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\arm_showroom_ddn.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\arm_showroom_spec.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\body_dif.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\body_showroom_ddn.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\body_showroom_spec.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\glass_ddn.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\glass_dif.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\hand_dif.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\hand_showroom_ddn.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\hand_showroom_spec.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\helmet_diff.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\helmet_showroom_ddn.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\helmet_showroom_spec.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\leg_dif.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\leg_showroom_ddn.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\assets\nanosuit\leg_showroom_spec.png">
+      <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Content Include="resources\assets\nanosuit\arm_dif.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\arm_showroom_ddn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\arm_showroom_spec.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\body_dif.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\body_showroom_ddn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\body_showroom_spec.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\glass_ddn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\glass_dif.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\hand_dif.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\hand_showroom_ddn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\hand_showroom_spec.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\helmet_diff.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\helmet_showroom_ddn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\helmet_showroom_spec.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\leg_dif.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\leg_showroom_ddn.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\nanosuit\leg_showroom_spec.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\assets\nanosuit\nanosuit.blend" />
+    <Content Include="resources\assets\nanosuit\nanosuit.blend">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\assets\nanosuit\nanosuit.mtl" />
+    <Content Include="resources\assets\nanosuit\nanosuit.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -343,6 +452,22 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Content Include="resources\textures\UVCubemap-2048x1536.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="resources\assets\nanosuit\LICENSE.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="resources\assets\nanosuit\nanosuit.obj">
+      <DeploymentContent>true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </Resource>
+    <Content Include="resources\assets\nanosuit\nanosuit.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <gfx\primitives\mesh.h>
-#include <opengl\texture.h>
+#include <gfx\primitives\mesh-instance.h>
 
 #include <memory>
 #include <vector>
@@ -16,6 +15,9 @@ namespace synonms
             {
             public:
                 Model(const std::string& filePath);
+                ~Model();
+
+                const std::vector<std::unique_ptr<primitives::MeshInstance>>& GetMeshInstances() const;
 
             private:
                 class Implementation;

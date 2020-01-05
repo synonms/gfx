@@ -21,7 +21,7 @@ namespace synonms
             public:
                 PBRShader(const std::string& vertexShaderSource, const std::string& fragmentShaderSource);
 
-                void Render(const PBRShaderData& data, const primitives::Mesh& mesh);
+                void Render(const PBRShaderData& data);
 
             private:
                 std::unique_ptr<api::opengl::ShaderProgram> _shaderProgram{ nullptr };
