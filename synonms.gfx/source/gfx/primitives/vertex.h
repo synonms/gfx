@@ -1,7 +1,7 @@
 #pragma once
 
-#include <gfx\mathematics\linear\vector2.h>
-#include <gfx\mathematics\linear\vector3.h>
+#include <gfx\geometry\vector2.h>
+#include <gfx\geometry\vector3.h>
 
 namespace synonms
 {
@@ -12,18 +12,21 @@ namespace synonms
             class Vertex
             {
             public:
-                Vertex(const mathematics::linear::Vector3<float>& position, 
-                    const mathematics::linear::Vector3<float>& normal, 
-                    const mathematics::linear::Vector2<float>& textureCoords)
+                Vertex(const geometry::Vector3<float>& position, 
+                    const geometry::Vector3<float>& normal, 
+                    const geometry::Vector2<float>& textureCoords,
+                    const geometry::Vector3<float>& tangent)
                     : position(position)
                     , normal(normal)
                     , textureCoords(textureCoords)
+                    , tangent(tangent)
                 {
                 }
 
-                mathematics::linear::Vector3<float> position;
-                mathematics::linear::Vector3<float> normal;
-                mathematics::linear::Vector2<float> textureCoords;
+                geometry::Vector3<float> position;
+                geometry::Vector3<float> normal;
+                geometry::Vector2<float> textureCoords;
+                geometry::Vector3<float> tangent;
             };
         }
     }

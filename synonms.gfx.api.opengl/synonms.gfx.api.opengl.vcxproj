@@ -25,6 +25,7 @@
     <ClInclude Include="source\opengl\enumerators\data-type.h" />
     <ClInclude Include="source\opengl\enumerators\data-usage.h" />
     <ClInclude Include="source\opengl\enumerators\draw-buffer-mode.h" />
+    <ClInclude Include="source\opengl\enumerators\draw-buffers-mode.h" />
     <ClInclude Include="source\opengl\enumerators\draw-mode.h" />
     <ClInclude Include="source\opengl\enumerators\framebuffer-status.h" />
     <ClInclude Include="source\opengl\enumerators\framebuffer-target.h" />
@@ -47,7 +48,6 @@
     <ClInclude Include="source\opengl\factories\frame-buffer-factory.h" />
     <ClInclude Include="source\opengl\factories\render-buffer-factory.h" />
     <ClInclude Include="source\opengl\factories\shader-factory.h" />
-    <ClInclude Include="source\opengl\factories\texture-factory.h" />
     <ClInclude Include="source\opengl\frame-buffer.h" />
     <ClInclude Include="source\opengl\index-buffer.h" />
     <ClInclude Include="source\opengl\opengl-exception.h" />
@@ -67,7 +67,6 @@
     <ClCompile Include="source\opengl\factories\frame-buffer-factory.cpp" />
     <ClCompile Include="source\opengl\factories\render-buffer-factory.cpp" />
     <ClCompile Include="source\opengl\factories\shader-factory.cpp" />
-    <ClCompile Include="source\opengl\factories\texture-factory.cpp" />
     <ClCompile Include="source\opengl\frame-buffer.cpp" />
     <ClCompile Include="source\opengl\index-buffer.cpp" />
     <ClCompile Include="source\opengl\opengl-exception.cpp" />

@@ -3,7 +3,7 @@
 #include <memory>
 
 #include <gfx\environment\i-view.h>
-#include <gfx\mathematics\linear\matrix4x4.h>
+#include <gfx\transforms\matrix4x4.h>
 
 namespace synonms
 {
@@ -16,11 +16,11 @@ namespace synonms
             public:
                 PerspectiveView(float horizontalFieldOfViewDegrees, float aspectRatio, float nearClipPlane, float farClipPlane);
 
-                virtual const mathematics::linear::Matrix4x4& GetProjectionMatrix() const override;
+                virtual const transforms::Matrix4x4& GetProjectionMatrix() const override;
                 void Resize(float horizontalFieldOfViewDegrees, float aspectRatio, float nearClipPlane, float farClipPlane);
 
             private:
-                mathematics::linear::Matrix4x4 _projectionMatrix;
+                transforms::Matrix4x4 _projectionMatrix;
             };
         }
     }

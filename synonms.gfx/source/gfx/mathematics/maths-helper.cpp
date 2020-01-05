@@ -2,6 +2,11 @@
 
 using namespace synonms::gfx::mathematics;
 
+float MathsHelper::Gamma(int n) 
+{
+    return (n * epsilon) / (1 - n * epsilon);
+}
+
 bool MathsHelper::IsEqual(float a, float b)
 {
     const float d = a - b;
@@ -94,9 +99,9 @@ float MathsHelper::Absolute(float v)
     return v;
 }
 
-float MathsHelper::Interpolate(float a, float b, float t)
+float MathsHelper::Interpolate(float value0, float value1, float t)
 {
-    return a + (b - a) * t;
+    return value0 + (value1 - value0) * t;
 }
 
 float MathsHelper::Snap(float p, float grid)

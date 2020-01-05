@@ -5,7 +5,7 @@
 #include <guiproxy\gui.h>
 
 using namespace synonms::gfx::gui;
-using namespace synonms::gfx::mathematics::linear;
+using namespace synonms::gfx::geometry;
 
 bool GuiHelper::show_demo_window = true;
 bool GuiHelper::show_another_window = false;

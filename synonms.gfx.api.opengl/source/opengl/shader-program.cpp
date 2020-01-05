@@ -1,5 +1,7 @@
 #include "shader-program.h"
 
+#include <opengl\opengl-exception.h>
+
 #include <GL\glew.h>
 
 #include <utility>
@@ -36,6 +38,29 @@ void ShaderProgram::AttachShader(unsigned int shaderId) const
     glAttachShader(_programId, shaderId);
 }
 
+std::vector<std::string> ShaderProgram::GetActiveUniforms() const
+{
+    int noOfActiveUniforms;
+    glGetProgramiv(_programId, GL_ACTIVE_UNIFORMS, &noOfActiveUniforms);
+
+    GLint size; // size of the variable
+    GLenum type; // type of the variable (float, vec3 or mat4, etc)
+    const GLsizei bufSize = 64; // maximum name length
+    GLchar name[bufSize]; // variable name in GLSL
+    GLsizei length; // name length
+
+    std::vector<std::string> results;
+
+    for (auto i = 0u; i < noOfActiveUniforms; i++)
+    {
+        glGetActiveUniform(_programId, i, bufSize, &length, &size, &type, name);
+
+        results.push_back(name);
+    }
+
+    return results;
+}
+
 int ShaderProgram::GetUniformLocation(const std::string& uniformName) const
 {
     return glGetUniformLocation(_programId, uniformName.c_str());
@@ -54,6 +79,13 @@ void ShaderProgram::Use() const
 void ShaderProgram::Validate() const
 {
     glValidateProgram(_programId);
+
+    int validationStatus;
+    glGetProgramiv(_programId, GL_VALIDATE_STATUS, &validationStatus);
+
+    if (validationStatus != GL_TRUE) {
+        throw OpenglException("Shader is invalid");
+    }
 }
 
 
@@ -70,6 +102,11 @@ void ShaderProgram::SetUniformFloat(unsigned int location, float value)
 void ShaderProgram::SetUniformInt(unsigned int location, int value)
 {
     glUniform1i(location, value);
+}
+
+void ShaderProgram::SetUniformUnsignedInt(unsigned int location, unsigned int value)
+{
+    glUniform1ui(location, value);
 }
 
 void ShaderProgram::SetUniformVector3(unsigned int location, float value1, float value2, float value3)

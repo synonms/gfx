@@ -4,7 +4,7 @@
 
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::mathematics;
-using namespace synonms::gfx::mathematics::linear;
+using namespace synonms::gfx::transforms;
 
 PerspectiveView::PerspectiveView(float horizontalFieldOfViewDegrees, float aspectRatio, float nearClipPlane, float farClipPlane)
 {

@@ -72,22 +72,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include;$(SolutionDir)dependencies\assimp\assimp-5.0.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include;$(SolutionDir)dependencies\assimp\assimp-5.0.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include;$(SolutionDir)dependencies\assimp\assimp-5.0.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include;$(SolutionDir)dependencies\assimp\assimp-5.0.0\include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="source\gfx\assets\model.cpp" />
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
     <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
@@ -162,12 +163,17 @@
     <ClCompile Include="source\gfx\io\image-file.cpp" />
     <ClCompile Include="source\gfx\io\image.cpp" />
     <ClCompile Include="source\gfx\materials\material.cpp" />
+    <ClCompile Include="source\gfx\materials\texture-factory.cpp" />
     <ClCompile Include="source\gfx\mathematics\maths-helper.cpp" />
+    <ClCompile Include="source\gfx\output\deferred-shading-buffer.cpp" />
     <ClCompile Include="source\gfx\output\pane.cpp" />
     <ClCompile Include="source\gfx\primitives\mesh.cpp" />
     <ClCompile Include="source\gfx\primitives\primitive-factory.cpp" />
     <ClCompile Include="source\gfx\shaders\buffer-shader.cpp" />
+    <ClCompile Include="source\gfx\shaders\deferred-gbuffer-shader.cpp" />
+    <ClCompile Include="source\gfx\shaders\deferred-lighting-shader.cpp" />
     <ClCompile Include="source\gfx\shaders\normal-shader.cpp" />
+    <ClCompile Include="source\gfx\shaders\pbr-shader.cpp" />
     <ClCompile Include="source\gfx\shaders\phong-shader.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-extensions.cpp" />
@@ -175,23 +181,39 @@
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="source\gfx\assets\model.h" />
+    <ClInclude Include="source\gfx\enumerators\axis3.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
     <ClInclude Include="source\gfx\environment\light.h" />
     <ClInclude Include="source\gfx\environment\perspective-view.h" />
     <ClInclude Include="source\gfx\environment\orthographic-view.h" />
     <ClInclude Include="source\gfx\environment\i-view.h" />
+    <ClInclude Include="source\gfx\geometry\interaction.h" />
+    <ClInclude Include="source\gfx\geometry\surface-interaction.h" />
     <ClInclude Include="source\gfx\gui\gui-helper.h" />
     <ClInclude Include="source\gfx\io\file-system.h" />
     <ClInclude Include="source\gfx\io\image-file.h" />
     <ClInclude Include="source\gfx\io\image.h" />
     <ClInclude Include="source\gfx\materials\material.h" />
-    <ClInclude Include="source\gfx\mathematics\linear\matrix2x2.h" />
-    <ClInclude Include="source\gfx\mathematics\linear\matrix3x3.h" />
-    <ClInclude Include="source\gfx\mathematics\linear\matrix4x4.h" />
-    <ClInclude Include="source\gfx\mathematics\linear\vector2.h" />
-    <ClInclude Include="source\gfx\mathematics\linear\vector3.h" />
-    <ClInclude Include="source\gfx\mathematics\linear\vector4.h" />
+    <ClInclude Include="source\gfx\materials\pbr-material.h" />
+    <ClInclude Include="source\gfx\materials\texture-factory.h" />
+    <ClInclude Include="source\gfx\geometry\bounds3.h" />
+    <ClInclude Include="source\gfx\output\deferred-shading-buffer.h" />
+    <ClInclude Include="source\gfx\shaders\deferred-gbuffer-shader-uniforms.h" />
+    <ClInclude Include="source\gfx\shaders\deferred-gbuffer-shader.h" />
+    <ClInclude Include="source\gfx\shaders\deferred-lighting-shader-uniforms.h" />
+    <ClInclude Include="source\gfx\shaders\deferred-lighting-shader.h" />
+    <ClInclude Include="source\gfx\transforms\matrix2x2.h" />
+    <ClInclude Include="source\gfx\transforms\matrix3x3.h" />
+    <ClInclude Include="source\gfx\transforms\matrix4x4.h" />
+    <ClInclude Include="source\gfx\geometry\normal3.h" />
+    <ClInclude Include="source\gfx\geometry\point3.h" />
+    <ClInclude Include="source\gfx\geometry\ray.h" />
+    <ClInclude Include="source\gfx\shapes\sphere.h" />
+    <ClInclude Include="source\gfx\geometry\vector2.h" />
+    <ClInclude Include="source\gfx\geometry\vector3.h" />
+    <ClInclude Include="source\gfx\geometry\vector4.h" />
     <ClInclude Include="source\gfx\mathematics\maths-helper.h" />
     <ClInclude Include="source\gfx\output\pane.h" />
     <ClInclude Include="source\gfx\primitives\primitive-factory.h" />
@@ -200,14 +222,43 @@
     <ClInclude Include="source\gfx\primitives\vertex.h" />
     <ClInclude Include="source\gfx\shaders\buffer-shader.h" />
     <ClInclude Include="source\gfx\shaders\normal-shader.h" />
+    <ClInclude Include="source\gfx\shaders\pbr-shader-data.h" />
+    <ClInclude Include="source\gfx\shaders\pbr-shader.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader.h" />
     <ClInclude Include="source\gfx\shaders\phong-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\shader-builder.h" />
     <ClInclude Include="source\gfx\shaders\shader-extensions.h" />
     <ClInclude Include="source\gfx\shaders\shadowmap-shader.h" />
+    <ClInclude Include="source\gfx\shapes\i-primitive.h" />
+    <ClInclude Include="source\gfx\shapes\i-shape.h" />
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="resources\shaders\deferred.gbuffer.fragment.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\deferred.gbuffer.fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\deferred.gbuffer.vertex.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\deferred.gbuffer.vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\deferred.lighting.fragment.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\deferred.lighting.fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\deferred.lighting.vertex.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\deferred.lighting.vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\disney.brdf.glsl" />
     <None Include="resources\shaders\normal.fragment.glsl">
       <DeploymentContent>true</DeploymentContent>
     </None>
@@ -260,6 +311,18 @@
       <DeploymentContent>true</DeploymentContent>
     </None>
     <Content Include="resources\shaders\buffer.vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\pbr.fragment.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\pbr.fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\pbr.vertex.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\pbr.vertex.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

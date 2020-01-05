@@ -2,6 +2,7 @@
 
 #include <GL\glew.h>
 
+#include <algorithm>
 #include <utility>
 
 using namespace synonms::gfx::api::opengl;
@@ -102,6 +103,15 @@ void FrameBuffer::ReadStencilPixels(int left, int bottom, int width, int height,
 void FrameBuffer::SetDrawBuffer(DrawBufferMode mode)
 {
     glDrawBuffer(static_cast<unsigned int>(mode));
+}
+
+void FrameBuffer::SetDrawBuffers(const std::vector<DrawBuffersMode>& modes)
+{
+    std::vector<unsigned int> attachments;
+
+    std::transform(std::begin(modes), std::end(modes), std::back_inserter(attachments), [](DrawBuffersMode mode) { return static_cast<unsigned int>(mode); });
+
+    glDrawBuffers(attachments.size(), attachments.data());
 }
 
 void FrameBuffer::SetReadBuffer(ReadBufferMode mode)

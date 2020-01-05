@@ -1,8 +1,9 @@
 #pragma once
 
-#include <gfx\mathematics\linear\matrix4x4.h>
-#include <gfx\mathematics\linear\vector4.h>
-#include <gfx\mathematics\linear\vector3.h>
+#include <gfx\transforms\matrix4x4.h>
+#include <gfx\geometry\point3.h>
+#include <gfx\geometry\vector3.h>
+#include <gfx\geometry\vector4.h>
 
 #include <opengl\texture.h>
 
@@ -31,14 +32,16 @@ namespace synonms
 
                 LightType Type;
 
-                mathematics::linear::Vector3<float> position{ 0.0f, 0.0f, 0.0f };
-                mathematics::linear::Vector3<float> target{ 0.0f, 0.0f, 0.0f };
+                geometry::Point3<float> position{ 0.0f, 0.0f, 0.0f };
+                geometry::Point3<float> target{ 0.0f, 0.0f, 0.0f };
 
-                mathematics::linear::Vector4<float> ambientColour{0.005f, 0.005f, 0.005f, 1.0f};
-                mathematics::linear::Vector4<float> diffuseColour{1.0f, 1.0f, 1.0f, 1.0f};
-                mathematics::linear::Vector4<float> specularColour{0.1f, 0.1f, 0.1f, 1.0f};
+                geometry::Vector3<float> radiance{ 1.0f, 1.0f, 1.0f };
 
-                mathematics::linear::Matrix4x4 shadowMapProjectionMatrix{}; // Ortho for directional, Perspective for positional
+                geometry::Vector4<float> ambientColour{0.005f, 0.005f, 0.005f, 1.0f};
+                geometry::Vector4<float> diffuseColour{1.0f, 1.0f, 1.0f, 1.0f};
+                geometry::Vector4<float> specularColour{0.1f, 0.1f, 0.1f, 1.0f};
+
+                transforms::Matrix4x4 shadowMapProjectionMatrix{}; // Ortho for directional, Perspective for positional
                 std::shared_ptr<api::opengl::Texture> shadowMapDepthTexture{ nullptr };
 
                 bool isEnabled{ true };
@@ -49,15 +52,15 @@ namespace synonms
                 float linearAttenuation{0.1f};
                 float quadraticAttenuation{0.01f};
 
-                inline mathematics::linear::Vector3<float> GetDirection() const {
-                    auto direction = target - position;
+                inline geometry::Vector3<float> GetDirection() const {
+                    auto direction = position.VectorTo(target);
                     direction.Normalise();
 
                     return direction;
                 }
 
-                inline mathematics::linear::Matrix4x4 GetViewMatrix() const { 
-                    return mathematics::linear::Matrix4x4::CreateViewFrom(position, target);
+                inline transforms::Matrix4x4 GetViewMatrix() const {
+                    return transforms::Matrix4x4::CreateViewFrom(position, target);
                 }
             };
         }

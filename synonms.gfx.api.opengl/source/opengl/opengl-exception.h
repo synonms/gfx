@@ -15,6 +15,7 @@ namespace synonms
                 class OpenglException : std::exception
                 {
                 public:
+                    OpenglException(const std::string& error);
                     OpenglException(const std::map<unsigned int, std::string>& errors);
                     const std::map<unsigned int, std::string>& Errors() const { return _errors; }
 

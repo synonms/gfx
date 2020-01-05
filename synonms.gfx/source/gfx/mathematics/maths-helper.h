@@ -15,6 +15,8 @@ namespace synonms
             class MathsHelper
             {
             public:
+                static float Gamma(int n);
+
                 /// test for floating point equality within [-epsilon,+epsilon]
                 static bool IsEqual(float a, float b);
 

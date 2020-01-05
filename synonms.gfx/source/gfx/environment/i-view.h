@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include <gfx\mathematics\linear\matrix4x4.h>
+#include <gfx\transforms\matrix4x4.h>
 
 namespace synonms
 {
@@ -13,7 +13,7 @@ namespace synonms
             class IView
             {
             public:
-                virtual const mathematics::linear::Matrix4x4& GetProjectionMatrix() const = 0;
+                virtual const transforms::Matrix4x4& GetProjectionMatrix() const = 0;
             };
         }
     }

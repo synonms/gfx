@@ -1,9 +1,10 @@
 #pragma once
 
 #include <gfx\primitives\mesh.h>
-#include <gfx\materials\material.h>
-#include <gfx\mathematics\linear\matrix3x3.h>
-#include <gfx\mathematics\linear\matrix4x4.h>
+#include <gfx\transforms\matrix3x3.h>
+#include <gfx\transforms\matrix4x4.h>
+#include <gfx\geometry\point3.h>
+#include <gfx\geometry\vector3.h>
 
 #include <string>
 
@@ -16,32 +17,27 @@ namespace synonms
             class MeshInstance
             {
             public:
-                MeshInstance(const Mesh& mesh, const materials::Material& material)
-                    : _mesh(mesh), _material(material)
+                MeshInstance(const Mesh& mesh)
+                    : _mesh(mesh)
                 {}
                 
-                mathematics::linear::Vector3<float> position{ 0.0f, 0.0f, 0.0f };
-                mathematics::linear::Vector3<float> rotationDegrees{ 0.0f, 0.0f, 0.0f };
-                mathematics::linear::Vector3<float> scale{ 1.0f, 1.0f, 1.0f };
-
-                inline const materials::Material& GetMaterial() const 
-                { 
-                    return _material; 
-                }
+                geometry::Point3<float> position{ 0.0f, 0.0f, 0.0f };
+                geometry::Vector3<float> rotationDegrees{ 0.0f, 0.0f, 0.0f };
+                geometry::Vector3<float> scale{ 1.0f, 1.0f, 1.0f };
 
                 inline const Mesh& GetMesh() const 
                 { 
                     return _mesh; 
                 }
 
-                inline mathematics::linear::Matrix4x4 GetModelMatrix() const 
+                inline transforms::Matrix4x4 GetModelMatrix() const
                 { 
                     return GetTranslationMatrix() * (GetRotationMatrix() * GetScaleMatrix());
                 }
 
-                inline mathematics::linear::Matrix3x3 GetNormalMatrix() const 
+                inline transforms::Matrix3x3 GetNormalMatrix() const
                 { 
-                    return mathematics::linear::Matrix4x4::CreateNormalFrom(GetModelMatrix());;
+                    return transforms::Matrix4x4::CreateNormalFrom(GetModelMatrix());;
                 }
 
                 inline void SetUniformScale(float scaleFactor)
@@ -53,24 +49,23 @@ namespace synonms
 
             private:
                 const Mesh& _mesh;
-                const materials::Material& _material;
 
-                inline mathematics::linear::Matrix4x4 GetRotationMatrix() const 
+                inline transforms::Matrix4x4 GetRotationMatrix() const
                 {
-                    return mathematics::linear::Matrix4x4::CreateFromRotationPitchYawRoll(
+                    return transforms::Matrix4x4::CreateFromRotationPitchYawRoll(
                         mathematics::MathsHelper::DegreesToRadians(rotationDegrees.pitch),
                         mathematics::MathsHelper::DegreesToRadians(rotationDegrees.yaw),
                         mathematics::MathsHelper::DegreesToRadians(rotationDegrees.roll));
                 }
 
-                inline mathematics::linear::Matrix4x4 GetTranslationMatrix() const 
+                inline transforms::Matrix4x4 GetTranslationMatrix() const
                 { 
-                    return mathematics::linear::Matrix4x4::CreateFromTranslation(position); 
+                    return transforms::Matrix4x4::CreateFromTranslation(geometry::Point3<float>().VectorTo(position));
                 }
 
-                inline mathematics::linear::Matrix4x4 GetScaleMatrix() const 
+                inline transforms::Matrix4x4 GetScaleMatrix() const
                 { 
-                    return mathematics::linear::Matrix4x4::CreateFromScale(scale); 
+                    return transforms::Matrix4x4::CreateFromScale(scale);
                 }
             };
         }

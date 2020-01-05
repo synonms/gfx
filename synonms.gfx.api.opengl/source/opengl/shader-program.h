@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <vector>
 
 namespace synonms
 {
@@ -23,6 +24,7 @@ namespace synonms
 
                 public:
                     void AttachShader(unsigned int shaderId) const;
+                    std::vector<std::string> GetActiveUniforms() const;
                     inline unsigned int GetProgramId() const { return _programId; }
                     int GetUniformLocation(const std::string& uniformName) const;
                     void Link() const;
@@ -33,6 +35,7 @@ namespace synonms
                     static void SetUniformBool(unsigned int location, bool value);
                     static void SetUniformFloat(unsigned int location, float value);
                     static void SetUniformInt(unsigned int location, int value);
+                    static void SetUniformUnsignedInt(unsigned int location, unsigned int value);
                     static void SetUniformVector3(unsigned int location, float value1, float value2, float value3);
                     static void SetUniformVector4(unsigned int location, float value1, float value2, float value3, float value4);
                     static void SetUniformMatrix3x3(unsigned int location, const float* value);

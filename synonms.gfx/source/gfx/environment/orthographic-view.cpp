@@ -1,7 +1,7 @@
 #include "orthographic-view.h"
 
 using namespace synonms::gfx::environment;
-using namespace synonms::gfx::mathematics::linear;
+using namespace synonms::gfx::transforms;
 
 OrthographicView::OrthographicView(float left, float right, float bottom, float top, float nearClipPlane, float farClipPlane)
 {

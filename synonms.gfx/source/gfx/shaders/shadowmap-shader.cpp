@@ -4,7 +4,7 @@
 
 #include <opengl\factories\shader-factory.h>
 
-using namespace synonms::gfx::mathematics::linear;
+using namespace synonms::gfx::transforms;
 using namespace synonms::gfx::primitives;
 using namespace synonms::gfx::shaders;
 using namespace synonms::gfx::api;

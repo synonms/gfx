@@ -63,8 +63,8 @@ void PhongShader::Render(const PhongShaderUniforms& uniforms, const Mesh& mesh)
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].isEnabled", uniforms.ShaderLight.isEnabled);
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].position", uniforms.ShaderLight.position);
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].direction", uniforms.ShaderLight.GetDirection());
-    ShaderExtensions::SetUniform(*_shaderProgram.get(), "vu_lights[0].spotInnerCutoffCosine", MathsHelper::Cosine(MathsHelper::DegreesToRadians(uniforms.ShaderLight.spotInnerCutoffDegrees)));
-    ShaderExtensions::SetUniform(*_shaderProgram.get(), "vu_lights[0].spotOuterCutoffCosine", MathsHelper::Cosine(MathsHelper::DegreesToRadians(uniforms.ShaderLight.spotOuterCutoffDegrees)));
+    ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].spotInnerCutoffCosine", MathsHelper::Cosine(MathsHelper::DegreesToRadians(uniforms.ShaderLight.spotInnerCutoffDegrees)));
+    ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].spotOuterCutoffCosine", MathsHelper::Cosine(MathsHelper::DegreesToRadians(uniforms.ShaderLight.spotOuterCutoffDegrees)));
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].ambientColour", uniforms.ShaderLight.ambientColour);
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].diffuseColour", uniforms.ShaderLight.diffuseColour);
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].specularColour", uniforms.ShaderLight.specularColour);

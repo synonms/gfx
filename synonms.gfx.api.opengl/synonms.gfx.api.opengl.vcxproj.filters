@@ -132,13 +132,13 @@
     <ClInclude Include="source\opengl\factories\render-buffer-factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\opengl\factories\texture-factory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\opengl\factories\frame-buffer-factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\opengl\factories\shader-factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\opengl\enumerators\draw-buffers-mode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -186,9 +186,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\factories\render-buffer-factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\opengl\factories\texture-factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\opengl\factories\frame-buffer-factory.cpp">

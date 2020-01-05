@@ -4,11 +4,14 @@
 #include <opengl\enumerators\attribute-bit.h>
 #include <opengl\enumerators\data-type.h>
 #include <opengl\enumerators\draw-buffer-mode.h>
+#include <opengl\enumerators\draw-buffers-mode.h>
 #include <opengl\enumerators\framebuffer-status.h>
 #include <opengl\enumerators\framebuffer-target.h>
 #include <opengl\enumerators\pixel-read-colour-format.h>
 #include <opengl\enumerators\read-buffer-mode.h>
 #include <opengl\enumerators\target-texture.h>
+
+#include <vector>
 
 namespace synonms
 {
@@ -47,6 +50,7 @@ namespace synonms
                     static void ReadDepthStencilPixels(int left, int bottom, int width, int height, enumerators::DataType dataType, void* data);
                     static void ReadStencilPixels(int left, int bottom, int width, int height, enumerators::DataType dataType, void* data);
                     static void SetDrawBuffer(enumerators::DrawBufferMode mode);
+                    static void SetDrawBuffers(const std::vector<enumerators::DrawBuffersMode>& modes);
                     static void SetReadBuffer(enumerators::ReadBufferMode mode);
 
                 private:

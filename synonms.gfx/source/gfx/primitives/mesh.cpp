@@ -35,6 +35,9 @@ Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<unsigned int>&
     opengl::VertexAttributeArray::Enable(2);
     opengl::VertexAttributeArray::Configure(2, 2, opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, textureCoords));
 
+    // Tangents
+    opengl::VertexAttributeArray::Enable(3);
+    opengl::VertexAttributeArray::Configure(3, 3, opengl::enumerators::DataType::Float, sizeof(Vertex), false, offsetof(Vertex, tangent));
 
     _indexBuffer = std::make_unique<opengl::IndexBuffer>();
     _indexBuffer->Bind();

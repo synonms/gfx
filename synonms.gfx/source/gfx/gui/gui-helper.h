@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <gfx\mathematics\linear\vector2.h>
+#include <gfx\geometry\vector2.h>
 
 namespace synonms
 {
@@ -17,8 +17,8 @@ namespace synonms
                 static bool CollapsingHeader(const std::string& header);
                 static bool ColourEdit3(const std::string& label, float* values);
                 static void DrawSampleWindow();
-                static mathematics::linear::Vector2<float> GetDisplaySize();
-                static mathematics::linear::Vector2<float> GetDisplayFramebufferScale();
+                static geometry::Vector2<float> GetDisplaySize();
+                static geometry::Vector2<float> GetDisplayFramebufferScale();
                 static void* Initialise(void* window, const std::string& glslVersion);
                 static void NewFrame();
                 static void PopItemWidth();

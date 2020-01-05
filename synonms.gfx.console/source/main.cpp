@@ -7,8 +7,10 @@
 #include <gfx\gui\gui-helper.h>
 #include <gfx\io\file-system.h>
 #include <gfx\io\image.h>
+#include <gfx\materials\pbr-material.h>
 #include <gfx\materials\material.h>
-#include <gfx\mathematics\linear\matrix4x4.h>
+#include <gfx\materials\texture-factory.h>
+#include <gfx\transforms\matrix4x4.h>
 #include <gfx\mathematics\maths-helper.h>
 #include <gfx\output\pane.h>
 #include <gfx\primitives\mesh.h>
@@ -18,20 +20,23 @@
 #include <gfx\shaders\phong-shader.h>
 #include <gfx\shaders\shadowmap-shader.h>
 #include <gfx\shaders\normal-shader.h>
+#include <gfx\shaders\pbr-shader.h>
+#include <gfx\shaders\deferred-gbuffer-shader.h>
+#include <gfx\shaders\deferred-lighting-shader.h>
 
 #include <opengl\state-manager.h>
 #include <opengl\system.h>
 #include <opengl\window.h>
 #include <opengl\factories\frame-buffer-factory.h>
 #include <opengl\factories\render-buffer-factory.h>
-#include <opengl\factories\texture-factory.h>
 
 using namespace synonms::gfx::environment;
 using namespace synonms::gfx::gui;
 using namespace synonms::gfx::io;
 using namespace synonms::gfx::materials;
 using namespace synonms::gfx::mathematics;
-using namespace synonms::gfx::mathematics::linear;
+using namespace synonms::gfx::transforms;
+using namespace synonms::gfx::geometry;
 using namespace synonms::gfx::output;
 using namespace synonms::gfx::primitives;
 using namespace synonms::gfx::shaders;
@@ -90,8 +95,8 @@ int main(int, char**)
         throw std::exception("Failed to intialise system");
     }
 
-    opengl::StateManager::SetBlendFunction(opengl::enumerators::BlendFactor::SourceAlpha, opengl::enumerators::BlendFactor::OneMinusSourceAlpha);
-    opengl::StateManager::EnableBlending();
+//    opengl::StateManager::SetBlendFunction(opengl::enumerators::BlendFactor::SourceAlpha, opengl::enumerators::BlendFactor::OneMinusSourceAlpha);
+//    opengl::StateManager::EnableBlending();
 
 
     // WINDOW *******************
@@ -111,8 +116,10 @@ int main(int, char**)
     std::cout << "Creating panes..." << std::endl;
 
     Pane mainPane(0, 0, windowWidth, windowHeight);
-    Pane debugPane1((windowWidth / 4) * 3, windowHeight / 2, debugWindowWidth, debugWindowHeight);
-    Pane debugPane2((windowWidth / 4) * 3, (windowHeight / 4) * 3, debugWindowWidth, debugWindowHeight);
+    Pane debugPane1((windowWidth / 4) * 3, (windowHeight / 4) * 3, debugWindowWidth, debugWindowHeight);
+    Pane debugPane2((windowWidth / 4) * 3,  windowHeight / 2,      debugWindowWidth, debugWindowHeight);
+    Pane debugPane3((windowWidth / 4) * 3, (windowHeight / 4),     debugWindowWidth, debugWindowHeight);
+    Pane debugPane4((windowWidth / 4) * 3,  0,                     debugWindowWidth, debugWindowHeight);
 
     std::cout << "Panes created" << std::endl;
 
@@ -124,34 +131,42 @@ int main(int, char**)
 
     // CAMERA *******************
     Camera camera;
-    camera.position = Vector3<float>{ 0.0f, 10.0f, 10.0f };
+    camera.position = Point3<float>{ 0.0f, 10.0f, 10.0f };
     camera.rotationDegrees = Vector3<float>{ 45.0f, 0.0f, 0.0f };
 
 
     // MATERIALS ***********************
     FileSystem fileSystem;
 
-    std::shared_ptr<opengl::Texture> checkerboardDiffuseTexture;
-    std::shared_ptr<opengl::Texture> checkerboardSpecularTexture;
-    std::shared_ptr<opengl::Texture> cubemapDiffuseTexture;
 
-    Image planeDiffuseImage("resources/textures/UVCheckerBoard-2048x2048.png");
-//    auto checkerboardImage = fileSystem.ReadImage("resources/textures/UVCheckerBoard-2048x2048.png");
-    checkerboardDiffuseTexture = opengl::factories::TextureFactory::CreateColour(planeDiffuseImage.GetWidth(), planeDiffuseImage.GetHeight(), planeDiffuseImage.GetData(),
-        planeDiffuseImage.GetTextureInternalFormat(), planeDiffuseImage.GetTextureFormat(), planeDiffuseImage.GetDataType());
+    Image planeAlbedoImage("D:\\Nick\\pictures\\textures\\floor\\PavingStones36_col.jpg");
+    Image planeNormalImage("D:\\Nick\\pictures\\textures\\floor\\PavingStones36_nrm.jpg");
+    Image planeRoughnessImage("D:\\Nick\\pictures\\textures\\floor\\PavingStones36_rgh.jpg");
+    Image planeAOImage("D:\\Nick\\pictures\\textures\\floor\\PavingStones36_AO.jpg");
+    // TODO
+    Image planeDisplacementImage("D:\\Nick\\pictures\\textures\\floor\\PavingStones36_disp.jpg");
 
-    auto checkerboardSpecularImage = fileSystem.ReadImage("resources/textures/UVCheckerBoard-specular-2048x2048.png");
-    checkerboardSpecularTexture = opengl::factories::TextureFactory::CreateColour(checkerboardSpecularImage.width, checkerboardSpecularImage.height, checkerboardSpecularImage.data);
+    PBRMaterial pavingStonesMaterial;
+    pavingStonesMaterial.Albedo = TextureFactory::CreateColour(planeAlbedoImage);
+    pavingStonesMaterial.Normal = TextureFactory::CreateColour(planeNormalImage);
+    pavingStonesMaterial.Roughness = TextureFactory::CreateColour(planeRoughnessImage);
+    pavingStonesMaterial.AmbientOcclusion = TextureFactory::CreateColour(planeAOImage);
+    pavingStonesMaterial.SpecularColourF0 = Vector3<float>(0.04f, 0.04f, 0.04f);
 
-    auto cubemapImage = fileSystem.ReadImage("resources/textures/UVCubemap-2048x1536.png");
-    cubemapDiffuseTexture = opengl::factories::TextureFactory::CreateColour(cubemapImage.width, cubemapImage.height, cubemapImage.data);
+    Image metalAlbedoImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_col.jpg");
+    Image metalNormalImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_nrm.jpg");
+    Image metalRoughnessImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_rgh.jpg");
+    Image metalMetallicImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_met.jpg");
+    // TODO
+    Image metalDisplacementImage("D:\\Nick\\pictures\\textures\\metals\\Metal03_disp.jpg");
 
-    auto checkerboardMaterial = Material::Create()
-        .WithTexture(0, checkerboardDiffuseTexture)
-        .WithTexture(1, checkerboardSpecularTexture);
+    PBRMaterial metalMaterial;
+    metalMaterial.Albedo = TextureFactory::CreateColour(metalAlbedoImage);
+    metalMaterial.Normal = TextureFactory::CreateColour(metalNormalImage);
+    metalMaterial.Roughness = TextureFactory::CreateColour(metalRoughnessImage);
+    metalMaterial.Metallic = TextureFactory::CreateColour(metalMetallicImage);
+    metalMaterial.SpecularColourF0 = Vector3<float>(0.56f, 0.57f, 0.58f);
 
-    auto cubeMaterial = Material::Create()
-        .WithTexture(0, cubemapDiffuseTexture);
 
     auto lightMaterial = Material::Create()
         .WithDiffuseColour({ 1.0f, 1.0f, 1.0f, 1.0f })
@@ -180,20 +195,35 @@ int main(int, char**)
 
     NormalShader normalShader(normalVertexShaderSource, normalFragmentShaderSource, normalGeometryShaderSource);
 
+    std::string pbrVertexShaderSource = fileSystem.ReadFile("resources/shaders/pbr.vertex.glsl");
+    std::string pbrFragmentShaderSource = fileSystem.ReadFile("resources/shaders/pbr.fragment.glsl");
+
+    PBRShader pbrShader(pbrVertexShaderSource, pbrFragmentShaderSource);
+
+    std::string deferredGBufferVertexShaderSource = fileSystem.ReadFile("resources/shaders/deferred.gbuffer.vertex.glsl");
+    std::string deferredGBufferFragmentShaderSource = fileSystem.ReadFile("resources/shaders/deferred.gbuffer.fragment.glsl");
+
+    DeferredGBufferShader deferredGBufferShader(deferredGBufferVertexShaderSource, deferredGBufferFragmentShaderSource);
+
+    std::string deferredLightingVertexShaderSource = fileSystem.ReadFile("resources/shaders/deferred.lighting.vertex.glsl");
+    std::string deferredLightingFragmentShaderSource = fileSystem.ReadFile("resources/shaders/deferred.lighting.fragment.glsl");
+
+    DeferredLightingShader deferredLightingShader(deferredLightingVertexShaderSource, deferredLightingFragmentShaderSource);
 
     // MESH **************************
     auto boxMesh = PrimitiveFactory::CreateBox(1.0f, 1.0f, 1.0f);
     auto planeMesh = PrimitiveFactory::CreatePlane(1.0f, 1.0f);
     auto screenQuad = PrimitiveFactory::CreatePlane(2.0f, 2.0f);
 
-    MeshInstance planeInstance(*planeMesh.get(), checkerboardMaterial);
+    MeshInstance planeInstance(*planeMesh.get());
     planeInstance.SetUniformScale(10.0f);
     planeInstance.rotationDegrees.x = -90.0f;
 
-    MeshInstance boxInstance(*boxMesh.get(), cubeMaterial);
+    MeshInstance boxInstance(*boxMesh.get());
     boxInstance.SetUniformScale(5.0f);
+    boxInstance.position = Point3<float>(0.0f, 2.5f, 0.0f);
 
-    MeshInstance lightInstance(*boxMesh.get(), lightMaterial);
+    MeshInstance lightInstance(*boxMesh.get());
     lightInstance.SetUniformScale(1.0f);
 
     std::cout << "Meshes created" << std::endl;
@@ -201,24 +231,31 @@ int main(int, char**)
 
     
     // BUFFERS **********************************
-    auto offscreenColourTexture = opengl::factories::TextureFactory::CreateColour(windowWidth, windowHeight);
+    auto offscreenColourTexture = TextureFactory::CreateColour(windowWidth, windowHeight);
     auto offscreenDepthStencilBuffer = opengl::factories::RenderBufferFactory::CreateDepthStencilBuffer(windowWidth, windowHeight);
     auto offscreenFrameBuffer = opengl::factories::FrameBufferFactory::CreateOffscreenBuffer(windowWidth, windowHeight, offscreenColourTexture->GetTextureId(), offscreenDepthStencilBuffer->GetRenderBufferId());
 
-    auto shadowMapColourTexture = opengl::factories::TextureFactory::CreateColour(shadowMapSize, shadowMapSize);
-    auto shadowMapDepthTexture = opengl::factories::TextureFactory::CreateDepth(shadowMapSize, shadowMapSize);
+    auto shadowMapColourTexture = TextureFactory::CreateColour(shadowMapSize, shadowMapSize);
+    auto shadowMapDepthTexture = TextureFactory::CreateDepth(shadowMapSize, shadowMapSize);
     auto shadowMapFrameBuffer = opengl::factories::FrameBufferFactory::CreateShadowmapBuffer(shadowMapSize, shadowMapSize, shadowMapDepthTexture->GetTextureId(), shadowMapColourTexture->GetTextureId());
+
+    auto gBufferPositionTexture = TextureFactory::CreateGBufferPosition(windowWidth, windowHeight);
+    auto gBufferNormalTexture = TextureFactory::CreateGBufferNormal(windowWidth, windowHeight);
+    auto gBufferAlbedoSpecTexture = TextureFactory::CreateGBufferAlbedoWithSpecular(windowWidth, windowHeight);
+    auto gBufferDepthStencilBuffer = opengl::factories::RenderBufferFactory::CreateDepthStencilBuffer(windowWidth, windowHeight);
+    auto deferredRendererFrameBuffer = opengl::factories::FrameBufferFactory::CreateGBuffer(windowWidth, windowHeight, gBufferPositionTexture->GetTextureId(), gBufferNormalTexture->GetTextureId(), gBufferAlbedoSpecTexture->GetTextureId(), gBufferDepthStencilBuffer->GetRenderBufferId());
 
 
     // LIGHT **********************************
     Light sunLight(Light::LightType::Directional);
     sunLight.ambientColour = Vector4<float>(0.1f, 0.1f, 0.1f, 1.0f);
-    sunLight.diffuseColour = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f);
+    sunLight.diffuseColour = Vector4<float>(1.0f, 1.0f, 1.0f, 1.0f);// , 1.0f);23.47f, 21.31f, 20.79f
     sunLight.specularColour = Vector4<float>(0.5f, 0.5f, 0.5f, 0.5f);
     sunLight.intensityMultiplier = 1.0f;
-    sunLight.target = Vector3<float>(0.0f, 0.0f, 0.0f);
-    sunLight.position = Vector3<float>(0.0f, 10.0f, 10.0f);
+    sunLight.target = Point3<float>(0.0f, 0.0f, 0.0f);
+    sunLight.position = Point3<float>(0.0f, 10.0f, 10.0f);
     sunLight.isEnabled = true;
+    sunLight.radiance = Vector3<float>(23.47f, 21.31f, 20.79f);
     // TODO - figure out how to size this
     sunLight.shadowMapProjectionMatrix = OrthographicView(-10.0f, 10.0f, -10.0f, 10.0f, 0.1f, 50.0f).GetProjectionMatrix();
     sunLight.shadowMapDepthTexture = shadowMapDepthTexture;
@@ -253,6 +290,7 @@ int main(int, char**)
         // Draw Sun shadowmap
         {
             opengl::Window::SetViewport(0, 0, shadowMapSize, shadowMapSize);
+
             shadowMapFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
             opengl::FrameBuffer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
             opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer);
@@ -264,27 +302,49 @@ int main(int, char**)
             shadowmapShader.RenderOrthographic(sunViewProjectionMatrix, boxInstance.GetModelMatrix(), boxInstance.GetMesh());
         }
 
-        // Draw to offline buffer
         mainPane.SetAsViewport();
         opengl::Window::SetViewport(0, 0, currentWindowWidth, currentWindowHeight);
-        offscreenFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
 
+        // Use GBuffer FBO
+//        deferredRendererFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
+//        opengl::FrameBuffer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
+//        opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer);
+//        opengl::StateManager::EnableDepthTesting();
+//
+//        // Geometry pass
+//        {
+//            lightInstance.position = sunLight.position;
+//
+//            auto planeModelMatrix = planeInstance.GetModelMatrix(); auto planeNormalMatrix = Matrix4x4::CreateNormalFrom(planeModelMatrix);
+//            auto boxModelMatrix = boxInstance.GetModelMatrix(); auto boxNormalMatrix = Matrix4x4::CreateNormalFrom(boxModelMatrix);
+//            auto lightModelMatrix = lightInstance.GetModelMatrix(); auto lightNormalMatrix = Matrix4x4::CreateNormalFrom(lightModelMatrix);
+//
+//            deferredGBufferShader.Render(DeferredGBufferShaderUniforms(projectionMatrix, viewMatrix, planeModelMatrix, planeNormalMatrix, pavingStonesMaterial), planeInstance.GetMesh());
+//            deferredGBufferShader.Render(DeferredGBufferShaderUniforms(projectionMatrix, viewMatrix, boxModelMatrix, boxNormalMatrix, metalMaterial), boxInstance.GetMesh());
+//            deferredGBufferShader.Render(DeferredGBufferShaderUniforms(projectionMatrix, viewMatrix, lightModelMatrix, lightNormalMatrix, metalMaterial), lightInstance.GetMesh());
+//        }
+
+        // Use Offscreen FBO
+        offscreenFrameBuffer->Bind(opengl::enumerators::FramebufferTarget::Framebuffer);
         opengl::StateManager::EnableDepthTesting();
         opengl::FrameBuffer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
         opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
+
+        // Lighting pass
+//        {
+//            deferredLightingShader.Render(DeferredLightingShaderUniforms(camera.position, *gBufferPositionTexture, *gBufferNormalTexture, *gBufferAlbedoSpecTexture, sunLight), planeInstance.GetMesh());
+//        }
 
         {
             lightInstance.position = sunLight.position;
 
             auto planeModelMatrix = planeInstance.GetModelMatrix(); auto planeNormalMatrix = Matrix4x4::CreateNormalFrom(planeModelMatrix);
             auto boxModelMatrix = boxInstance.GetModelMatrix(); auto boxNormalMatrix = Matrix4x4::CreateNormalFrom(boxModelMatrix);
-            auto lightModelMatrix = lightInstance.GetModelMatrix(); auto lightNormalMatrix = Matrix4x4::CreateNormalFrom(lightModelMatrix);
+//            auto lightModelMatrix = lightInstance.GetModelMatrix(); auto lightNormalMatrix = Matrix4x4::CreateNormalFrom(lightModelMatrix);
 
-            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, planeModelMatrix, planeNormalMatrix, planeInstance.GetMaterial(), sunLight, sceneAmbientColour), planeInstance.GetMesh());
-            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, boxModelMatrix, boxNormalMatrix, boxInstance.GetMaterial(), sunLight, sceneAmbientColour), boxInstance.GetMesh());
-            phongShader.Render(PhongShaderUniforms(projectionMatrix, viewMatrix, lightModelMatrix, lightNormalMatrix, lightInstance.GetMaterial(), sunLight, sceneAmbientColour), lightInstance.GetMesh());
-
-            normalShader.Render(projectionMatrix, viewMatrix, boxModelMatrix, boxNormalMatrix, boxInstance.GetMesh());
+            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, planeModelMatrix, planeNormalMatrix, pavingStonesMaterial, camera, sunLight), planeInstance.GetMesh());
+            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, boxModelMatrix, boxNormalMatrix, metalMaterial, camera, sunLight), boxInstance.GetMesh());
+//            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, lightModelMatrix, lightNormalMatrix, metalMaterial, camera, sunLight), lightInstance.GetMesh());
         }
 
         // Revert to default buffer
@@ -298,10 +358,23 @@ int main(int, char**)
             opengl::Texture::ActivateSlot(0);
 
             offscreenColourTexture->Bind();
+            mainPane.SetAsViewport();
             bufferShader.Render(0, *screenQuad.get());
 
+//            gBufferPositionTexture->Bind();
+//            debugPane1.SetAsViewport();
+//            bufferShader.Render(0, *screenQuad.get());
+//
+//            gBufferNormalTexture->Bind();
+//            debugPane2.SetAsViewport();
+//            bufferShader.Render(0, *screenQuad.get());
+//
+//            gBufferAlbedoSpecTexture->Bind();
+//            debugPane3.SetAsViewport();
+//            bufferShader.Render(0, *screenQuad.get());
+
             shadowMapColourTexture->Bind();
-            debugPane1.SetAsViewport();
+            debugPane4.SetAsViewport();
             bufferShader.Render(0, *screenQuad.get());
         }
 
@@ -315,10 +388,7 @@ int main(int, char**)
         GuiHelper::CollapsingHeader("Light");
         GuiHelper::SliderFloat3("Position", &sunLight.position.x, -20.0f, 20.0f);
         GuiHelper::SliderFloat3("Target", &sunLight.target.x, -20.0f, 20.0f);
-        GuiHelper::ColourEdit3("Ambient", &sunLight.ambientColour.red);
-        GuiHelper::ColourEdit3("Diffuse", &sunLight.diffuseColour.red);
-        GuiHelper::ColourEdit3("Specular", &sunLight.specularColour.red);
-        GuiHelper::SliderFloat("Intensity", sunLight.intensityMultiplier, 0.0f, 20.0f);
+        GuiHelper::SliderFloat3("Radiance", &sunLight.radiance.red, 0.0f, 20.0f);
 
         GuiHelper::CollapsingHeader("Debug");
 

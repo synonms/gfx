@@ -1,7 +1,7 @@
 #include "material.h"
 
 using namespace synonms::gfx::materials;
-using namespace synonms::gfx::mathematics::linear;
+using namespace synonms::gfx::geometry;
 using namespace synonms::gfx::api;
 
 void Material::ActivateTexture(unsigned int slot) const

@@ -2,9 +2,9 @@
 
 #include <gfx\environment\light.h>
 #include <gfx\materials\material.h>
-#include <gfx\mathematics\linear\matrix3x3.h>
-#include <gfx\mathematics\linear\matrix4x4.h>
-#include <gfx\mathematics\linear\vector4.h>
+#include <gfx\transforms\matrix3x3.h>
+#include <gfx\transforms\matrix4x4.h>
+#include <gfx\geometry\vector4.h>
 
 namespace synonms
 {
@@ -15,13 +15,13 @@ namespace synonms
             class PhongShaderUniforms
             {
             public:
-                PhongShaderUniforms(const mathematics::linear::Matrix4x4& projectionMatrix,
-                    const mathematics::linear::Matrix4x4& viewMatrix,
-                    const mathematics::linear::Matrix4x4& modelMatrix,
-                    const mathematics::linear::Matrix3x3& normalMatrix,
+                PhongShaderUniforms(const transforms::Matrix4x4& projectionMatrix,
+                    const transforms::Matrix4x4& viewMatrix,
+                    const transforms::Matrix4x4& modelMatrix,
+                    const transforms::Matrix3x3& normalMatrix,
                     const materials::Material& material,
                     const environment::Light& light,
-                    const mathematics::linear::Vector4<float>& sceneAmbientColour)
+                    const geometry::Vector4<float>& sceneAmbientColour)
                     : ProjectionMatrix(projectionMatrix)
                     , ViewMatrix(viewMatrix)
                     , ModelMatrix(modelMatrix)
@@ -31,13 +31,13 @@ namespace synonms
                     , SceneAmbientColour(sceneAmbientColour)
                 {}
 
-                const mathematics::linear::Matrix4x4& ProjectionMatrix;
-                const mathematics::linear::Matrix4x4& ViewMatrix;
-                const mathematics::linear::Matrix4x4& ModelMatrix;
-                const mathematics::linear::Matrix3x3& NormalMatrix;
+                const transforms::Matrix4x4& ProjectionMatrix;
+                const transforms::Matrix4x4& ViewMatrix;
+                const transforms::Matrix4x4& ModelMatrix;
+                const transforms::Matrix3x3& NormalMatrix;
                 const materials::Material& ShaderMaterial;
                 const environment::Light& ShaderLight;
-                mathematics::linear::Vector4<float> SceneAmbientColour;
+                geometry::Vector4<float> SceneAmbientColour;
             };
         }
     }
