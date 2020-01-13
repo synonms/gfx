@@ -87,7 +87,7 @@
     <ClCompile Include="source\gfx\shaders\deferred-lighting-shader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\gfx\assets\model.cpp">
+    <ClCompile Include="source\gfx\assets\obj-model-loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -242,7 +242,10 @@
     <ClInclude Include="source\gfx\shaders\deferred-lighting-shader-uniforms.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\gfx\assets\model.h">
+    <ClInclude Include="source\gfx\assets\obj-model-loader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\gfx\utilities\string-extensions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -262,8 +265,6 @@
     <None Include="resources\shaders\deferred.gbuffer.vertex.glsl" />
     <None Include="resources\shaders\deferred.lighting.vertex.glsl" />
     <None Include="resources\shaders\deferred.lighting.fragment.glsl" />
-    <None Include="resources\assets\nanosuit\nanosuit.blend" />
-    <None Include="resources\assets\nanosuit\nanosuit.mtl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">
@@ -275,62 +276,50 @@
     <Image Include="resources\textures\UVCubemap-2048x1536.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\arm_dif.png">
+    <Image Include="resources\assets\barrels\textures\drum1_ambient.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\arm_showroom_ddn.png">
+    <Image Include="resources\assets\barrels\textures\drum1_base_color.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\arm_showroom_spec.png">
+    <Image Include="resources\assets\barrels\textures\drum1_metallic.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\body_dif.png">
+    <Image Include="resources\assets\barrels\textures\drum1_normal.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\body_showroom_ddn.png">
+    <Image Include="resources\assets\barrels\textures\drum1_roughness.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\body_showroom_spec.png">
+    <Image Include="resources\assets\barrels\textures\drum2_ambient.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\glass_ddn.png">
+    <Image Include="resources\assets\barrels\textures\drum2_base_color.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\glass_dif.png">
+    <Image Include="resources\assets\barrels\textures\drum2_metallic.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\hand_dif.png">
+    <Image Include="resources\assets\barrels\textures\drum2_normal.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\hand_showroom_ddn.png">
+    <Image Include="resources\assets\barrels\textures\drum2_roughness.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\hand_showroom_spec.png">
+    <Image Include="resources\assets\barrels\textures\drum3_ambient.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\helmet_diff.png">
+    <Image Include="resources\assets\barrels\textures\drum3_base_color.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\helmet_showroom_ddn.png">
+    <Image Include="resources\assets\barrels\textures\drum3_metallic.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\helmet_showroom_spec.png">
+    <Image Include="resources\assets\barrels\textures\drum3_normal.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\leg_dif.png">
+    <Image Include="resources\assets\barrels\textures\drum3_roughness.png">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="resources\assets\nanosuit\leg_showroom_ddn.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-    <Image Include="resources\assets\nanosuit\leg_showroom_spec.png">
-      <Filter>Resource Files</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="resources\assets\nanosuit\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Object Include="resources\assets\nanosuit\nanosuit.obj" />
   </ItemGroup>
 </Project>

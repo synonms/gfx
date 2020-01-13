@@ -19,12 +19,14 @@ namespace synonms
                     T x;
                     T width;
                     T near;
+                    T u;
                 };
                 union
                 {
                     T y;
                     T height;
                     T far;
+                    T v;
                 };
 
             public:

@@ -169,6 +169,12 @@ namespace synonms
                     *this = *this * rotationMatrix;
                 }
 
+                void Scale(float xFactor, float yFactor, float zFactor)
+                {
+                    auto scaleMatrix = CreateFromScale({xFactor, yFactor, zFactor});
+                    *this = *this * scaleMatrix;
+                }
+
                 geometry::Bounds3<float> Transform(const geometry::Bounds3<float>& bounds) const {
                     geometry::Bounds3<float> ret(Transform(geometry::Point3<float>(bounds.minimum.x, bounds.minimum.y, bounds.minimum.z)));
                     ret = geometry::Bounds3<float>::CreateUnion(ret, Transform(geometry::Point3<float>(bounds.maximum.x, bounds.minimum.y, bounds.minimum.z)));
@@ -214,7 +220,7 @@ namespace synonms
                     float lengthSquared = direction.Length() * direction.Length();
                     float tMax = input.maxExtent;
 
-                    // TODO - Adjust origin to account fo round off errors
+                    // TODO - Adjust origin to account for round off errors
 //                        if (lengthSquared > 0) {
 //                            auto dt = Vector3<float>::Abs(direction).Dot(roundOffErrors) / lengthSquared;
 //                            origin += direction * dt;
@@ -233,6 +239,18 @@ namespace synonms
                     auto outputZ = (xAxis.z * input.x) + (yAxis.z * input.y) + (zAxis.z * input.z) + (origin.z * w);
 
                     return { outputX, outputY, outputZ };
+                }
+
+                void Translate(geometry::Vector3<float> delta)
+                {
+                    Translate(delta.x, delta.y, delta.z);
+                }
+
+                void Translate(float x, float y, float z)
+                {
+                    origin.x += x;
+                    origin.y += y;
+                    origin.z += z;
                 }
 
             public:

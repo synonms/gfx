@@ -82,12 +82,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include;$(SolutionDir)dependencies\assimp\assimp-5.0.0\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)artifacts\bin\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>$(SolutionDir)artifacts\obj\$(Platform)\$(Configuration)\$(ProjectName)\</IntDir>
-    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include;$(SolutionDir)dependencies\assimp\assimp-5.0.0\include</IncludePath>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ProjectDir)source;$(SolutionDir)dependencies\glfw\glfw-3.3\include;$(SolutionDir)dependencies\glew\glew-2.1.0\include;$(SolutionDir)synonms.gfx.api.opengl\source;$(SolutionDir)synonms.gfx.proxies.imgui\source;$(SolutionDir)dependencies\freeimage\freeimage-3.18.0\include</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -154,7 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\gfx\assets\model.cpp" />
+    <ClCompile Include="source\gfx\assets\obj-model-loader.cpp" />
     <ClCompile Include="source\gfx\enumerators\data-type.cpp" />
     <ClCompile Include="source\gfx\environment\perspective-view.cpp" />
     <ClCompile Include="source\gfx\environment\orthographic-view.cpp" />
@@ -181,7 +181,7 @@
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\gfx\assets\model.h" />
+    <ClInclude Include="source\gfx\assets\obj-model-loader.h" />
     <ClInclude Include="source\gfx\enumerators\axis3.h" />
     <ClInclude Include="source\gfx\enumerators\data-type.h" />
     <ClInclude Include="source\gfx\environment\camera.h" />
@@ -231,6 +231,7 @@
     <ClInclude Include="source\gfx\shaders\shadowmap-shader.h" />
     <ClInclude Include="source\gfx\shapes\i-primitive.h" />
     <ClInclude Include="source\gfx\shapes\i-shape.h" />
+    <ClInclude Include="source\gfx\utilities\string-extensions.h" />
     <ClInclude Include="source\vendor\stb_image\stb-image.h" />
   </ItemGroup>
   <ItemGroup>
@@ -326,116 +327,104 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="resources\assets\nanosuit\arm_dif.png">
+    <Content Include="resources\assets\barrels\barrels_obj.obj">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\assets\barrels\barrels_obj.mtl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum1_ambient.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\arm_showroom_ddn.png">
+    <Content Include="resources\assets\barrels\textures\drum1_ambient.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum1_base_color.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\arm_showroom_spec.png">
+    <Content Include="resources\assets\barrels\textures\drum1_base_color.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum1_metallic.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\body_dif.png">
+    <Content Include="resources\assets\barrels\textures\drum1_metallic.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum1_normal.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\body_showroom_ddn.png">
+    <Content Include="resources\assets\barrels\textures\drum1_normal.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum1_roughness.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\body_showroom_spec.png">
+    <Content Include="resources\assets\barrels\textures\drum1_roughness.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum2_ambient.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\glass_ddn.png">
+    <Content Include="resources\assets\barrels\textures\drum2_ambient.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum2_base_color.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\glass_dif.png">
+    <Content Include="resources\assets\barrels\textures\drum2_base_color.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum2_metallic.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\hand_dif.png">
+    <Content Include="resources\assets\barrels\textures\drum2_metallic.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum2_normal.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\hand_showroom_ddn.png">
+    <Content Include="resources\assets\barrels\textures\drum2_normal.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum2_roughness.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\hand_showroom_spec.png">
+    <Content Include="resources\assets\barrels\textures\drum2_roughness.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum3_ambient.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\helmet_diff.png">
+    <Content Include="resources\assets\barrels\textures\drum3_ambient.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum3_base_color.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\helmet_showroom_ddn.png">
+    <Content Include="resources\assets\barrels\textures\drum3_base_color.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum3_metallic.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\helmet_showroom_spec.png">
+    <Content Include="resources\assets\barrels\textures\drum3_metallic.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum3_normal.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\leg_dif.png">
+    <Content Include="resources\assets\barrels\textures\drum3_normal.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Image Include="resources\assets\barrels\textures\drum3_roughness.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
-    <Image Include="resources\assets\nanosuit\leg_showroom_ddn.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Image Include="resources\assets\nanosuit\leg_showroom_spec.png">
-      <DeploymentContent>true</DeploymentContent>
-    </Image>
-    <Content Include="resources\assets\nanosuit\arm_dif.png">
+    <Content Include="resources\assets\barrels\textures\drum3_roughness.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="resources\assets\nanosuit\arm_showroom_ddn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\arm_showroom_spec.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\body_dif.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\body_showroom_ddn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\body_showroom_spec.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\glass_ddn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\glass_dif.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\hand_dif.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\hand_showroom_ddn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\hand_showroom_spec.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\helmet_diff.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\helmet_showroom_ddn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\helmet_showroom_spec.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\leg_dif.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\leg_showroom_ddn.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="resources\assets\nanosuit\leg_showroom_spec.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="resources\assets\nanosuit\nanosuit.blend" />
-    <Content Include="resources\assets\nanosuit\nanosuit.blend">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="resources\assets\nanosuit\nanosuit.mtl" />
-    <Content Include="resources\assets\nanosuit\nanosuit.mtl">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+  </ItemGroup>
+  <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">
       <DeploymentContent>true</DeploymentContent>
     </Image>
@@ -452,22 +441,6 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Content Include="resources\textures\UVCubemap-2048x1536.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="resources\assets\nanosuit\LICENSE.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="resources\assets\nanosuit\nanosuit.obj">
-      <DeploymentContent>true</DeploymentContent>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-    </Resource>
-    <Content Include="resources\assets\nanosuit\nanosuit.obj">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
