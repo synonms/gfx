@@ -24,6 +24,7 @@
 #include <gfx\shaders\pbr-shader.h>
 #include <gfx\shaders\deferred-gbuffer-shader.h>
 #include <gfx\shaders\deferred-lighting-shader.h>
+#include <gfx\shaders\skybox-shader.h>
 
 #include <opengl\state-manager.h>
 #include <opengl\system.h>
@@ -97,9 +98,6 @@ int main(int, char**)
         throw std::exception("Failed to intialise system");
     }
 
-//    opengl::StateManager::SetBlendFunction(opengl::enumerators::BlendFactor::SourceAlpha, opengl::enumerators::BlendFactor::OneMinusSourceAlpha);
-//    opengl::StateManager::EnableBlending();
-
 
     // WINDOW *******************
     opengl::Window::SetOpenGlContextVersion(3, 3);
@@ -112,6 +110,10 @@ int main(int, char**)
 
     // GLEW EXTENSIONS **************
     opengl::System::InitialiseExtensions();
+
+
+    opengl::StateManager::SetBlendFunction(opengl::enumerators::BlendFactor::SourceAlpha, opengl::enumerators::BlendFactor::OneMinusSourceAlpha);
+    opengl::StateManager::EnableBlending();
 
 
     // PANES **********************
@@ -154,6 +156,18 @@ int main(int, char**)
     pavingStonesMaterial->AmbientOcclusion = TextureFactory::CreateColour(planeAOImage);
     pavingStonesMaterial->SpecularColourF0 = Vector3<float>(0.04f, 0.04f, 0.04f);
 
+    pavingStonesMaterial->isShadowReceiverOnly = true;
+
+
+    Image skyboxImageBack("resources/textures/CNTower/posz.jpg");
+    Image skyboxImageBottom("resources/textures/CNTower/negy.jpg");
+    Image skyboxImageFront("resources/textures/CNTower/negz.jpg");
+    Image skyboxImageLeft("resources/textures/CNTower/negx.jpg");
+    Image skyboxImageRight("resources/textures/CNTower/posx.jpg");
+    Image skyboxImageTop("resources/textures/CNTower/posy.jpg");
+
+    auto skyboxTexture = TextureFactory::CreateColour(skyboxImageFront, skyboxImageBack, skyboxImageLeft, skyboxImageRight, skyboxImageTop, skyboxImageBottom);
+
 
     // SHADERS ***********************
     std::string shadowmapVertexShaderSource = fileSystem.ReadFile("resources/shaders/shadowmap.vertex.glsl");
@@ -177,10 +191,16 @@ int main(int, char**)
 
     PBRShader pbrShader(pbrVertexShaderSource, pbrFragmentShaderSource);
 
+    std::string skyboxVertexShaderSource = fileSystem.ReadFile("resources/shaders/skybox.vertex.glsl");
+    std::string skyboxFragmentShaderSource = fileSystem.ReadFile("resources/shaders/skybox.fragment.glsl");
+
+    SkyBoxShader skyboxShader(skyboxVertexShaderSource, skyboxFragmentShaderSource);
+
 
     // MESH **************************
     auto planeMesh = PrimitiveFactory::CreatePlane(1.0f, 1.0f);
     auto screenQuad = PrimitiveFactory::CreatePlane(2.0f, 2.0f);
+    auto skybox = PrimitiveFactory::CreateSkyBox();
 
     MeshInstance planeInstance(planeMesh, pavingStonesMaterial);
     planeInstance.SetUniformScale(40.0f);
@@ -245,6 +265,7 @@ int main(int, char**)
 
         auto projectionMatrix = view.GetProjectionMatrix();
         auto viewMatrix = camera.GetViewMatrix();
+        auto sceneRotationMatrix = camera.GetSceneRotationMatrix();
 
         // Draw Sun shadowmap
         {
@@ -293,17 +314,23 @@ int main(int, char**)
         opengl::FrameBuffer::ClearColour(0.0f, 0.0f, 0.0f, 1.0f);
         opengl::FrameBuffer::Clear(opengl::enumerators::AttributeBit::ColourBuffer | opengl::enumerators::AttributeBit::DepthBuffer | opengl::enumerators::AttributeBit::StencilBuffer);
 
+        // Draw Skybox
+        {
+            skyboxShader.Render(sceneRotationMatrix, projectionMatrix, *skyboxTexture.get(), *skybox.get());
+        }
+
+
         // Lighting pass
 //        {
 //            deferredLightingShader.Render(DeferredLightingShaderUniforms(camera.position, *gBufferPositionTexture, *gBufferNormalTexture, *gBufferAlbedoSpecTexture, sunLight), planeInstance.GetMesh());
 //        }
 
         {
-            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, planeInstance, camera, sunLight));
+            pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, planeInstance, camera, sunLight, *skyboxTexture.get()));
 
             for (const auto& meshInstance : barrelMeshInstances)
             {
-                pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, meshInstance, camera, sunLight));
+                pbrShader.Render(PBRShaderData(projectionMatrix, viewMatrix, meshInstance, camera, sunLight, *skyboxTexture.get()));
             };
         }
 

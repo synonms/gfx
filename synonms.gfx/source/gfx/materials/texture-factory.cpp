@@ -6,6 +6,30 @@ using namespace synonms::gfx::materials;
 using namespace synonms::gfx::api::opengl;
 using namespace synonms::gfx::api::opengl::enumerators;
 
+std::shared_ptr<Texture> TextureFactory::CreateColour(const Image& front, const Image& back, const Image& left, const Image& right, const Image& top, const Image& bottom)
+{
+    auto texture = std::make_shared<Texture>(TargetTexture::TextureCubeMap);
+
+    texture->Bind();
+
+    texture->SendCubeMapDataRight(right.GetTextureInternalFormat(), right.GetWidth(), right.GetHeight(), right.GetTextureFormat(), right.GetDataType(), right.GetData());
+    texture->SendCubeMapDataLeft(left.GetTextureInternalFormat(), left.GetWidth(), left.GetHeight(), left.GetTextureFormat(), left.GetDataType(), left.GetData());
+    texture->SendCubeMapDataTop(top.GetTextureInternalFormat(), top.GetWidth(), top.GetHeight(), top.GetTextureFormat(), top.GetDataType(), top.GetData());
+    texture->SendCubeMapDataBottom(bottom.GetTextureInternalFormat(), bottom.GetWidth(), bottom.GetHeight(), bottom.GetTextureFormat(), bottom.GetDataType(), bottom.GetData());
+    texture->SendCubeMapDataBack(back.GetTextureInternalFormat(), back.GetWidth(), back.GetHeight(), back.GetTextureFormat(), back.GetDataType(), back.GetData());
+    texture->SendCubeMapDataFront(front.GetTextureInternalFormat(), front.GetWidth(), front.GetHeight(), front.GetTextureFormat(), front.GetDataType(), front.GetData());
+
+    Texture::SetMinificationFilter(TargetTexture::TextureCubeMap, MinificationFilterValue::Linear);
+    Texture::SetMagnificationFilter(TargetTexture::TextureCubeMap, MagnificationFilterValue::Linear);
+    Texture::SetWrapModeR(TargetTexture::TextureCubeMap, TextureWrapMode::ClampToEdge);
+    Texture::SetWrapModeS(TargetTexture::TextureCubeMap, TextureWrapMode::ClampToEdge);
+    Texture::SetWrapModeT(TargetTexture::TextureCubeMap, TextureWrapMode::ClampToEdge);
+
+    Texture::Unbind(TargetTexture::TextureCubeMap);
+
+    return std::move(texture);
+}
+
 std::shared_ptr<Texture> TextureFactory::CreateColour(const Image& image)
 {
     auto texture = std::make_shared<Texture>(TargetTexture::Texture2D);

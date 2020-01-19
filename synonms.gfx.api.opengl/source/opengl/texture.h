@@ -34,6 +34,12 @@ namespace synonms
                     void Bind() const;
                     inline unsigned int GetTextureId() const { return _textureId; }
                     void SendData(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data) const;
+                    void SendCubeMapDataRight(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data) const;
+                    void SendCubeMapDataLeft(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data) const;
+                    void SendCubeMapDataTop(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data) const;
+                    void SendCubeMapDataBottom(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data) const;
+                    void SendCubeMapDataBack(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data) const;
+                    void SendCubeMapDataFront(enumerators::TextureInternalFormat internalFormat, int width, int height, enumerators::TextureFormat format, enumerators::DataType dataType, unsigned char* data) const;
 
                 public:
                     static void ActivateSlot(unsigned int slot);
@@ -42,6 +48,7 @@ namespace synonms
                     static void SetCompareMode(enumerators::TargetTexture targetTexture, enumerators::TextureCompareMode compareMode);
                     static void SetMinificationFilter(enumerators::TargetTexture targetTexture, enumerators::MinificationFilterValue filterValue);
                     static void SetMagnificationFilter(enumerators::TargetTexture targetTexture, enumerators::MagnificationFilterValue filterValue);
+                    static void SetWrapModeR(enumerators::TargetTexture targetTexture, enumerators::TextureWrapMode wrapMode);
                     static void SetWrapModeS(enumerators::TargetTexture targetTexture, enumerators::TextureWrapMode wrapMode);
                     static void SetWrapModeT(enumerators::TargetTexture targetTexture, enumerators::TextureWrapMode wrapMode);
                     static void Unbind(enumerators::TargetTexture targetTexture);

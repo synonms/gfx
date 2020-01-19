@@ -143,3 +143,81 @@ std::shared_ptr<Mesh> PrimitiveFactory::CreateBox(float width, float height, flo
 
     return std::make_shared<Mesh>(vertices, indices);
 }
+
+std::shared_ptr<Mesh> PrimitiveFactory::CreateSkyBox()
+{
+    const float width = 1.0f;
+    const float height = 1.0f;
+    const float depth = 1.0f;
+    const auto& halfWidth = width / 2.0f;
+    const auto& halfHeight = height / 2.0f;
+    const auto& halfDepth = depth / 2.0f;
+
+    auto vertices = std::vector<Vertex>{
+        //    x           y             z          nx    ny      nz    u     v          tx    ty    tz
+        // BACK
+        {{-halfWidth, -halfHeight, -halfDepth}, { 0.0f,  0.0f,  1.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight, -halfDepth}, { 0.0f,  0.0f,  1.0f}, {1.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 0.0f,  0.0f,  1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 0.0f,  0.0f,  1.0f}, {1.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 0.0f,  0.0f,  1.0f}, {0.0f, 1.0f}, {1.0f, 0.0f, 0.0f}},
+        {{-halfWidth, -halfHeight, -halfDepth}, { 0.0f,  0.0f,  1.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+
+        // FRONT
+        {{ halfWidth, -halfHeight,  halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}},
+        {{-halfWidth, -halfHeight,  halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight,  halfDepth}, { 0.0f,  0.0f, -1.0f}, {0.0f, 0.0f}, {-1.0f, 0.0f, 0.0f}},
+
+        // BOTTOM
+        {{-halfWidth, -halfHeight,  halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight,  halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight, -halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth, -halfHeight, -halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{-halfWidth, -halfHeight, -halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{-halfWidth, -halfHeight,  halfDepth}, { 0.0f,  1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+
+        // TOP
+        {{ halfWidth,  halfHeight,  halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, { 0.0f, -1.0f,  0.0f}, {0.0f, 0.0f}, {1.0f, 0.0f, 0.0f}},
+
+        // RIGHT
+        {{ halfWidth, -halfHeight, -halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+        {{ halfWidth, -halfHeight,  halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+        {{ halfWidth,  halfHeight,  halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+        {{ halfWidth,  halfHeight, -halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+        {{ halfWidth, -halfHeight, -halfDepth}, {-1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, 1.0f}},
+
+        // LEFT
+        {{-halfWidth, -halfHeight,  halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}},
+        {{-halfWidth, -halfHeight, -halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}},
+        {{-halfWidth,  halfHeight, -halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}},
+        {{-halfWidth,  halfHeight,  halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}},
+        {{-halfWidth, -halfHeight,  halfDepth}, { 1.0f,  0.0f,  0.0f}, {0.0f, 0.0f}, {0.0f, 0.0f, -1.0f}}
+    };
+
+    auto indices = std::vector<unsigned int>{
+         0,  1,  2,
+         3,  4,  5,
+         6,  7,  8,
+         9, 10, 11,
+        12, 13, 14,
+        15, 16, 17,
+        18, 19, 20,
+        21, 22, 23,
+        24, 25, 26,
+        27, 28, 29,
+        30, 31, 32,
+        33, 34, 35,
+    };
+
+    return std::make_shared<Mesh>(vertices, indices);
+}              

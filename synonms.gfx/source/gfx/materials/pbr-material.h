@@ -25,6 +25,8 @@ namespace synonms
                 // It varies per material and is tinted on metals as we find in large material databases
                 // Dielectrics are monochrome and have low values
                 geometry::Vector3<float> SpecularColourF0{0.04f, 0.04f, 0.04f};
+
+                bool isShadowReceiverOnly{ false };
             };
         }
     }

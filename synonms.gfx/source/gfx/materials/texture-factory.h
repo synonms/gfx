@@ -15,6 +15,7 @@ namespace synonms
             class TextureFactory
             {
             public:
+                static std::shared_ptr<api::opengl::Texture> CreateColour(const io::Image& front, const io::Image& back, const io::Image& left, const io::Image& right, const io::Image& top, const io::Image& bottom);
                 static std::shared_ptr<api::opengl::Texture> CreateColour(const io::Image& image);
                 static std::shared_ptr<api::opengl::Texture> CreateColour(int width, int height,
                     unsigned char* data = nullptr, 

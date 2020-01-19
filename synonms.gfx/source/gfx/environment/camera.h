@@ -14,6 +14,7 @@ namespace synonms
             {
             public:
                 inline transforms::Matrix4x4 GetViewMatrix() const { return transforms::Matrix4x4::CreateViewFrom(position, rotationDegrees, false); }
+                inline transforms::Matrix4x4 GetSceneRotationMatrix() const { return transforms::Matrix4x4::CreateViewFrom(geometry::Point3<float>(), rotationDegrees, true); }
 
                 geometry::Point3<float> position{ 0.0f, 0.0f, 0.0f };
                 geometry::Vector3<float> rotationDegrees{ 0.0f, 0.0f, 0.0f };

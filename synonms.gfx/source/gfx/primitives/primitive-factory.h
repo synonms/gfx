@@ -14,6 +14,7 @@ namespace synonms
             {
             public:
                 static std::shared_ptr<Mesh> CreateBox(float width, float height, float depth);
+                static std::shared_ptr<Mesh> CreateSkyBox();
                 static std::shared_ptr<Mesh> CreatePlane(float width, float height);
                 static std::shared_ptr<Mesh> CreatePlane(float left, float bottom, float width, float height);
             };

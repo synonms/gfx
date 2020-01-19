@@ -178,6 +178,7 @@
     <ClCompile Include="source\gfx\shaders\shader-builder.cpp" />
     <ClCompile Include="source\gfx\shaders\shader-extensions.cpp" />
     <ClCompile Include="source\gfx\shaders\shadowmap-shader.cpp" />
+    <ClCompile Include="source\gfx\shaders\skybox-shader.cpp" />
     <ClCompile Include="source\vendor\stb_image\stb-image.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -204,6 +205,7 @@
     <ClInclude Include="source\gfx\shaders\deferred-gbuffer-shader.h" />
     <ClInclude Include="source\gfx\shaders\deferred-lighting-shader-uniforms.h" />
     <ClInclude Include="source\gfx\shaders\deferred-lighting-shader.h" />
+    <ClInclude Include="source\gfx\shaders\skybox-shader.h" />
     <ClInclude Include="source\gfx\transforms\matrix2x2.h" />
     <ClInclude Include="source\gfx\transforms\matrix3x3.h" />
     <ClInclude Include="source\gfx\transforms\matrix4x4.h" />
@@ -325,6 +327,18 @@
     <Content Include="resources\shaders\pbr.vertex.glsl">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="resources\shaders\skybox.vertex.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\skybox.vertex.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <None Include="resources\shaders\skybox.fragment.glsl">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
+    <Content Include="resources\shaders\skybox.fragment.glsl">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="resources\assets\barrels\barrels_obj.obj">
@@ -421,6 +435,44 @@
       <DeploymentContent>true</DeploymentContent>
     </Image>
     <Content Include="resources\assets\barrels\textures\drum3_roughness.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="resources\textures\CNTower\negx.jpg">
+        <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\textures\CNTower\negy.jpg">
+        <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\textures\CNTower\negz.jpg">
+        <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\textures\CNTower\posx.jpg">
+        <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\textures\CNTower\posy.jpg">
+        <DeploymentContent>true</DeploymentContent>
+    </Image>
+    <Image Include="resources\textures\CNTower\posz.jpg">
+        <DeploymentContent>true</DeploymentContent>
+    </Image>     
+    <Content Include="resources\textures\CNTower\negx.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\CNTower\negy.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\CNTower\negz.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\CNTower\posx.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\CNTower\posy.jpg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="resources\textures\CNTower\posz.jpg">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

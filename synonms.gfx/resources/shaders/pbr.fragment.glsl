@@ -27,6 +27,7 @@ struct Material {
     bool roughnessPresent;
     bool ambientOcclusionPresent;
     vec3 specularColourF0;
+    bool isShadowReceiverOnly;
 }; 
 
 uniform Material fu_material;
@@ -50,6 +51,8 @@ struct Light {
 };
 
 uniform Light fu_lights[MAX_LIGHTS];
+
+uniform samplerCube fu_cubeMapTextureSlot;
 
 layout(location = 0) out vec4 p_fragmentColour;
 
@@ -149,8 +152,38 @@ float CalculateShadowFactor(int lightIndex, float NdotL)
 
 void main()
 {
-    vec3 albedoSample = texture(fu_material.albedoTextureSlot, pipeline_in.textureUV).rgb;
     vec3 normalSample = mix(vec3(0.0), texture(fu_material.normalTextureSlot, pipeline_in.textureUV).rgb, fu_material.normalPresent);
+    vec3 normalInWorldSpace = mix(normalize(pipeline_in.vertexNormalDirectionWorldSpace), pipeline_in.tbnMatrix * normalize(normalSample * 2.0 - 1.0), fu_material.normalPresent);  // transform normal vector to range [-1,1]
+
+    if (fu_material.isShadowReceiverOnly)
+    {
+
+        float cumulativeShadowFactor = 0.0f;
+        for (int i = 0; i < MAX_LIGHTS; ++i)
+        {
+            vec3 vertexToLightDirection = normalize(pipeline_in.vertexToLightDirectionWorldSpace[i]);
+            float NdotL = max(dot(normalInWorldSpace, vertexToLightDirection), 0.0);
+            cumulativeShadowFactor += CalculateShadowFactor(i, NdotL);
+        }
+
+        cumulativeShadowFactor /= float(MAX_LIGHTS);
+
+        if (cumulativeShadowFactor == 1.0)
+        {
+            // Fully lit
+            discard;
+        }
+
+        // Use to reduce jet black shadows on background - higher number = more background shows through
+        float ambientFactor = 0.5;
+
+        p_fragmentColour = vec4(0.0, 0.0, 0.0, ambientFactor - (ambientFactor * cumulativeShadowFactor));
+
+        return;
+    }
+
+
+    vec3 albedoSample = texture(fu_material.albedoTextureSlot, pipeline_in.textureUV).rgb;
     vec3 metallicSample = mix(vec3(0.0), texture(fu_material.metallicTextureSlot, pipeline_in.textureUV).rgb, fu_material.metallicPresent);
     vec3 roughnessSample = mix(vec3(0.5), texture(fu_material.roughnessTextureSlot, pipeline_in.textureUV).rgb, fu_material.roughnessPresent);
     vec3 aoSample = mix(vec3(1.0), texture(fu_material.ambientOcclusionTextureSlot, pipeline_in.textureUV).rgb, fu_material.ambientOcclusionPresent);
@@ -160,12 +193,15 @@ void main()
     float materialRoughness = roughnessSample.r;
     float materialAO = aoSample.r;
 
-    vec3 normalInWorldSpace = mix(normalize(pipeline_in.vertexNormalDirectionWorldSpace), pipeline_in.tbnMatrix * normalize(normalSample * 2.0 - 1.0), fu_material.normalPresent);  // transform normal vector to range [-1,1]
     vec3 vertexToCameraDirectionWorldSpace = normalize(pipeline_in.vertexToCameraDirectionWorldSpace);
+    vec3 reflectionDirectionInWorldSpace = reflect(-vertexToCameraDirectionWorldSpace, normalize(normalInWorldSpace));
+
+    vec3 reflectionColour = texture(fu_cubeMapTextureSlot, reflectionDirectionInWorldSpace).rgb;
 
     float NdotV = max(dot(normalInWorldSpace, vertexToCameraDirectionWorldSpace), 0.0);
 
     vec3 outgoingRadiance = vec3(0.0);
+    vec3 cumulativeAmbient = vec3(0.0);
 
     for (int i = 0; i < MAX_LIGHTS; ++i)
     {
@@ -191,10 +227,10 @@ void main()
         vec3 radiance = fu_lights[i].radiance * attenuation * NdotL;
 
         outgoingRadiance += (invertedFresnel * materialAlbedo / PI + specular) * radiance * shadowFactor;
+        cumulativeAmbient = vec3(0.03) * ((invertedFresnel * materialAlbedo) + (fresnel * reflectionColour)) * materialAO;
     }
 
-    vec3 ambient = vec3(0.03) * materialAlbedo * materialAO;
-    vec3 outputColour = ambient + outgoingRadiance;  
+    vec3 outputColour = cumulativeAmbient + outgoingRadiance;
 
     // Gamma correction
     outputColour = outputColour / (outputColour + vec3(1.0));

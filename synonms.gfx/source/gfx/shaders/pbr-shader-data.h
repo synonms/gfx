@@ -20,12 +20,14 @@ namespace synonms
                     const transforms::Matrix4x4& viewMatrix,
                     const primitives::MeshInstance& meshInstance,
                     const environment::Camera& camera,
-                    const environment::Light& light)
+                    const environment::Light& light,
+                    const api::opengl::Texture& skyBoxTexture)
                     : projectionMatrix(projectionMatrix)
                     , viewMatrix(viewMatrix)
                     , meshInstance(meshInstance)
                     , camera(camera)
                     , light(light)
+                    , skyBoxTexture(skyBoxTexture)
                 {}
 
                 const transforms::Matrix4x4& projectionMatrix;
@@ -33,6 +35,7 @@ namespace synonms
                 const primitives::MeshInstance& meshInstance;
                 const environment::Camera& camera;
                 const environment::Light& light;
+                const api::opengl::Texture& skyBoxTexture;
             };
         }
     }

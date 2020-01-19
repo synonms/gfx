@@ -45,6 +45,36 @@ void Texture::SendData(TextureInternalFormat internalFormat, int width, int heig
     glTexImage2D(static_cast<unsigned int>(_targetTexture), 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
 }
 
+void Texture::SendCubeMapDataRight(TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data) const
+{
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
+}
+
+void Texture::SendCubeMapDataLeft(TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data) const
+{
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
+}
+
+void Texture::SendCubeMapDataTop(TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data) const
+{
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
+}
+
+void Texture::SendCubeMapDataBottom(TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data) const
+{
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
+}
+
+void Texture::SendCubeMapDataBack(TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data) const
+{
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
+}
+
+void Texture::SendCubeMapDataFront(TextureInternalFormat internalFormat, int width, int height, TextureFormat format, DataType dataType, unsigned char* data) const
+{
+    glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, static_cast<unsigned int>(internalFormat), width, height, 0, static_cast<unsigned int>(format), static_cast<unsigned int>(dataType), data);
+}
+
 
 void Texture::ActivateSlot(unsigned int slot)
 {
@@ -74,6 +104,11 @@ void Texture::SetMinificationFilter(TargetTexture targetTexture, MinificationFil
 void Texture::SetMagnificationFilter(TargetTexture targetTexture, MagnificationFilterValue filterValue)
 {
     glTexParameteri(static_cast<unsigned int>(targetTexture), GL_TEXTURE_MAG_FILTER, static_cast<int>(filterValue));
+}
+
+void Texture::SetWrapModeR(TargetTexture targetTexture, TextureWrapMode wrapMode)
+{
+    glTexParameteri(static_cast<unsigned int>(targetTexture), GL_TEXTURE_WRAP_R, static_cast<int>(wrapMode));
 }
 
 void Texture::SetWrapModeS(TargetTexture targetTexture, TextureWrapMode wrapMode)

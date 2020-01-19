@@ -53,9 +53,15 @@ void PBRShader::Render(const PBRShaderData& data)
         ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].shadowMapTextureSlot", currentTextureSlot);
         opengl::Texture::ActivateSlot(currentTextureSlot);
         data.light.shadowMapDepthTexture->Bind();
+        currentTextureSlot++;
     }
 
+    ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_cubeMapTextureSlot", currentTextureSlot);
+    opengl::Texture::ActivateSlot(currentTextureSlot);
+    data.skyBoxTexture.Bind();
+
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_material.specularColourF0", material.SpecularColourF0);
+    ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_material.isShadowReceiverOnly", material.isShadowReceiverOnly);
 
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].type", static_cast<int>(data.light.Type));
     ShaderExtensions::SetUniform(*_shaderProgram.get(), "fu_lights[0].radiance", data.light.radiance);

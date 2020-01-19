@@ -90,6 +90,9 @@
     <ClCompile Include="source\gfx\assets\obj-model-loader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\gfx\shaders\skybox-shader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\gfx\io\file-system.h">
@@ -248,6 +251,9 @@
     <ClInclude Include="source\gfx\utilities\string-extensions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\gfx\shaders\skybox-shader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="resources\shaders\phong.fragment.glsl" />
@@ -265,6 +271,8 @@
     <None Include="resources\shaders\deferred.gbuffer.vertex.glsl" />
     <None Include="resources\shaders\deferred.lighting.vertex.glsl" />
     <None Include="resources\shaders\deferred.lighting.fragment.glsl" />
+    <None Include="resources\shaders\skybox.vertex.glsl" />
+    <None Include="resources\shaders\skybox.fragment.glsl" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="resources\textures\UVCheckerBoard-2048x2048.png">
@@ -319,6 +327,30 @@
       <Filter>Resource Files</Filter>
     </Image>
     <Image Include="resources\assets\barrels\textures\drum3_roughness.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\lmcity\lmcity_bk.tga" />
+    <Image Include="resources\textures\lmcity\lmcity_dn.tga" />
+    <Image Include="resources\textures\lmcity\lmcity_ft.tga" />
+    <Image Include="resources\textures\lmcity\lmcity_lf.tga" />
+    <Image Include="resources\textures\lmcity\lmcity_rt.tga" />
+    <Image Include="resources\textures\lmcity\lmcity_up.tga" />
+    <Image Include="resources\textures\CNTower\negx.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\CNTower\negy.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\CNTower\negz.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\CNTower\posx.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\CNTower\posy.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="resources\textures\CNTower\posz.jpg">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>
